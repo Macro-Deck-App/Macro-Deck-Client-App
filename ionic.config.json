@@ -1,0 +1,8 @@
+{
+  "name": "Macro Deck Client",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "18f990a7"
+}
