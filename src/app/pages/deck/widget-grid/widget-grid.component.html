@@ -1,0 +1,10 @@
+<div #widgetsWrapper class="widgets-wrapper">
+  <div [ngStyle]="getWidgetStyle(widgetIndex)"
+       *ngFor="let _ of [].constructor(countTotalWidgets()); let widgetIndex = index;" class="widget">
+    <app-widget-content
+            [ngStyle]="getWidgetContentStyle()"
+            class="widget-content-wrapper"
+            [data]="getWidgetFromIndex(widgetIndex)">
+    </app-widget-content>
+  </div>
+</div>

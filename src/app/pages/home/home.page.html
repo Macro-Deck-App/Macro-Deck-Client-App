@@ -1,0 +1,27 @@
+<app-splashscreen class="splashscreen"
+                  [ngClass]="{'opacity-0' : !splashScreenVisible}"
+                  *ngIf="splashScreen"></app-splashscreen>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedPage">
+      <ion-segment-button value="connections">
+        <ion-label>Connections</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="settings">
+        <ion-label>Settings</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-connections *ngIf="selectedPage === 'connections'"></app-connections>
+  <app-settings *ngIf="selectedPage === 'settings'"></app-settings>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-text class="ms-3">{{version}} | Client Id: {{clientId}}</ion-text>
+  </ion-toolbar>
+</ion-footer>

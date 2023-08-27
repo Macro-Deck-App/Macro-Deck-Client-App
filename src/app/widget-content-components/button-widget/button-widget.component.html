@@ -1,0 +1,7 @@
+<div [ngStyle]="{'border-radius': WidgetGridComponent.borderRadiusPoints + 'pt'}"
+     (down)="onMouseDown($event)"
+     (up)="onMouseUp($event)" class="button-widget-wrapper">
+    <div [ngStyle]=foregroundStyle class="foreground"></div>
+    <div [ngStyle]=iconStyle class="icon"></div>
+    <div [ngStyle]=backgroundStyle class="background"></div>
+</div>

@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - '**'
+      - '!main'
+      - '!develop'
+
+jobs:
+  base_image_build:
+    name: Image build
+    uses: ./.github/workflows/build-image.yml
+    if: ${{ github.event_name != 'push' || github.event.pull_request.head.sha != github.sha }}
+    secrets: inherit

@@ -1,0 +1,26 @@
+.icon {
+  background-image: url("/assets/icon.png");
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scale(.5);
+  animation: splashAnimation .8s ease .3s 1 normal forwards;
+}
+
+@keyframes splashAnimation {
+  10% {
+    transform: scale(.5);
+  }
+  30% {
+    transform: scale(.4);
+  }
+  60% {
+    opacity: 100;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}

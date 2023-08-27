@@ -1,0 +1,14 @@
+<ion-content [scrollY]="false" [scrollX]="false" [fullscreen]="true">
+    <app-widget-grid class="widgets-grid-container"></app-widget-grid>
+
+    <ion-fab class="fab-menu" slot="fixed" vertical="bottom" horizontal="start">
+        <ion-fab-button size="small">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="close()" color="danger">
+                <ion-icon name="close"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+</ion-content>

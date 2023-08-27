@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Connection failed</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" [strong]="true">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-text>
+    <h4>I was not able to connect to {{url}} 🙁</h4>
+    <b class="d-block mt-3">There can be multiple reasons why this happens:</b>
+    <ul>
+      <li>Your anti virus software or firewall blocks Macro Deck 2.exe (Common issue)</li>
+      <li>The wrong network adapter is chosen in the settings</li>
+      <li>The chosen port is used by another application</li>
+      <li>Your computer and the device with the client are not in the same network</li>
+      <li>If you're using VPN services, disable them</li>
+      <li>A restart of your computer can help sometimes</li>
+      <li>If you're using a 5GHz Wi-Fi connection, try to switch to 2,4GHz temporarily</li>
+      <li>Some routers block the communication between Ethernet and Wi-Fi. Check your router settings. Look for SSID isolation or AP isolation and disable it.</li>
+    </ul>
+  </ion-text>
+</ion-content>

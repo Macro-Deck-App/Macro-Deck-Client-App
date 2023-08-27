@@ -1,0 +1,62 @@
+<ion-content>
+  <ion-item-group *ngIf="discoveredConnections.length > 0">
+    <ion-item-divider>
+      <ion-label>Discovered</ion-label>
+    </ion-item-divider>
+
+    <ion-list lines="full" *ngFor="let connection of savedConnections">
+      <ion-item color="success" button="true" (click)="connect(connection)">
+        <ion-icon name="flash" slot="start"></ion-icon>
+        <ion-label>
+          <h3>{{connection.name}}</h3>
+          <span>{{connection.host}}:{{connection.port}}</span>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-item-group>
+
+  <ion-item-group *ngIf="savedConnectionsInitialized">
+    <ion-item-divider>
+      <ion-label>Saved connections</ion-label>
+    </ion-item-divider>
+
+    <ion-list lines="full" *ngIf="savedConnections.length > 0; else noConnections">
+      <ion-item-sliding *ngFor="let connection of savedConnections">
+        <ion-item button="true" (click)="connect(connection)">
+          <ion-icon name="star" slot="start"></ion-icon>
+          <ion-label>
+            <h3>{{connection.name}}</h3>
+            <span>{{connection.host}}:{{connection.port}}</span>
+          </ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option (click)="editConnection(connection)" color="warning">
+            <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+          </ion-item-option>
+          <ion-item-option (click)="deleteConnection(connection)" color="danger">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ion-item-group>
+
+  <ion-fab *ngIf="savedConnections.length > 0" slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="success" (click)="openAddConnectionModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<ng-template #noConnections>
+  <div class="ion-padding d-flex flex-column">
+    <span class="d-block text-center">You have set up no saved connections</span>
+    <div class="justify-content-center d-flex mt-3">
+      <ion-button (click)="openAddConnectionModal()" id="add-connection-button">
+        <ion-icon name="add"></ion-icon>
+        <ion-label>Add connection</ion-label>
+      </ion-button>
+    </div>
+  </div>
+</ng-template>
