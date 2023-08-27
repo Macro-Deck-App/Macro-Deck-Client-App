@@ -12,16 +12,16 @@ jobs:
 
   deploy:
     name: Deploy Docker image
-    environment: staging
+    #environment: staging
     needs: [ ci ]
     runs-on: ubuntu-latest
     steps:
       - name: Updating the image on the server
         uses: Macro-Deck-App/Actions/deploy@main
         with:
-          host: ${{ secrets.TEST_DEPLOY_HOST }}
-          user: ${{ secrets.TEST_DEPLOY_USER }}
-          key: ${{ secrets.TEST_DEPLOY_KEY }}
-          known-hosts: ${{ secrets.TEST_DEPLOY_KNOWN_HOSTS }}
+          host: ${{ secrets.LIVE_DEPLOY_HOST }}
+          user: ${{ secrets.LIVE_DEPLOY_USER }}
+          key: ${{ secrets.LIVE_DEPLOY_KEY }}
+          known-hosts: ${{ secrets.LIVE_DEPLOY_KNOWN_HOSTS }}
           sha: ${{ github.sha }}
-          service: macro-deck-web-client
+          service: macro-deck-beta-web-client
