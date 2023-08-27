@@ -8,7 +8,6 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
 import {ConnectionsPageModule} from "./connections/connections.module";
-import {SettingsPageModule} from "./settings/settings.module";
 import {SplashscreenComponent} from "./splashscreen/splashscreen.component";
 
 @NgModule({
@@ -17,8 +16,7 @@ import {SplashscreenComponent} from "./splashscreen/splashscreen.component";
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    ConnectionsPageModule,
-    SettingsPageModule
+    ConnectionsPageModule
   ],
   declarations: [HomePage, SplashscreenComponent]
 })

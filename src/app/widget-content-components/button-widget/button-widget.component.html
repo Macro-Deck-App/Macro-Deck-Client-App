@@ -1,7 +1,11 @@
-<div [ngStyle]="{'border-radius': WidgetGridComponent.borderRadiusPoints + 'pt'}"
+<div [ngStyle]="{
+        'border-radius': widgetGridComponent.borderRadiusPoints + 'pt',
+        'border': '2pt solid ' + borderColor,
+        'padding': '2pt'
+        }"
      (down)="onMouseDown($event)"
      (up)="onMouseUp($event)" class="button-widget-wrapper">
-    <div [ngStyle]=foregroundStyle class="foreground"></div>
-    <div [ngStyle]=iconStyle class="icon"></div>
+    <img *ngIf="foregroundImage" [src]="foregroundImage" class="foreground" />
+    <img *ngIf="iconImage" [src]="iconImage" class="icon" />
     <div [ngStyle]=backgroundStyle class="background"></div>
 </div>

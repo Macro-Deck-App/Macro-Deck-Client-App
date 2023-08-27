@@ -11,9 +11,10 @@ import {
 } from "../../pages/home/connections/modals/insecure-connection/insecure-connection.component";
 import {Router} from "@angular/router";
 import {ProtocolHandlerService} from "../protocol/protocol-handler.service";
-import {Subject, Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {LoadingService} from "../loading/loading.service";
 import {webSocket} from "rxjs/webSocket";
+import {ConnectionLostComponent} from "../../pages/home/connections/modals/connection-lost/connection-lost.component";
 
 @Injectable({
     providedIn: 'root'
@@ -63,7 +64,7 @@ export class WebsocketService {
 
     private subscribeOpenClose() {
         this.connectionClosed.subscribe(async closeEvent => {
-            console.error("Close code " + closeEvent.code);
+            console.info("Closed with code " + closeEvent.code);
             await this.loadingService.dismiss();
 
             switch (closeEvent.code) {
@@ -120,6 +121,9 @@ export class WebsocketService {
     }
 
     private async showConnectionLostModal() {
-
+      const modal = await this.modalController.create({
+        component: ConnectionLostComponent
+      });
+      await modal.present();
     }
 }

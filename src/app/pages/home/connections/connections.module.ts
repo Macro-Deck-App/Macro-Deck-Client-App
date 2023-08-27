@@ -4,29 +4,28 @@ import {FormsModule} from '@angular/forms';
 
 import {IonicModule} from '@ionic/angular';
 
-import {ConnectionsPageRoutingModule} from './connections-routing.module';
-
 import {ConnectionsPage} from './connections.page';
 import {AddConnectionComponent} from "./modals/add-connection/add-connection.component";
 import {ConnectionFailedComponent} from "./modals/connection-failed/connection-failed.component";
 import {InsecureConnectionComponent} from "./modals/insecure-connection/insecure-connection.component";
+import {ConnectionLostComponent} from "./modals/connection-lost/connection-lost.component";
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule,
-        ConnectionsPageRoutingModule
-    ],
-    exports: [
-        ConnectionsPage
-    ],
-    declarations: [
-        ConnectionsPage,
-        AddConnectionComponent,
-        ConnectionFailedComponent,
-        InsecureConnectionComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule
+  ],
+  exports: [
+    ConnectionsPage
+  ],
+  declarations: [
+    ConnectionsPage,
+    AddConnectionComponent,
+    ConnectionFailedComponent,
+    InsecureConnectionComponent,
+    ConnectionLostComponent
+  ]
 })
 export class ConnectionsPageModule {
 }

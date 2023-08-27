@@ -19,7 +19,11 @@
   right: 0;
   bottom: 0;
   left: 0;
-  transition: background-image 1s ease-out;
+  transition: background-color .3s ease-out;
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
 }
 
 .background {

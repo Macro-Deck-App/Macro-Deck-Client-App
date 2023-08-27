@@ -15,5 +15,9 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 :root {
-  --macro-deck-bg: #232323;
+  --macro-deck-bg: #2d2d2d;
+}
+
+.bg-macro-deck {
+  background-color: var(--macro-deck-bg);
 }

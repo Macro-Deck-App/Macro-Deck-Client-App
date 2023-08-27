@@ -1,4 +1,4 @@
-import {AfterViewInit, ApplicationRef, Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {AfterContentInit, AfterViewInit, ApplicationRef, Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {Widget} from "../../../datatypes/widgets/widget";
 import {Subscription} from "rxjs";
 import {MacroDeckService} from "../../../services/macro-deck/macro-deck.service";
@@ -9,7 +9,7 @@ import {WidgetContentType} from "../../../enums/widget-content-type";
     templateUrl: './widget-grid.component.html',
     styleUrls: ['./widget-grid.component.scss'],
 })
-export class WidgetGridComponent implements AfterViewInit, OnDestroy {
+export class WidgetGridComponent implements AfterContentInit, OnDestroy {
     @ViewChild('widgetsWrapper', {static: false}) wrapperElement!: ElementRef;
 
     constructor(private macroDeckService: MacroDeckService,
@@ -17,11 +17,6 @@ export class WidgetGridComponent implements AfterViewInit, OnDestroy {
     }
 
     private subscription: Subscription = new Subscription();
-
-    private columns: number = 5;
-    private rows: number = 3;
-    private widgetSpacing: number = 10;
-    private borderRadius: number = 10;
 
     private buttonSize: number = 0;
     private widgetSpacingPoints: number = 0;
@@ -36,37 +31,22 @@ export class WidgetGridComponent implements AfterViewInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    ngAfterViewInit(): void {
-        this.subscription.add(this.macroDeckService.configUpdate.subscribe(() => {
-            this.loadConfig();
-        }));
-
-        this.subscription.add(screen.orientation.onchange = () => {
-            setTimeout(() => {
-                this.resetSizes();
-                this.applicationRef.tick();
-            }, 100);
-        });
-
-        setTimeout(() => {
-            this.loadConfig();
-        }, 1000);
-    }
-
-    resetSizes() {
-        this.rows = 0;
-        this.columns = 0;
-        this.widgetSpacing = 0;
-        this.borderRadius = 0;
-        this.loadConfig();
-    }
-
-    loadConfig() {
-        this.rows = this.macroDeckService.rows;
-        this.columns = this.macroDeckService.columns;
-        this.widgetSpacing = this.macroDeckService.buttonSpacing;
-        this.borderRadius = this.macroDeckService.buttonRadius;
+    ngAfterContentInit(): void {
+      this.subscription.add(this.macroDeckService.configUpdate.subscribe(() => {
         this.calculateWidgetSize();
+        this.applicationRef.tick();
+      }));
+
+      this.subscription.add(screen.orientation.onchange = () => {
+        setTimeout(() => {
+          this.calculateWidgetSize();
+          this.applicationRef.tick();
+        }, 100);
+      });
+
+      setTimeout(() => {
+        this.calculateWidgetSize();
+      }, 1000);
     }
 
     @HostListener('window:resize', ['$event'])
@@ -82,28 +62,28 @@ export class WidgetGridComponent implements AfterViewInit, OnDestroy {
             parseInt(wrapperStyle.getPropertyValue('padding-bottom'));
         this.wrapperWidth = (this.wrapperElement?.nativeElement.offsetWidth ?? 0) - this.wrapperPaddingX;
         this.wrapperHeight = (this.wrapperElement?.nativeElement.offsetHeight ?? 0) - this.wrapperPaddingY;
-        let widgetSizeX = this.wrapperWidth / this.columns;
-        let widgetSizeY = this.wrapperHeight / this.rows;
+        let widgetSizeX = this.wrapperWidth / this.macroDeckService.columns;
+        let widgetSizeY = this.wrapperHeight / this.macroDeckService.rows;
         this.buttonSize = Math.min(widgetSizeX, widgetSizeY);
 
-        this.widgetSpacingPoints = (((this.widgetSpacing / 100) * this.buttonSize) * 72 / 96) / 2;
-        WidgetGridComponent.borderRadiusPoints = (((this.borderRadius / 100) * this.buttonSize) * 72 / 96) / 2;
+        this.widgetSpacingPoints = (((this.macroDeckService.buttonSpacing / 100) * this.buttonSize) * 72 / 96) / 2;
+        WidgetGridComponent.borderRadiusPoints = (((this.macroDeckService.buttonRadius / 100) * this.buttonSize) * 72 / 96) / 2;
     }
 
     countTotalWidgets(): number {
-        return this.rows * this.columns;
+        return this.macroDeckService.rows * this.macroDeckService.columns;
     }
 
     getWidgetStyle(index: number) {
-        const row = Math.trunc(index / this.columns);
-        const column = Math.trunc(index % this.columns);
+        const row = Math.trunc(index / this.macroDeckService.columns);
+        const column = Math.trunc(index % this.macroDeckService.columns);
         const widget = this.macroDeckService.widgets.find(x => x.row == row && x.column == column);
 
         const width = this.buttonSize * (widget?.colSpan ?? 1);
         const height = this.buttonSize * (widget?.rowSpan ?? 1);
 
-        const xOffset = (this.wrapperWidth / 2) - ((this.columns * this.buttonSize) / 2); // Offset to center items horizontally
-        const yOffset = (this.wrapperHeight / 2) - ((this.rows * this.buttonSize) / 2); // Offset to center items vertically
+        const xOffset = (this.wrapperWidth / 2) - ((this.macroDeckService.columns * this.buttonSize) / 2); // Offset to center items horizontally
+        const yOffset = (this.wrapperHeight / 2) - ((this.macroDeckService.rows * this.buttonSize) / 2); // Offset to center items vertically
 
         const x = xOffset + (column * this.buttonSize);
         const y = yOffset + (row * this.buttonSize);
@@ -124,12 +104,12 @@ export class WidgetGridComponent implements AfterViewInit, OnDestroy {
     }
 
     getWidgetFromIndex(index: number): Widget | undefined {
-        const row = Math.trunc(index / this.columns);
-        const column = Math.trunc(index % this.columns);
+        const row = Math.trunc(index / this.macroDeckService.columns);
+        const column = Math.trunc(index % this.macroDeckService.columns);
         let widget: Widget | undefined = this.macroDeckService.widgets.find(x => x.row == row && x.column == column);
         if (!widget) {
             widget = {
-                backgroundColorHex: '#2d2d2d',
+                backgroundColorHex: '#232323',
                 colSpan: 1,
                 column: column,
                 row: row,

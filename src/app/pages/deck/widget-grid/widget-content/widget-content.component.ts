@@ -25,7 +25,7 @@ export class WidgetContentComponent implements OnDestroy {
   private subscription: Subscription = new Subscription();
   private componentCreated: boolean = false;
 
-  constructor(private macroDeckService: MacroDeckService) { }
+  constructor() { }
 
   updateContent(data: Widget | undefined) {
     if (data?.widgetContentType !== this.currentContentType) {
@@ -49,32 +49,7 @@ export class WidgetContentComponent implements OnDestroy {
       case WidgetContentType.button:
         if (!this.componentCreated) {
           this.ref = this.vcr.createComponent(ButtonWidgetComponent);
-          this.subscription.add(this.ref.instance.shortPress.subscribe(() => {
-            this.macroDeckService.emitInteraction({
-              widget: data,
-              widgetInteractionType: WidgetInteractionType.ButtonPress
-            });
-          }));
-          this.subscription.add(this.ref.instance.shortPressRelease.subscribe(() => {
-            this.macroDeckService.emitInteraction({
-              widget: data,
-              widgetInteractionType: WidgetInteractionType.ButtonShortPressRelease
-            });
-          }));
-          this.subscription.add(this.ref.instance.longPress.subscribe(() => {
-            this.macroDeckService.emitInteraction({
-              widget: data,
-              widgetInteractionType: WidgetInteractionType.ButtonLongPress
-            });
-          }));
-          this.subscription.add(this.ref.instance.longPressRelease.subscribe(() => {
-            this.macroDeckService.emitInteraction({
-              widget: data,
-              widgetInteractionType: WidgetInteractionType.ButtonLongPressRelease
-            });
-          }));
         }
-
         this.ref.instance.updateWidget(data);
         break;
       default:
@@ -88,5 +63,4 @@ export class WidgetContentComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
 }

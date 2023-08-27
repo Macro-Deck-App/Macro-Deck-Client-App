@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {IonModal} from "@ionic/angular";
+import {Component, OnInit} from '@angular/core';
+import {ModalController} from "@ionic/angular";
 import {SettingsService} from "../../services/settings/settings.service";
 import {environment} from "../../../environments/environment";
 import {DiagnosticService} from "../../services/diagnostic/diagnostic.service";
 import {Capacitor} from "@capacitor/core";
+import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
 
 @Component({
     selector: 'app-home',
@@ -12,13 +13,13 @@ import {Capacitor} from "@capacitor/core";
 })
 export class HomePage implements OnInit {
     clientId: string | undefined;
-    selectedPage: string = "connections";
     splashScreen: boolean = true;
     splashScreenVisible: boolean = true;
     version: string | undefined;
 
     constructor(private settingsService: SettingsService,
-                private diagnosticService: DiagnosticService) {
+                private diagnosticService: DiagnosticService,
+                private modalController: ModalController) {
     }
 
     async ngOnInit() {
@@ -41,4 +42,11 @@ export class HomePage implements OnInit {
     }
 
     protected readonly environment = environment;
+
+  async openSettings() {
+    const modal = await this.modalController.create({
+      component: SettingsModalComponent
+    });
+    await modal.present();
+  }
 }

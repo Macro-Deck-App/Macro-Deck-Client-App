@@ -39,10 +39,10 @@ export class Protocol2Service {
                 if (!this.initialConfigReceived) {
                     this.initialConfigReceived = true;
                     await this.router.navigate(['deck'], {replaceUrl: false});
-                    this.send(Protocol2Messages.getGetButtonsMessage());
                     await this.loadingService.dismiss();
                 }
 
+                this.send(Protocol2Messages.getGetButtonsMessage());
                 break;
             case "GET_BUTTONS":
                 if (!this.initialConfigReceived) {

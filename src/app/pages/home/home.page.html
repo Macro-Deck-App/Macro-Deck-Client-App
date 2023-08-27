@@ -4,20 +4,15 @@
 
 <ion-header>
   <ion-toolbar>
-    <ion-segment [(ngModel)]="selectedPage">
-      <ion-segment-button value="connections">
-        <ion-label>Connections</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="settings">
-        <ion-label>Settings</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-title>Macro Deck</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="openSettings()">Settings</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <app-connections *ngIf="selectedPage === 'connections'"></app-connections>
-  <app-settings *ngIf="selectedPage === 'settings'"></app-settings>
+  <app-connections></app-connections>
 </ion-content>
 
 <ion-footer>
