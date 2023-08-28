@@ -38,7 +38,7 @@ export class Protocol2Service {
                 this.macroDeckService.setConfig(message);
                 if (!this.initialConfigReceived) {
                     this.initialConfigReceived = true;
-                    await this.router.navigate(['deck'], {replaceUrl: false});
+                    await this.router.navigate(['deck'], {replaceUrl: false, skipLocationChange: true});
                     await this.loadingService.dismiss();
                 }
 

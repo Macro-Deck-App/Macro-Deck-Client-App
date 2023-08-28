@@ -24,6 +24,7 @@
     "@angular/router": "^16.2.2",
     "@angular/service-worker": "^16.2.2",
     "@awesome-cordova-plugins/app-version": "^6.4.0",
+    "@capacitor-community/keep-awake": "^4.0.0",
     "@capacitor/android": "5.2.3",
     "@capacitor/app": "^5.0.6",
     "@capacitor/core": "5.2.3",
@@ -41,6 +42,7 @@
     "i": "^0.3.7",
     "ionicons": "^7.0.0",
     "ng2-events": "^5.0.0",
+    "nosleep.js": "^0.12.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

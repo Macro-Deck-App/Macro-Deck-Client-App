@@ -4,7 +4,7 @@
   position: relative;
   overflow: hidden;
   border-radius: inherit;
-  transition: all .1s ease-out;
+  transition: all .07s ease-out;
   box-sizing: border-box;
 }
 
@@ -38,6 +38,7 @@
   z-index: 3;
 }
 
-.active {
-  transform: scale(.8);
+.pressed {
+  transform: scale(0.8);
 }
+

@@ -1,12 +1,20 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
     <ion-title>Settings</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="confirm()" [strong]="true">Close</ion-button>
+      <ion-button (click)="confirm()" [strong]="true">Save</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <span>Coming soon</span>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-icon name="timer" slot="start"></ion-icon>
+      <ion-toggle (ngModelChange)="preventScreenTimeoutChange($event)" [(ngModel)]="preventScreenTimeout">Prevent screen timeout</ion-toggle>
+    </ion-item>
+  </ion-list>
 </ion-content>

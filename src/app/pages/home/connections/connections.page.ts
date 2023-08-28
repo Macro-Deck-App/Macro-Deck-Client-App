@@ -4,6 +4,7 @@ import {ConnectionService} from "../../../services/connection/connection.service
 import {AlertController, ModalController} from "@ionic/angular";
 import {AddConnectionComponent} from "./modals/add-connection/add-connection.component";
 import {WebsocketService} from "../../../services/websocket/websocket.service";
+import {WakelockService} from "../../../services/wakelock/wakelock.service";
 
 @Component({
   selector: 'app-connections',
@@ -19,7 +20,8 @@ export class ConnectionsPage implements OnInit {
   constructor(private connectionService: ConnectionService,
               private modalController: ModalController,
               private alertController: AlertController,
-              private websocketService: WebsocketService) { }
+              private websocketService: WebsocketService,
+              private wakeLockService: WakelockService) { }
 
   async ngOnInit() {
     await this.loadConnections();
@@ -78,6 +80,7 @@ export class ConnectionsPage implements OnInit {
   }
 
   async connect(connection: Connection) {
+    await this.wakeLockService.updateWakeLock();
     await this.websocketService.connect(connection.host, connection.port, false);
   }
 }

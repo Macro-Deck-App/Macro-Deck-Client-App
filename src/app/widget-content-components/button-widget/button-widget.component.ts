@@ -42,7 +42,8 @@ export class ButtonWidgetComponent {
   }
 
   onMouseUp(event: Event) {
-    this.setClass(event.currentTarget, 'active', false);
+    this.setClass(event.currentTarget, 'pressed', false);
+
     if (this.longPressTrigger) {
       if (this.widget === undefined) {
         return;
@@ -56,7 +57,7 @@ export class ButtonWidgetComponent {
   }
 
   onMouseDown(event: Event) {
-    this.setClass(event.currentTarget, 'active', true);
+    this.setClass(event.currentTarget, 'pressed', true);
     this.emitInteraction(WidgetInteractionType.ButtonPress);
     this.longPressTimeout = setTimeout(() => {
       this.longPressTrigger = true;

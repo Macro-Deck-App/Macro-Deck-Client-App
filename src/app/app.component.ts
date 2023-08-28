@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Storage} from "@ionic/storage";
+import {WakelockService} from "./services/wakelock/wakelock.service";
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,16 @@ import {Storage} from "@ionic/storage";
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage,
+              private wakeLockService: WakelockService) {
+  }
 
   async ngOnInit() {
     await this.storage.create();
+    try {
+      await this.wakeLockService.updateWakeLock();
+    } catch {
+      // exception is expected in browser because wake lock needs user interaction
+    }
   }
 }

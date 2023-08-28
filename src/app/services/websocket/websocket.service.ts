@@ -82,7 +82,7 @@ export class WebsocketService {
             }
 
             this.isConnected = false;
-            await this.router.navigate([''], {replaceUrl: false});
+            await this.router.navigate([''], {replaceUrl: false, skipLocationChange: true});
         })
 
         this.connectionOpened.subscribe(async () => {
@@ -95,7 +95,6 @@ export class WebsocketService {
     }
 
     public close() {
-        console.log("Close requested");
         this.socket?.complete();
     }
 
