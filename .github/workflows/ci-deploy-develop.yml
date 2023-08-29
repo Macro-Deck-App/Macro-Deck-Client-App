@@ -51,7 +51,7 @@ jobs:
                       },
                       {
                         "name": "Commit message",
-                        "value": "${{ (github.event.head_commit.message == null || github.event.head_commit.message == '') && '"-"' || toJSON(github.event.head_commit.message) }}",
+                        "value": ${{ (github.event.head_commit.message == null || github.event.head_commit.message == '') && '-' || toJSON(github.event.head_commit.message) }},
                         "inline": false
                       },
                      {
