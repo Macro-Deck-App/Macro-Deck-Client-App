@@ -8,5 +8,5 @@ RUN npm install -g @angular/cli
 RUN npm i -g @ionic/cli
 RUN ionic build --prod
 
-FROM nginx:stable-bullseye as final
-COPY --from=node /src/www /usr/share/nginx/html
+FROM scratch as final
+COPY --from=node /src/www /dist
