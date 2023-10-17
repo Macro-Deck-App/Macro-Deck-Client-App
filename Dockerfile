@@ -1,4 +1,4 @@
-FROM node:20.5.0 as node
+FROM node:18.18.2-buster-slim as node
 
 WORKDIR /src
 COPY . .
@@ -10,3 +10,4 @@ RUN ionic build --prod
 
 FROM scratch as final
 COPY --from=node /src/www /dist
+ENTRYPOINT ["/bin/bash"]
