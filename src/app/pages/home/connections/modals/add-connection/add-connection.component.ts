@@ -1,18 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AlertController, ModalController} from "@ionic/angular";
 import {Connection} from "../../../../../datatypes/connection";
 
 @Component({
-  selector: 'add-connection-modal',
+  selector: 'app-add-connection-modal',
   templateUrl: './add-connection.component.html',
   styleUrls: ['./add-connection.component.scss'],
 })
-export class AddConnectionComponent implements OnInit {
+export class AddConnectionComponent {
 
   id: string = "";
   name: string | undefined;
   host: string = "";
   port: number = 8191;
+  useSsl: boolean = false;
 
   constructor(private modalController: ModalController,
               private alertController: AlertController) {
@@ -32,8 +33,10 @@ export class AddConnectionComponent implements OnInit {
       host: this.host,
       id: this.id,
       name: this.name === undefined || this.name.length === 0 ? this.host : this.name,
-      port: this.port
+      port: this.port,
+      ssl: this.useSsl
     }
+    console.log(connection)
     await this.modalController.dismiss(connection, 'confirm');
   }
 
@@ -60,8 +63,5 @@ export class AddConnectionComponent implements OnInit {
     });
 
     await alert.present();
-  }
-
-  ngOnInit(): void {
   }
 }

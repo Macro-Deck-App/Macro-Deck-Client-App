@@ -35,31 +35,35 @@ export class WebsocketService {
         this.subscribeOpenClose();
     }
 
-    public async connect(host: string, port: number, secure: boolean) {
-        this.url = secure ? "wss://" : "ws://" + host + ":" + port;
-        await this.loadingService.showText(`Connecting to ${this.url}...`);
+    public async connectToString(connectionString: string) {
+      this.url = connectionString;
+      await this.loadingService.showText(`Connecting to ${this.url}...`);
 
-        this.socket = webSocket({
-            url: this.url,
-            closeObserver: this.connectionClosed,
-            openObserver: this.connectionOpened
-        });
+      this.socket = webSocket({
+        url: this.url,
+        closeObserver: this.connectionClosed,
+        openObserver: this.connectionOpened
+      });
 
-        this.socket.subscribe({
-            next: async (message: any) => {
-                await this.protocolHandlerService.handleMessage(message);
-            },
-            error: async error => {
-                await this.loadingService.dismiss();
-                if (error instanceof DOMException) {
-                    switch (error.name) {
-                        case "SecurityError":
-                            await this.showInsecureConnectionModal();
-                            break;
-                    }
-                }
+      this.socket.subscribe({
+        next: async (message: any) => {
+          await this.protocolHandlerService.handleMessage(message);
+        },
+        error: async error => {
+          await this.loadingService.dismiss();
+          if (error instanceof DOMException) {
+            switch (error.name) {
+              case "SecurityError":
+                await this.showInsecureConnectionModal();
+                break;
             }
-        });
+          }
+        }
+      });
+    }
+
+    public async connect(host: string, port: number, secure: boolean) {
+        await this.connectToString((secure ? "wss://" : "ws://") + host + ":" + port);
     }
 
     private subscribeOpenClose() {
