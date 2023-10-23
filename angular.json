@@ -45,9 +45,46 @@
             "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
-            "production": {
+            "web_production": {
               "baseHref": "/client/",
               "deployUrl": "/client/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "web": {
+              "baseHref": "/client/",
+              "deployUrl": "/client/",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "production": {
               "budgets": [
                 {
                   "type": "initial",
@@ -85,8 +122,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
+            "web_production": {
+              "browserTarget": "app:build:web_production"
+            },
             "production": {
               "browserTarget": "app:build:production"
+            },
+            "web": {
+              "browserTarget": "app:build:web"
             },
             "development": {
               "browserTarget": "app:build:development"

@@ -19,9 +19,7 @@ export class ConnectionsPage implements OnInit {
   savedConnections: Connection[] = [];
   savedConnectionsInitialized = false;
 
-  constructor(@Inject(DOCUMENT) private document: Document,
-              private connectionService: ConnectionService,
-              private route: ActivatedRoute,
+  constructor(private connectionService: ConnectionService,
               private modalController: ModalController,
               private alertController: AlertController,
               private websocketService: WebsocketService,
@@ -30,17 +28,6 @@ export class ConnectionsPage implements OnInit {
   async ngOnInit() {
     await this.loadConnections();
     this.savedConnectionsInitialized = true;
-    this.route.queryParams.subscribe(async params => {
-      const autoConnect = params['auto-connect'] ?? false;
-      if (autoConnect == 'true') {
-        const baseUrl = this.document.baseURI;
-        const urlParts = baseUrl.split('/');
-        const wsProtocol = urlParts[0].toLowerCase().replace('http', 'ws');
-        const host = urlParts[2];
-        const websocketUrl = `${wsProtocol}//${host}`;
-        await this.connectToString(websocketUrl);
-      }
-    });
   }
 
   private async loadConnections() {
@@ -98,9 +85,5 @@ export class ConnectionsPage implements OnInit {
   async connect(connection: Connection) {
     await this.wakeLockService.updateWakeLock();
     await this.websocketService.connect(connection.host, connection.port, connection.ssl);
-  }
-
-  async connectToString(connectionString: string) {
-    await this.websocketService.connectToString(connectionString);
   }
 }

@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {CurrentPlatformService} from "../../services/current-platform/current-platform.service";
 import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
 import {ModalController} from "@ionic/angular";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-deck',
@@ -48,4 +49,5 @@ export class DeckPage implements OnInit, AfterViewInit {
     }
   }
 
+  protected readonly environment = environment;
 }
