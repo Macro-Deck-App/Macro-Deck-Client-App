@@ -11,6 +11,7 @@ import {WakelockService} from "../../../../services/wakelock/wakelock.service";
 export class SettingsModalComponent  implements OnInit {
 
   preventScreenTimeout: boolean = false;
+  buttonLongPressDelay: number = 1000;
 
   constructor(private modalController: ModalController,
               private settingsService: SettingsService,
@@ -32,11 +33,13 @@ export class SettingsModalComponent  implements OnInit {
 
   async saveSettings() {
     await this.settingsService.setWakeLockEnabled(this.preventScreenTimeout);
+    await this.settingsService.setButtonLongPressDelay(this.buttonLongPressDelay);
     await this.wakelockService.updateWakeLock();
   }
 
   async loadCurrentSettings() {
     this.preventScreenTimeout = await this.settingsService.getWakeLockEnabled();
+    this.buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
   }
 
   async preventScreenTimeoutChange(event: any) {

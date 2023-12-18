@@ -5,6 +5,7 @@ import {WidgetGridComponent} from "../../pages/deck/widget-grid/widget-grid.comp
 import {MacroDeckService} from "../../services/macro-deck/macro-deck.service";
 import {WidgetInteractionType} from "../../enums/widget-interaction-type";
 import { DomSanitizer } from '@angular/platform-browser';
+import {SettingsService} from "../../services/settings/settings.service";
 
 @Component({
   selector: 'app-button-widget',
@@ -25,7 +26,8 @@ export class ButtonWidgetComponent {
 
   constructor(private renderer: Renderer2,
               private macroDeckService: MacroDeckService,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private settingsService: SettingsService) {
   }
 
   updateWidget(widget: Widget) {
@@ -56,13 +58,15 @@ export class ButtonWidgetComponent {
     clearTimeout(this.longPressTimeout);
   }
 
-  onMouseDown(event: Event) {
+  async onMouseDown(event: Event) {
     this.setClass(event.currentTarget, 'pressed', true);
     this.emitInteraction(WidgetInteractionType.ButtonPress);
+
+    let buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
     this.longPressTimeout = setTimeout(() => {
       this.longPressTrigger = true;
       this.emitInteraction(WidgetInteractionType.ButtonLongPress);
-    }, 1000);
+    }, buttonLongPressDelay);
   }
 
   setClass(target: any, className: string, value: boolean): void {
@@ -75,7 +79,10 @@ export class ButtonWidgetComponent {
   }
 
   adjustColor(color: string, amount: number) {
-    return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+      return '#' + color.replace(/^#/, '')
+          .replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount))
+          .toString(16))
+          .substr(-2));
   }
 
   private emitInteraction(widgetInteractionType: WidgetInteractionType) {

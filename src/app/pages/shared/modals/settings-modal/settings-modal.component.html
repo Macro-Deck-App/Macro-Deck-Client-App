@@ -16,5 +16,18 @@
       <ion-icon name="timer" slot="start"></ion-icon>
       <ion-toggle (ngModelChange)="preventScreenTimeoutChange($event)" [(ngModel)]="preventScreenTimeout">Prevent screen timeout</ion-toggle>
     </ion-item>
+    <ion-item>
+      <ion-icon slot="start" class="mdi mdi-gesture-tap-box d-flex align-items-center"></ion-icon>
+      <ion-range
+        label-placement="start"
+        label="Button long press delay"
+        ticks="true"
+        step="100"
+        snaps="true"
+        min="100"
+        max="2000"
+        [(ngModel)]="buttonLongPressDelay"></ion-range>
+      <ion-label slot="end">{{buttonLongPressDelay}}ms</ion-label>
+    </ion-item>
   </ion-list>
 </ion-content>
