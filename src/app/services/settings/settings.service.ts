@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Storage} from "@ionic/storage";
-import {KeepAwake} from "@capacitor-community/keep-awake";
 
 const clientIdStorageKey: string = "client_id";
 const wakeLockKey: string = "wake_lock_enabled";
+const buttonLongPressDelay: string = "button_long_press_delay";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,14 @@ export class SettingsService {
 
 
   constructor(private storage: Storage) {
+  }
+
+  public async setButtonLongPressDelay(delay: number) {
+    await this.storage.set(buttonLongPressDelay, delay);
+  }
+
+  public async getButtonLongPressDelay() {
+    return await this.storage.get(buttonLongPressDelay) ?? 1000;
   }
 
   public async setWakeLockEnabled(state: boolean) {
