@@ -4,7 +4,7 @@
   position: relative;
   overflow: hidden;
   border-radius: inherit;
-  transition: all .07s ease-out;
+  transition: all .01s linear;
   box-sizing: border-box;
 }
 
@@ -42,6 +42,9 @@
 }
 
 .pressed {
-  transform: scale(0.8);
+  transform: scale(0.7);
 }
 
+.release-transition {
+  transition: transform .4s linear;
+}
