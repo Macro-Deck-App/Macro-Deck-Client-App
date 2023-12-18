@@ -110,13 +110,24 @@ export class Protocol2Service {
     }
 
     private handleInteraction(interaction: WidgetInteraction) {
+        let method: String | undefined;
         switch (interaction.widgetInteractionType) {
             case WidgetInteractionType.ButtonPress:
-                this.send({
-                    "Method": "BUTTON_PRESS",
-                    "Message": `${interaction.widget.row}_${interaction.widget.column}`
-                });
+                method = "BUTTON_PRESS";
+                break;
+            case WidgetInteractionType.ButtonShortPressRelease:
+                method = "BUTTON_RELEASE";
+                break;
+            case WidgetInteractionType.ButtonLongPress:
+                method = "BUTTON_LONG_PRESS";
+                break;
+            case WidgetInteractionType.ButtonLongPressRelease:
+                method = "BUTTON_LONG_PRESS_RELEASE";
                 break;
         }
+      this.send({
+        "Method": method,
+        "Message": `${interaction.widget.row}_${interaction.widget.column}`
+      });
     }
 }
