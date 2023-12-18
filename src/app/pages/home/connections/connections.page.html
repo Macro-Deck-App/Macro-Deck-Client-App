@@ -26,7 +26,15 @@
           <ion-icon name="star" slot="start"></ion-icon>
           <ion-label>
             <h3>{{connection.name}}</h3>
-            <span>{{connection.host}}:{{connection.port}}</span>
+            <span>
+              <ion-icon *ngIf="connection.ssl"
+
+                        aria-hidden="true"
+                        title="Secure connection"
+                        class="text-success"
+                        name="lock-closed-outline" />
+              {{connection.host}}:{{connection.port}}
+            </span>
           </ion-label>
         </ion-item>
 
