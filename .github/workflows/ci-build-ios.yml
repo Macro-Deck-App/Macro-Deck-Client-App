@@ -1,0 +1,72 @@
+name: Build iOS project
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "Version name"
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "Version name"
+
+jobs:
+  build:
+    name: Build project
+    runs-on: macos-14
+
+    steps:
+      - name: "Check out code"
+        uses: actions/checkout@v3
+
+      - name: "Setup dependencies: Node"
+        uses: actions/setup-node@v4
+
+      - name: "Install dependencies"
+        uses: Macro-Deck-App/Actions/setup-ionic@main
+
+      - name: "Build Ionic app"
+        run: ionic build -c production
+
+      - name: "Sync iOS project"
+        run: cap sync ios
+
+      - name: "Install SSH key"
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.FASTLANE_CERTIFICATES_KEY }}
+
+      - name: "Cache bundles"
+        uses: actions/cache@v3
+        with:
+          key: "ios-bundle-${{ hashFiles('ios/Gemfile') }}"
+          path: ios/App/vendor/bundle
+
+      - name: "Build project"
+        env:
+          VERSION_NUMBER: ${{ inputs.version }}
+          KEY_ID: ${{secrets.APPSTORE_KEY_ID}}
+          ISSUER_ID: ${{secrets.APPSTORE_KEY_ISSUER_ID}}
+          KEY_CONTENT: ${{secrets.APPSTORE_KEY_CONTENT}}
+          MATCH_PASSWORD: ${{secrets.MATCH_PASSWORD}}
+        run: |
+          export BUILD_NUMBER=$(( ${{ github.run_number }} + 3000 ))
+          cd ios/App
+          which bundle || gem install bundler
+          bundle config path vendor/bundle
+          bundle install
+          bundle exec fastlane build
+
+      - name: "Upload"
+        env:
+          KEY_ID: ${{secrets.APPSTORE_KEY_ID}}
+          ISSUER_ID: ${{secrets.APPSTORE_KEY_ISSUER_ID}}
+          KEY_CONTENT: ${{secrets.APPSTORE_KEY_CONTENT}}
+          CHANGELOG: ${{ github.event.head_commit.message }}
+        run: |
+          cd ios/App
+          bundle exec fastlane release

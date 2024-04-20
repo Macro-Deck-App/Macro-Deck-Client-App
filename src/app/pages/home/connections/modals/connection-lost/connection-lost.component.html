@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Connection lost</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" [strong]="true">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-text>
+    <h4>I lost the connection to the server 🫤</h4>
+    <b class="d-block mt-3">Maybe the server was stopped or the connection dropped.</b>
+  </ion-text>
+</ion-content>

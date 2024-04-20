@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" [strong]="true">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-icon name="timer" slot="start"></ion-icon>
+      <ion-toggle
+        (ngModelChange)="preventScreenTimeoutChange($event)"
+        [(ngModel)]="preventScreenTimeout">Prevent screen timeout</ion-toggle>
+    </ion-item>
+
+    <ion-item *ngIf="isAndroid()">
+      <ion-icon slot="start" class="mdi mdi-lock-off d-flex align-items-center"></ion-icon>
+      <ion-toggle
+        [(ngModel)]="skipSslValidation">Skip SSL validation</ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon slot="start" class="mdi mdi-gesture-tap-box d-flex align-items-center"></ion-icon>
+      <ion-range
+        label-placement="start"
+        label="Button long press delay"
+        ticks="true"
+        step="100"
+        snaps="true"
+        min="100"
+        max="2000"
+        [(ngModel)]="buttonLongPressDelay"></ion-range>
+      <ion-label slot="end">{{buttonLongPressDelay}}ms</ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="isAndroidOriOS()">
+      <ion-icon slot="start" class="mdi mdi-screen-rotation d-flex align-items-center"></ion-icon>
+      <ion-select [(ngModel)]="screenOrientation" label="Screen orientation">
+        <ion-select-option value="0">Auto</ion-select-option>
+        <ion-select-option value="1">Landscape</ion-select-option>
+        <ion-select-option value="2">Landscape alternative</ion-select-option>
+        <ion-select-option value="3">Portrait</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</ion-content>

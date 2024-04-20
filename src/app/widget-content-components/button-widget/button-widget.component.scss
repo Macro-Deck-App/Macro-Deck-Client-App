@@ -1,0 +1,51 @@
+.button-widget-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+  transition: all .01s linear;
+  box-sizing: border-box;
+  transform: translateZ(0);
+}
+
+.foreground,
+.icon,
+.background {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: background-color .3s ease-out;
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+}
+
+.background {
+  z-index: 1;
+}
+
+.icon {
+  z-index: 2;
+}
+
+.foreground {
+  z-index: 3;
+}
+
+.pressed {
+  transform: scale(0.9);
+}
+
+.release-transition {
+  transition: transform .4s linear;
+}

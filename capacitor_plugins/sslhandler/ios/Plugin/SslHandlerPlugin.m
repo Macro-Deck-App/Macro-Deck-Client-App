@@ -1,0 +1,39 @@
+#import <WebKit/WebKit.h>
+#import <objc/message.h>
+#import <objc/runtime.h>
+
+@implementation NSObject (WKNavigationDelegate)
+
++ (void)load {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    Class class = [self class];
+    SEL originalSelector = @selector(webView:didReceiveAuthenticationChallenge:completionHandler:);
+    SEL swizzledSelector = @selector(SslHandlerWebView:didReceiveAuthenticationChallenge:completionHandler:);
+
+    Method originalMethod = class_getInstanceMethod(class, originalSelector);
+    Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+
+    BOOL didAddMethod = class_addMethod(class,
+                                        originalSelector,
+                                        method_getImplementation(swizzledMethod),
+                                        method_getTypeEncoding(swizzledMethod));
+    if (didAddMethod) {
+      class_replaceMethod(class,
+                          swizzledSelector,
+                          method_getImplementation(originalMethod),
+                          method_getTypeEncoding(originalMethod));
+    } else {
+      method_exchangeImplementations(originalMethod, swizzledMethod);
+    }
+  });
+}
+
+- (void)SslHandlerWebView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler{
+  NSURLCredential * credential = [[NSURLCredential alloc] initWithTrust:[challenge protectionSpace].serverTrust];
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+  });
+}
+
+@end

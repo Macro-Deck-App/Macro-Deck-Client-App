@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Connection failed</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" [strong]="true">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-text>
+    <h4>I was able to connect but there were some problems ⚠️</h4>
+
+    <span class="d-block mt-3">
+      It seems like your browser blocks the connection because of security issues.<br>
+      This is caused by the client being accessed over a https connection and the server is not accessed wss.<br>
+      To solve this, allow insecure connections from https in your browser.
+    </span>
+  </ion-text>
+</ion-content>

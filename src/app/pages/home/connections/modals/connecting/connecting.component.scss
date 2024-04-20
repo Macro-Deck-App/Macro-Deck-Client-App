@@ -1,0 +1,18 @@
+.spinner-grow {
+  width: 3em;
+  height: 3em;
+}
+
+#message {
+  animation: text-animation .5s;
+}
+
+@keyframes text-animation {
+  0% {
+    opacity: 0;
+  }
+
+  1000% {
+    opacity: 100%;
+  }
+}

@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Add connection</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-input labelPlacement="floating" type="text" [placeholder]="host" [(ngModel)]="name">
+      <div slot="label">Name</div>
+    </ion-input>
+  </ion-item>
+
+  <ion-item class="mt-2">
+    <ion-input labelPlacement="floating" type="text" [(ngModel)]="host">
+      <div slot="label">IP Address / Hostname</div>
+    </ion-input>
+  </ion-item>
+
+  <ion-item class="mt-2">
+    <ion-input min="1" labelPlacement="floating" type="number" [(ngModel)]="port">
+      <div slot="label">Port</div>
+    </ion-input>
+  </ion-item>
+
+  <ion-item class="mt-2">
+    <ion-toggle [(ngModel)]="useSsl">Use SSL</ion-toggle>
+  </ion-item>
+</ion-content>

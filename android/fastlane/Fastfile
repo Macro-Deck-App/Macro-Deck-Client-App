@@ -1,0 +1,58 @@
+default_platform :android
+
+desc "Build the app"
+lane :build do
+    unless ENV["BUILD_NUMBER"] && !ENV["BUILD_NUMBER"].empty?
+        UI.user_error!("A BUILD_NUMBER must be provided.")
+        exit(1)
+    end
+
+    unless ENV["VERSION_NUMBER"] && !ENV["VERSION_NUMBER"].empty?
+        UI.user_error!("A VERSION_NUMBER must be provided.")
+        exit(1)
+    end
+
+    increment_version_code(
+        gradle_file_path: "app/build.gradle",
+        version_code: ENV["BUILD_NUMBER"]
+    )
+
+    increment_version_name(
+        gradle_file_path: "app/build.gradle",
+        version_name: ENV["VERSION_NUMBER"]
+    )
+
+    gradle(
+        task: 'bundle',
+        build_type: 'Release',
+        properties: {
+              "android.injected.signing.store.file" => ENV["KEYSTORE_FILE_PATH"],
+              "android.injected.signing.store.password" => ENV["KEYSTORE_FILE_PASSWORD"],
+              "android.injected.signing.key.alias" => ENV["KEYSTORE_FILE_ALIAS"],
+              "android.injected.signing.key.password" => ENV["KEYSTORE_FILE_PASSWORD"],
+          }
+      )
+end
+
+lane :beta do
+  firebase_app_distribution(
+    app: ENV["FIREBASE_APP_ID"],
+    groups: "trusted-testers",
+    android_artifact_type: "AAB",
+    android_artifact_path: "app/build/outputs/bundle/release/app-release.aab",
+    release_notes: ENV["CHANGELOG"],
+    service_credentials_file: ENV["FIREBASE_CREDENTIALS_PATH"]
+  )
+end
+
+lane :release do
+  upload_to_play_store(
+    track: 'beta',
+    skip_upload_metadata: true,
+    release_status: 'draft',
+    aab: 'app/build/outputs/bundle/release/app-release.aab',
+    json_key_data: ENV["PLAYSTORE_CREDENTIALS"],
+    version_code: ENV["BUILD_NUMBER"],
+    version_name: ENV["VERSION_NUMBER"]
+  )
+end

@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Macro Deck</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="openSettings()">Settings</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-connections></app-connections>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-text class="ms-3">{{version}} | Client Id: {{clientId}}</ion-text>
+    <ion-buttons slot="primary">
+      <ion-button (click)="openDonate()" fill="solid">
+        Donate
+        <ion-icon slot="end" name="heart-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+

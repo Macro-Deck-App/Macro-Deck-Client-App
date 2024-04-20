@@ -1,0 +1,12 @@
+git_url("git@github.com:Macro-Deck-App/Fastlane-Certificates.git")
+
+storage_mode("git")
+
+type("development") # The default type, can be: appstore, adhoc, enterprise or development
+
+app_identifier([
+    "com.suchbyte.macrodeck"
+])
+force_for_new_devices(true)
+
+username("suchbyte@gmail.com")
