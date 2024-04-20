@@ -3,10 +3,15 @@ package com.suchbyte.sslhandler;
 import android.net.http.SslError;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.getcapacitor.BridgeWebViewClient;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -20,15 +25,15 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+class Options {
+    public static boolean SkipSslValidation = false;
+}
+
 @CapacitorPlugin(name = "SslHandler")
 public class SslHandlerPlugin extends Plugin {
-
-    private boolean skipSslValidation = false;
-
-
     @PluginMethod
     public void skipValidation(PluginCall call) {
-        this.skipSslValidation = call.getBoolean("value", false);
+        Options.SkipSslValidation = call.getBoolean("value", false);
         call.resolve();
     }
 
@@ -64,31 +69,31 @@ public class SslHandlerPlugin extends Plugin {
         this.bridge.setWebViewClient(new BridgeWebViewClient(this.bridge) {
             @Override
             public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-                if (this.skipSslValidation) {
+                if (Options.SkipSslValidation) {
                     handler.proceed();
                     return;
                 }
 
-                try{
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(PaymentActivity.this);
-                    builder.setMessage(R.string.notification_error_ssl_cert_invalid);
-                    builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            handler.proceed();
-                        }
-                    });
-                    builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            handler.cancel();
-                        }
-                    });
-                    final AlertDialog dialog = builder.create();
-                    dialog.show();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("SSL Certificate Error");
+                builder.setMessage("The SSL certificate is invalid but you can continue anyways since the app is used in a local network and there is no sensitive data transmitted.\n\nYou can disable this warning in the settings.");
+
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    handler.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }
