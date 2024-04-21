@@ -17,7 +17,8 @@ export class HomePage implements OnInit {
 
     constructor(private settingsService: SettingsService,
                 private diagnosticService: DiagnosticService,
-                private modalController: ModalController) {
+                private modalController: ModalController,
+                private diagnosticsService: DiagnosticService) {
     }
 
     async ngOnInit() {
@@ -38,6 +39,10 @@ export class HomePage implements OnInit {
       component: SettingsModalComponent
     });
     await modal.present();
+  }
+
+  showDonateButton() {
+    return !this.diagnosticsService.isiOS();
   }
 
   openDonate() {

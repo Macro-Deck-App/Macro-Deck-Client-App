@@ -14,7 +14,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-text class="ms-3">{{version}} | Client Id: {{clientId}}</ion-text>
-    <ion-buttons slot="primary">
+    <ion-buttons *ngIf="showDonateButton()" slot="primary">
       <ion-button (click)="openDonate()" fill="solid">
         Donate
         <ion-icon slot="end" name="heart-outline"></ion-icon>
@@ -22,4 +22,3 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
-
