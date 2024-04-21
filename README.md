@@ -1,5 +1,10 @@
 # Macro Deck Client
 
+The Macro Deck Client is crafted with Angular, leveraging the power of the Ionic framework. This strategic choice ensures a unified codebase, seamlessly compatible across iOS, Android, and the Web platforms.
+
+<img src="https://raw.githubusercontent.com/Macro-Deck-App/Macro-Deck-Client-App/main/screenshots/iPad%20Pro%20Screenshot%202.png"
+    height="600">
+
 [<img src="https://macro-deck.app/images/google-play-badge.png"
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=com.suchbyte.macrodeck)
