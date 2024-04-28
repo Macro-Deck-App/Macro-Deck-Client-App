@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import CapawesomeCapacitorScreenOrientation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -9,6 +10,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true
+    }
+
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+       return ScreenOrientation.getSupportedInterfaceOrientations()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

@@ -15,7 +15,7 @@ def capacitor_pods
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'CapacitorKeyboard', :path => '../../node_modules/@capacitor/keyboard'
-  pod 'CapacitorScreenOrientation', :path => '../../node_modules/@capacitor/screen-orientation'
+  pod 'CapawesomeCapacitorScreenOrientation', :path => '../../node_modules/@capawesome/capacitor-screen-orientation'
   pod 'Sslhandler', :path => '../../node_modules/sslhandler'
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
 end

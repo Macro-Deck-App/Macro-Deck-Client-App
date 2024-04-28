@@ -10,7 +10,7 @@ PODS:
     - Capacitor
   - CapacitorKeyboard (5.0.6):
     - Capacitor
-  - CapacitorScreenOrientation (5.0.6):
+  - CapawesomeCapacitorScreenOrientation (6.0.0):
     - Capacitor
   - CordovaPlugins (5.2.3):
     - CapacitorCordova
@@ -24,7 +24,7 @@ DEPENDENCIES:
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
-  - "CapacitorScreenOrientation (from `../../node_modules/@capacitor/screen-orientation`)"
+  - "CapawesomeCapacitorScreenOrientation (from `../../node_modules/@capawesome/capacitor-screen-orientation`)"
   - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
   - Sslhandler (from `../../node_modules/sslhandler`)
 
@@ -41,8 +41,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
     :path: "../../node_modules/@capacitor/keyboard"
-  CapacitorScreenOrientation:
-    :path: "../../node_modules/@capacitor/screen-orientation"
+  CapawesomeCapacitorScreenOrientation:
+    :path: "../../node_modules/@capawesome/capacitor-screen-orientation"
   CordovaPlugins:
     :path: "../capacitor-cordova-ios-plugins"
   Sslhandler:
@@ -55,10 +55,10 @@ SPEC CHECKSUMS:
   CapacitorCordova: 35def3ebfdef491f0a7b652816eb873ff4b20bbf
   CapacitorHaptics: 1fffc1217c7e64a472d7845be50fb0c2f7d4204c
   CapacitorKeyboard: b978154b024a5f65e044908e37d15b7de58b9d12
-  CapacitorScreenOrientation: e5ef438489815d05340f1b51a2b1794108dc0ac3
+  CapawesomeCapacitorScreenOrientation: 82675c41cb616a64630c834b06344515a2849ff3
   CordovaPlugins: d4671f1d2a1af985cd35caa0d8bbb58b95ef3c70
   Sslhandler: 5b1dfaa41fdbad6e788cea98538cb0c2995b9153
 
-PODFILE CHECKSUM: 398e7d75531b27cb4b9dbfe967b8b16018b40804
+PODFILE CHECKSUM: 4824b7d1cba227e54345c8671e97841c8e6cf1e7
 
 COCOAPODS: 1.12.1

@@ -4,6 +4,7 @@ import {WakelockService} from "./services/wakelock/wakelock.service";
 import {ScreenOrientationService} from "./services/screen-orientation/screen-orientation.service";
 import {SslHandler} from "../../capacitor_plugins/sslhandler/src";
 import {SettingsService} from "./services/settings/settings.service";
+import {DiagnosticService} from "./services/diagnostic/diagnostic.service";
 
 @Component({
   selector: 'app-root',
@@ -14,19 +15,18 @@ export class AppComponent implements OnInit {
   constructor(private storage: Storage,
               private wakeLockService: WakelockService,
               private screenOrientationService: ScreenOrientationService,
-              private settingsService: SettingsService) {
+              private settingsService: SettingsService,
+              private diagnosticService: DiagnosticService) {
   }
 
   async ngOnInit() {
     await this.storage.create();
     await this.screenOrientationService.updateScreenOrientation();
-    try {
-      await this.wakeLockService.updateWakeLock();
-    } catch {
-      // exception is expected in browser because wake lock needs user interaction
-    }
+    await this.wakeLockService.updateWakeLock();
 
-    let skipSslValidation = await this.settingsService.getSkipSslValidation();
-    SslHandler.skipValidation({value: skipSslValidation});
+    if (this.diagnosticService.isAndroid()) {
+      let skipSslValidation = await this.settingsService.getSkipSslValidation();
+      SslHandler.skipValidation({value: skipSslValidation});
+    }
   }
 }

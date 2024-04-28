@@ -32,7 +32,7 @@
     "@capacitor/haptics": "5.0.6",
     "@capacitor/ios": "5.2.3",
     "@capacitor/keyboard": "5.0.6",
-    "@capacitor/screen-orientation": "^5.0.6",
+    "@capawesome/capacitor-screen-orientation": "^6.0.0",
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/ionic-webview": "^5.36.0",
     "@ionic-native/screen-orientation": "^5.36.0",
