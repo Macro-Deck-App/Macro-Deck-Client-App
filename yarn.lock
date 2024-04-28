@@ -1436,10 +1436,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/keyboard/-/keyboard-5.0.6.tgz#04400e71b677abf9f1fc1ceaffd1211e7d864319"
   integrity sha512-9GewAa/y2Hwkdw/Be8MTdiAjrFZ7TPDKpR44M0Y/0QMnK+mBbgzcoZ/UkuumWv6e2F1IAI+VY5eYVQHDeZcRoA==
 
-"@capacitor/screen-orientation@^5.0.6":
-  version "5.0.6"
-  resolved "https://registry.yarnpkg.com/@capacitor/screen-orientation/-/screen-orientation-5.0.6.tgz#fb2985ff06ccfb7a176c7ed07af99fc0c9584e2b"
-  integrity sha512-WK8zBo+i0ivzIY7gmvr37AMFVGGIsgFUm/vUWAH9molu5qZ3w899VqwROgntAWgr2GMIpihQ3LQBg+4Cd6Rndw==
+"@capawesome/capacitor-screen-orientation@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@capawesome/capacitor-screen-orientation/-/capacitor-screen-orientation-6.0.0.tgz#d9572a5f31923bec147f4c898c62486ba11831f5"
+  integrity sha512-zVYMH/lcFNfjlfBUwheG5zSJkX9BE608p+Pxik1Talc6T7Iu2O0ivZKfMJP6f1WMmd54yD54mbsKkJ+uj0ZYtg==
 
 "@colors/colors@1.5.0":
   version "1.5.0"

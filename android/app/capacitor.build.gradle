@@ -13,7 +13,7 @@ dependencies {
     implementation project(':capacitor-app')
     implementation project(':capacitor-haptics')
     implementation project(':capacitor-keyboard')
-    implementation project(':capacitor-screen-orientation')
+    implementation project(':capawesome-capacitor-screen-orientation')
     implementation project(':sslhandler')
 
 }

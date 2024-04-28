@@ -21,4 +21,7 @@ export class DiagnosticService {
     return this.platform.is("ios");
   }
 
+  public isiOSorAndroid() {
+    return this.isiOS() || this.isAndroid();
+  }
 }

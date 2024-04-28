@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
 import {SettingsService} from "../settings/settings.service";
 import {ScreenOrientationType} from "../../enums/screen-orientation-type";
-import {ScreenOrientation} from "@capacitor/screen-orientation";
+import { ScreenOrientation, OrientationType } from '@capawesome/capacitor-screen-orientation';
+import {DiagnosticService} from "../diagnostic/diagnostic.service";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScreenOrientationService {
 
-  constructor(private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService,
+              private diagnosticService: DiagnosticService) { }
 
   public async updateScreenOrientation() {
+    if (!this.diagnosticService.isiOSorAndroid()) {
+      return;
+    }
+
     let screenOrientation = await this.settingsService.getScreenOrientation();
     try {
       switch (screenOrientation) {
@@ -18,16 +25,16 @@ export class ScreenOrientationService {
           await ScreenOrientation.unlock();
           break;
         case ScreenOrientationType.Landscape:
-          await ScreenOrientation.lock({orientation: "landscape"});
+          await ScreenOrientation.lock({ type: OrientationType.LANDSCAPE_PRIMARY });
           break;
         case ScreenOrientationType.LandscapeAlt:
-          await ScreenOrientation.lock({orientation: "landscape-secondary"});
+          await ScreenOrientation.lock({ type: OrientationType.LANDSCAPE_SECONDARY });
           break;
         case ScreenOrientationType.Portrait:
-          await ScreenOrientation.lock({orientation: "portrait"});
+          await ScreenOrientation.lock({ type: OrientationType.PORTRAIT_PRIMARY });
           break;
         case ScreenOrientationType.PortraitAlt:
-          await ScreenOrientation.lock({orientation: "portrait-secondary"});
+          await ScreenOrientation.lock({ type: OrientationType.PORTRAIT_SECONDARY });
           break;
       }
     } catch {

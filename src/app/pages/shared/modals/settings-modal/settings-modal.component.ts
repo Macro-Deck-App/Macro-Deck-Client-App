@@ -46,7 +46,9 @@ export class SettingsModalComponent  implements OnInit {
     await this.settingsService.setScreenOrientation(Number.parseInt(this.screenOrientation));
     await this.wakelockService.updateWakeLock();
     await this.screenOrientationService.updateScreenOrientation();
-    SslHandler.skipValidation({value: this.skipSslValidation});
+    if (this.diagnosticService.isAndroid()) {
+      SslHandler.skipValidation({value: this.skipSslValidation});
+    }
   }
 
   async loadCurrentSettings() {
@@ -74,8 +76,8 @@ export class SettingsModalComponent  implements OnInit {
     return this.diagnosticService.isAndroid()
   }
 
-  public isAndroidOriOS() {
-    return this.diagnosticService.isAndroid() || this.diagnosticService.isiOS();
+  public isiOSorAndroid() {
+    return this.diagnosticService.isiOSorAndroid();
   }
 
   protected readonly environment = environment;

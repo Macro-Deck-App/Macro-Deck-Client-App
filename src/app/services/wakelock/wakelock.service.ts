@@ -14,10 +14,14 @@ export class WakelockService {
   }
 
   public async updateWakeLock() {
-    if (await this.settingsService.getWakeLockEnabled() === true) {
-      await this.enableWakeLock();
-    } else {
-      await this.disableWakeLock();
+    try {
+      if (await this.settingsService.getWakeLockEnabled() === true) {
+        await this.enableWakeLock();
+      } else {
+        await this.disableWakeLock();
+      }
+    } catch {
+      // exception is expected in browser because wake lock needs user interaction
     }
   }
 
