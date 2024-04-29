@@ -3,7 +3,6 @@ import {ModalController} from "@ionic/angular";
 import {SettingsService} from "../../services/settings/settings.service";
 import {environment} from "../../../environments/environment";
 import {DiagnosticService} from "../../services/diagnostic/diagnostic.service";
-import {Capacitor} from "@capacitor/core";
 import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
 
 @Component({
@@ -23,13 +22,7 @@ export class HomePage implements OnInit {
 
     async ngOnInit() {
         this.clientId = await this.settingsService.getClientId();
-        if (Capacitor.isNativePlatform()) {
-            this.diagnosticService.getVersion().then(version => {
-                this.version = `v${version}`;
-            });
-        } else {
-            this.version = "Web Version";
-        }
+        this.version = await this.diagnosticsService.getVersion();
     }
 
     protected readonly environment = environment;

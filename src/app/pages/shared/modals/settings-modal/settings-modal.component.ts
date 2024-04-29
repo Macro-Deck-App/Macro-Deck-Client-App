@@ -15,6 +15,7 @@ import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.serv
 export class SettingsModalComponent  implements OnInit {
 
   preventScreenTimeout: boolean = false;
+  showMenuButton: boolean = true;
   skipSslValidation: boolean = false;
   buttonLongPressDelay: number = 1000;
   screenOrientation: string = "0";
@@ -41,6 +42,7 @@ export class SettingsModalComponent  implements OnInit {
 
   async saveSettings() {
     await this.settingsService.setWakeLockEnabled(this.preventScreenTimeout);
+    await this.settingsService.setShowMenuButton(this.showMenuButton);
     await this.settingsService.setSkipSslValidation(this.skipSslValidation);
     await this.settingsService.setButtonLongPressDelay(this.buttonLongPressDelay);
     await this.settingsService.setScreenOrientation(Number.parseInt(this.screenOrientation));
@@ -53,6 +55,7 @@ export class SettingsModalComponent  implements OnInit {
 
   async loadCurrentSettings() {
     this.preventScreenTimeout = await this.settingsService.getWakeLockEnabled();
+    this.showMenuButton = await this.settingsService.getShowMenuButton();
     this.skipSslValidation = await this.settingsService.getSkipSslValidation();
     this.buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
     this.screenOrientation = (await this.settingsService.getScreenOrientation()).toString();
@@ -66,6 +69,20 @@ export class SettingsModalComponent  implements OnInit {
     const alert = await this.alertController.create({
       header: 'Warning',
       message: 'Displaying a static image for a long time can cause screen burn-in on some screens.',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+
+  async displayMenuButtonChange(event: any) {
+    if (event !== false) {
+      return;
+    }
+
+    const alert = await this.alertController.create({
+      header: 'Information',
+      message: 'To access the menu, swipe from the left edge of the screen',
       buttons: ['OK'],
     });
 
