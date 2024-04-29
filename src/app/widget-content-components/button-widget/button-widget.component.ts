@@ -23,6 +23,7 @@ export class ButtonWidgetComponent {
 
   private longPressTrigger: boolean = false;
   private longPressTimeout: any;
+  private pressed: boolean = false;
 
   constructor(private renderer: Renderer2,
               private macroDeckService: MacroDeckService,
@@ -44,6 +45,11 @@ export class ButtonWidgetComponent {
   }
 
   onMouseUp(event: Event) {
+    if (!this.pressed) {
+      return;
+    }
+
+    this.pressed = false;
     this.setClass(event.currentTarget, 'pressed', false);
     this.setClass(event.currentTarget, 'release-transition', true);
 
@@ -59,10 +65,15 @@ export class ButtonWidgetComponent {
     clearTimeout(this.longPressTimeout);
   }
 
+  async onMouseLeave(event: Event) {
+    this.onMouseUp(event);
+  }
+
   async onMouseDown(event: Event) {
     this.setClass(event.currentTarget, 'pressed', true);
     this.setClass(event.currentTarget, 'release-transition', false);
     this.emitInteraction(WidgetInteractionType.ButtonPress);
+    this.pressed = true;
 
     let buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
 
