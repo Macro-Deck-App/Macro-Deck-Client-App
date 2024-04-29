@@ -9,6 +9,7 @@ const screenOrientationKey: string = "screen_orientation";
 const connectionCountKey: string = "connection_count";
 const lastConnectionKey: string = "last_connection";
 const skipSslValidationKey: string = "skip_ssl_validation";
+const showMenuButtonKey: string = "show_menu_button";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,14 @@ export class SettingsService {
 
 
   constructor(private storage: Storage) {
+  }
+
+  public async setShowMenuButton(showMenuButton: boolean) {
+    await this.storage.set(showMenuButtonKey, showMenuButton);
+  }
+
+  public async getShowMenuButton() {
+    return await this.storage.get(showMenuButtonKey) ?? true;
   }
 
   public async setSkipSslValidation(lastConnection: boolean) {
