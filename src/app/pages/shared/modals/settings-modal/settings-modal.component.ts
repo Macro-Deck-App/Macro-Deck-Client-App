@@ -6,6 +6,8 @@ import {ScreenOrientationService} from "../../../../services/screen-orientation/
 import {SslHandler} from "../../../../../../capacitor_plugins/sslhandler/src";
 import {environment} from "../../../../../environments/environment.web";
 import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
+import {AppearanceType} from "../../../../enums/appearance-type";
+import {ThemeService} from "../../../../services/theme/theme.service";
 
 @Component({
   selector: 'app-settings-modal',
@@ -18,6 +20,7 @@ export class SettingsModalComponent  implements OnInit {
   showMenuButton: boolean = true;
   skipSslValidation: boolean = false;
   buttonLongPressDelay: number = 1000;
+  appearanceType: string = "0";
   screenOrientation: string = "0";
 
   constructor(private modalController: ModalController,
@@ -25,7 +28,8 @@ export class SettingsModalComponent  implements OnInit {
               private wakelockService: WakelockService,
               private alertController: AlertController,
               private screenOrientationService: ScreenOrientationService,
-              public diagnosticService: DiagnosticService) { }
+              public diagnosticService: DiagnosticService,
+              private themeService: ThemeService) { }
 
   async ngOnInit() {
     await this.loadCurrentSettings();
@@ -45,9 +49,11 @@ export class SettingsModalComponent  implements OnInit {
     await this.settingsService.setShowMenuButton(this.showMenuButton);
     await this.settingsService.setSkipSslValidation(this.skipSslValidation);
     await this.settingsService.setButtonLongPressDelay(this.buttonLongPressDelay);
+    await this.settingsService.setAppearance(Number.parseInt(this.appearanceType));
     await this.settingsService.setScreenOrientation(Number.parseInt(this.screenOrientation));
     await this.wakelockService.updateWakeLock();
     await this.screenOrientationService.updateScreenOrientation();
+    await this.themeService.updateTheme();
     if (this.diagnosticService.isAndroid()) {
       SslHandler.skipValidation({value: this.skipSslValidation});
     }
@@ -58,6 +64,7 @@ export class SettingsModalComponent  implements OnInit {
     this.showMenuButton = await this.settingsService.getShowMenuButton();
     this.skipSslValidation = await this.settingsService.getSkipSslValidation();
     this.buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
+    this.appearanceType = (await this.settingsService.getAppearance()).toString();
     this.screenOrientation = (await this.settingsService.getScreenOrientation()).toString();
   }
 

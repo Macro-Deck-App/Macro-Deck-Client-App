@@ -26,6 +26,15 @@
         [(ngModel)]="showMenuButton">Show menu button</ion-toggle>
     </ion-item>
 
+    <ion-item>
+      <ion-icon slot="start" class="mdi mdi-theme-light-dark d-flex align-items-center"></ion-icon>
+      <ion-select [(ngModel)]="appearanceType" label="Appearance">
+        <ion-select-option value="0">System</ion-select-option>
+        <ion-select-option value="1">Dark</ion-select-option>
+        <ion-select-option value="2">Light</ion-select-option>
+      </ion-select>
+    </ion-item>
+
     <ion-item *ngIf="isAndroid()">
       <ion-icon slot="start" class="mdi mdi-lock-off d-flex align-items-center"></ion-icon>
       <ion-toggle
