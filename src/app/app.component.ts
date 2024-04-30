@@ -5,6 +5,7 @@ import {ScreenOrientationService} from "./services/screen-orientation/screen-ori
 import {SslHandler} from "../../capacitor_plugins/sslhandler/src";
 import {SettingsService} from "./services/settings/settings.service";
 import {DiagnosticService} from "./services/diagnostic/diagnostic.service";
+import {ThemeService} from "./services/theme/theme.service";
 
 @Component({
   selector: 'app-root',
@@ -16,13 +17,15 @@ export class AppComponent implements OnInit {
               private wakeLockService: WakelockService,
               private screenOrientationService: ScreenOrientationService,
               private settingsService: SettingsService,
-              private diagnosticService: DiagnosticService) {
+              private diagnosticService: DiagnosticService,
+              private themeService: ThemeService) {
   }
 
   async ngOnInit() {
     await this.storage.create();
     await this.screenOrientationService.updateScreenOrientation();
     await this.wakeLockService.updateWakeLock();
+    await this.themeService.updateTheme();
 
     if (this.diagnosticService.isAndroid()) {
       let skipSslValidation = await this.settingsService.getSkipSslValidation();

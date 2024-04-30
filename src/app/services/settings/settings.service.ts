@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Storage} from "@ionic/storage";
 import {ScreenOrientationType} from "../../enums/screen-orientation-type";
+import {AppearanceType} from "../../enums/appearance-type";
 
 const clientIdStorageKey: string = "client_id";
 const wakeLockKey: string = "wake_lock_enabled";
@@ -10,6 +11,7 @@ const connectionCountKey: string = "connection_count";
 const lastConnectionKey: string = "last_connection";
 const skipSslValidationKey: string = "skip_ssl_validation";
 const showMenuButtonKey: string = "show_menu_button";
+const appearanceKey: string = "appearance";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,14 @@ export class SettingsService {
 
 
   constructor(private storage: Storage) {
+  }
+
+  public async setAppearance(appearanceType: AppearanceType) {
+    await this.storage.set(appearanceKey, appearanceType);
+  }
+
+  public async getAppearance() {
+    return  await this.storage.get(appearanceKey) ?? AppearanceType.Dark;
   }
 
   public async setShowMenuButton(showMenuButton: boolean) {
@@ -49,7 +59,7 @@ export class SettingsService {
   }
 
   public async getScreenOrientation() {
-    return  await this.storage.get(screenOrientationKey);
+    return  await this.storage.get(screenOrientationKey) ?? ScreenOrientationType.Auto;
   }
 
   public async setButtonLongPressDelay(delay: number) {
