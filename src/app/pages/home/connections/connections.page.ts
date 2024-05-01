@@ -23,8 +23,6 @@ export class ConnectionsPage implements OnInit, OnDestroy {
   savedConnectionsInitialized = false;
   reorderEnabled: boolean = true;
 
-  lastConnection: Connection | undefined;
-
   constructor(private connectionService: ConnectionService,
               private modalController: ModalController,
               private alertController: AlertController,
@@ -65,8 +63,6 @@ export class ConnectionsPage implements OnInit, OnDestroy {
   private async loadConnections() {
     this.savedConnections = await this.connectionService.getConnections() ?? [];
     this.savedConnectionsInitialized = true;
-    const lastConnectionId = await this.settingsService.getLastConnection();
-    this.lastConnection = this.savedConnections.filter(x => x.id == lastConnectionId)[0];
   }
 
   async openAddConnectionModal(existingConnection?: Connection | null) {

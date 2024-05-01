@@ -23,6 +23,7 @@ import {environment} from "../../../environments/environment";
 export class WebsocketService {
   public isConnected: Boolean = false;
 
+  private connecting: boolean = false;
   private closing: boolean = false;
   private url: string = "";
   private connectionId: string | undefined;
@@ -70,6 +71,7 @@ export class WebsocketService {
       error: async error => {
         await this.loadingService.dismiss();
         this.closed.emit();
+        this.connecting = false;
         if (error instanceof DOMException) {
           switch (error.name) {
             case "SecurityError":
@@ -82,6 +84,10 @@ export class WebsocketService {
   }
 
   public async connect(host: string, port: number, secure: boolean, id: string) {
+    if (this.connecting || this.isConnected) {
+      return;
+    }
+
     await this.connectToString((secure ? "wss://" : "ws://") + host + ":" + port);
     this.connectionId = id;
   }
@@ -92,6 +98,7 @@ export class WebsocketService {
       await this.loadingService.dismiss();
       this.subscription.unsubscribe();
       this.closed.emit();
+      this.connecting = false;
 
       if (!this.closing) {
         await this.handleError(closeEvent);
@@ -103,6 +110,7 @@ export class WebsocketService {
 
     this.connectionOpened.subscribe(async () => {
       this.connected.emit();
+      this.connecting = false;
       await this.settingsService.increaseConnectionCount();
       await this.settingsService.setLastConnection(this.connectionId ?? "");
       this.protocolHandlerService.setWebsocketSubject(this.socket!);

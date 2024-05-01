@@ -25,7 +25,7 @@ export class PingService {
     this.subscription = new Subscription();
     let connections = await this.connectionService.getConnections();
     for (const connection of connections) {
-      this.subscription.add(this.periodicRequest(this.getPingUrl(connection), 1000).subscribe(response => {
+      this.subscription.add(this.periodicRequest(this.getPingUrl(connection), 1500).subscribe(response => {
         if (response !== null) {
           this.addAvailableConnection(connection);
         } else {
@@ -68,7 +68,7 @@ export class PingService {
   private periodicRequest(url: string, intervalTime: number): Observable<any> {
     return interval(intervalTime).pipe(
       switchMap(() => this.http.get(url).pipe(
-        timeout(500),
+        timeout(800),
         catchError(error => {
           return of(null);
         })
