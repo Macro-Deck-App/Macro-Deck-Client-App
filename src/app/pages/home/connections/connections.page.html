@@ -1,39 +1,24 @@
 <ion-content *ngIf="savedConnectionsInitialized; else connectionsLoading">
-  <ion-item-group *ngIf="discoveredConnections.length > 0">
-    <ion-item-divider>
-      <ion-label>Discovered</ion-label>
-    </ion-item-divider>
-
-    <ion-list lines="full" *ngFor="let connection of savedConnections">
-      <ion-item color="success" button="true" (click)="connect(connection)">
-        <ion-icon name="flash" slot="start"></ion-icon>
-        <ion-label>
-          <h3>{{connection.name}}</h3>
-          <span>{{connection.host}}:{{connection.port}}</span>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-item-group>
-
   <ion-item-group *ngIf="savedConnectionsInitialized">
-    <ion-item-divider>
-      <ion-label>Saved connections</ion-label>
-    </ion-item-divider>
-
     <ion-list lines="full" *ngIf="savedConnections.length > 0; else noConnections">
       <ion-reorder-group [disabled]="!reorderEnabled" (ionItemReorder)="handleReorder($any($event))">
         <ion-item-sliding *ngFor="let connection of savedConnections">
           <ion-item button="true" (click)="connect(connection)">
-            <ion-icon name="star" slot="start"></ion-icon>
+            <ng-container *ngIf="availableConnections.includes(connection.id)">
+              <ion-icon slot="start" class="mdi mdi-wifi text-success d-flex align-items-center"></ion-icon>
+            </ng-container>
+            <ng-container *ngIf="!availableConnections.includes(connection.id)">
+              <ion-icon slot="start" class="mdi mdi-wifi-off text-danger d-flex align-items-center"></ion-icon>
+            </ng-container>
             <ion-label>
-              <h3>{{connection.name}}</h3>
+              <h3>{{ connection.name }}</h3>
               <span>
                 <ion-icon *ngIf="connection.ssl"
                           aria-hidden="true"
                           title="Secure connection"
                           class="text-success"
-                          name="lock-closed-outline" />
-                {{connection.host}}:{{connection.port}}
+                          name="lock-closed-outline"/>
+                {{ connection.host }}:{{ connection.port }}
               </span>
             </ion-label>
             <ion-reorder slot="end"></ion-reorder>

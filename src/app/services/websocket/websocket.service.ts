@@ -31,6 +31,8 @@ export class WebsocketService {
   private connectionOpened: Subject<any> = new Subject<any>();
 
   public connectionLost: EventEmitter<any> = new EventEmitter<any>();
+  public connected: EventEmitter<any> = new EventEmitter<any>();
+  public closed: EventEmitter<any> = new EventEmitter<any>();
 
   private subscription: Subscription = new Subscription();
 
@@ -67,6 +69,7 @@ export class WebsocketService {
       },
       error: async error => {
         await this.loadingService.dismiss();
+        this.closed.emit();
         if (error instanceof DOMException) {
           switch (error.name) {
             case "SecurityError":
@@ -88,6 +91,7 @@ export class WebsocketService {
       console.info("Closed with code " + closeEvent.code);
       await this.loadingService.dismiss();
       this.subscription.unsubscribe();
+      this.closed.emit();
 
       if (!this.closing) {
         await this.handleError(closeEvent);
@@ -98,6 +102,7 @@ export class WebsocketService {
     });
 
     this.connectionOpened.subscribe(async () => {
+      this.connected.emit();
       await this.settingsService.increaseConnectionCount();
       await this.settingsService.setLastConnection(this.connectionId ?? "");
       this.protocolHandlerService.setWebsocketSubject(this.socket!);

@@ -4,5 +4,6 @@ export interface Connection {
   host: string,
   port: number,
   ssl: boolean,
-  index: number | undefined
+  index: number | undefined,
+  autoConnect: boolean | undefined
 }

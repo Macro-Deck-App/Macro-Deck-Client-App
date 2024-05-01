@@ -11,6 +11,7 @@ import {IonicStorageModule} from "@ionic/storage-angular";
 import {WidgetContentComponentsModule} from "./widget-content-components/widget-content-components.module";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {SettingsModalComponent} from "./pages/shared/modals/settings-modal/settings-modal.component";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import {SettingsModalComponent} from "./pages/shared/modals/settings-modal/setti
     ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         IonicModule.forRoot(),
         IonicStorageModule.forRoot(),
         AppRoutingModule,

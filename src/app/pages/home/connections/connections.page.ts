@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterContentInit, Component, ElementRef, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Connection} from "../../../datatypes/connection";
 import {ConnectionService} from "../../../services/connection/connection.service";
 import {AlertController, ItemReorderEventDetail, ModalController} from "@ionic/angular";
@@ -6,16 +6,20 @@ import {AddConnectionComponent} from "./modals/add-connection/add-connection.com
 import {WebsocketService} from "../../../services/websocket/websocket.service";
 import {WakelockService} from "../../../services/wakelock/wakelock.service";
 import {SettingsService} from "../../../services/settings/settings.service";
+import {PingService} from "../../../services/ping/ping.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-connections',
   templateUrl: './connections.page.html',
   styleUrls: ['./connections.page.scss'],
 })
-export class ConnectionsPage implements OnInit {
+export class ConnectionsPage implements OnInit, OnDestroy {
 
-  discoveredConnections: Connection[] = [];
+  private subscription: Subscription = new Subscription();
+
   savedConnections: Connection[] = [];
+  availableConnections: string[] = [];
   savedConnectionsInitialized = false;
   reorderEnabled: boolean = true;
 
@@ -26,10 +30,36 @@ export class ConnectionsPage implements OnInit {
               private alertController: AlertController,
               private websocketService: WebsocketService,
               private wakeLockService: WakelockService,
-              private settingsService: SettingsService) { }
+              private settingsService: SettingsService,
+              private pingService: PingService) { }
 
   async ngOnInit() {
     await this.loadConnections();
+    await this.pingService.start();
+    this.subscription.add(this.pingService.connectionAvailable.subscribe(async connectionId=> {
+      if (!this.availableConnections.includes(connectionId)) {
+        this.availableConnections.push(connectionId);
+        let connection = this.savedConnections.find(x => x.id == connectionId);
+        if (connection?.autoConnect === true) {
+          await this.connect(connection);
+        }
+      }
+    }));
+    this.subscription.add(this.pingService.connectionUnavailable.subscribe(connectionId=> {
+      if (this.availableConnections.includes(connectionId)) {
+        this.availableConnections.splice(this.availableConnections.indexOf(connectionId), 1);
+      }
+    }));
+    this.subscription.add(this.websocketService.connected.subscribe(_ => {
+      this.pingService.stop();
+    }));
+    this.subscription.add(this.websocketService.closed.subscribe(_ => {
+      this.pingService.start();
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   private async loadConnections() {
@@ -47,7 +77,9 @@ export class ConnectionsPage implements OnInit {
         name: existingConnection?.name,
         host: existingConnection?.host,
         port: existingConnection?.port ?? 8191,
-        useSsl: existingConnection?.ssl ?? false
+        useSsl: existingConnection?.ssl ?? false,
+        autoConnect: existingConnection?.autoConnect ?? false,
+        index: existingConnection?.index ?? 0,
       }
     });
     await modal.present();
@@ -59,6 +91,7 @@ export class ConnectionsPage implements OnInit {
 
     await this.connectionService.addUpdateConnection(data);
     await this.loadConnections();
+    await this.pingService.restart();
   }
 
   async handleReorder(event: CustomEvent<ItemReorderEventDetail>) {
