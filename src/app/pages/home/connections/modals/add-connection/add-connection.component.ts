@@ -14,6 +14,8 @@ export class AddConnectionComponent {
   host: string = "";
   port: number = 8191;
   useSsl: boolean = false;
+  autoConnect: boolean = true;
+  index: number = 0;
 
   constructor(private modalController: ModalController,
               private alertController: AlertController) {
@@ -35,7 +37,8 @@ export class AddConnectionComponent {
       name: this.name === undefined || this.name.length === 0 ? this.host : this.name,
       port: this.port,
       ssl: this.useSsl,
-      index: 0
+      index: this.index,
+      autoConnect: this.autoConnect
     }
     console.log(connection)
     await this.modalController.dismiss(connection, 'confirm');

@@ -31,14 +31,16 @@ export class ConnectionService {
     if (connection.id === undefined) {
       connection.id = `connection${Math.floor(Date.now() / 1000)}`;
       connection.index = connectionsObject.length;
+      connectionsObject.push(connection);
     } else {
       const existingIndex = connectionsObject.findIndex((x: Connection) => x.id === connection.id);
       if (existingIndex > -1) {
-        connectionsObject.splice(existingIndex, 1);
+        connectionsObject[existingIndex] = connection;
+      } else {
+        connectionsObject.push(connection);
       }
     }
 
-    connectionsObject.push(connection);
     await this.saveConnections(connectionsObject);
   }
 

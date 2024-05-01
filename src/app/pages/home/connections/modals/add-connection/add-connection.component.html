@@ -11,25 +11,29 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+
   <ion-item>
-    <ion-input labelPlacement="floating" type="text" [placeholder]="host" [(ngModel)]="name">
+    <ion-input labelPlacement="floating" type="text" [placeholder]="host" [(ngModel)]="name" [clearInput]="true">
       <div slot="label">Name</div>
     </ion-input>
   </ion-item>
+  <ion-item>
+    <ion-toggle [(ngModel)]="autoConnect">Automatically connect</ion-toggle>
+  </ion-item>
 
   <ion-item class="mt-2">
-    <ion-input labelPlacement="floating" type="text" [(ngModel)]="host">
+    <ion-input labelPlacement="floating" type="text" [(ngModel)]="host" [clearInput]="true">
       <div slot="label">IP Address / Hostname</div>
     </ion-input>
   </ion-item>
 
-  <ion-item class="mt-2">
+  <ion-item>
     <ion-input min="1" labelPlacement="floating" type="number" [(ngModel)]="port">
       <div slot="label">Port</div>
     </ion-input>
   </ion-item>
 
-  <ion-item class="mt-2">
+  <ion-item>
     <ion-toggle [(ngModel)]="useSsl">Use SSL</ion-toggle>
   </ion-item>
 </ion-content>
