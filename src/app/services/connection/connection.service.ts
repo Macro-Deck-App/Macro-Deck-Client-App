@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Connection} from "../../datatypes/connection";
 import {Storage} from '@ionic/storage';
+import {SettingsService} from "../settings/settings.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,21 @@ export class ConnectionService {
 
   private connectionsStorageKey: string = "connections";
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: Storage,
+              private settingsService: SettingsService) { }
+
+  public async getUsbConnection() {
+    return {
+      autoConnect: await this.settingsService.getUsbAutoConnect(),
+      index: undefined,
+      id: "usb",
+      name: "USB",
+      host: "127.0.0.1",
+      port: await this.settingsService.getUsbPort(),
+      ssl: await this.settingsService.getUsbUseSsl(),
+      usbConnection: true
+    }
+  }
 
   public async getConnections(): Promise<Connection[]> {
     const connectionsData = await this.storage.get(this.connectionsStorageKey);

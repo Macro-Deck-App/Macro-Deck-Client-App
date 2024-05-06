@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ConnectionsPage } from './connections.page';
+import { ConnectionLostPage } from './connection-lost.page';
 
-describe('ConnectionsPage', () => {
-  let component: ConnectionsPage;
-  let fixture: ComponentFixture<ConnectionsPage>;
+describe('ConnectionLostPage', () => {
+  let component: ConnectionLostPage;
+  let fixture: ComponentFixture<ConnectionLostPage>;
 
   beforeEach(async(() => {
-    fixture = TestBed.createComponent(ConnectionsPage);
+    fixture = TestBed.createComponent(ConnectionLostPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

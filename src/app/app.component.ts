@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Storage} from "@ionic/storage";
 import {WakelockService} from "./services/wakelock/wakelock.service";
 import {ScreenOrientationService} from "./services/screen-orientation/screen-orientation.service";
@@ -6,6 +6,9 @@ import {SslHandler} from "../../capacitor_plugins/sslhandler/src";
 import {SettingsService} from "./services/settings/settings.service";
 import {DiagnosticService} from "./services/diagnostic/diagnostic.service";
 import {ThemeService} from "./services/theme/theme.service";
+import {HomePage} from "./pages/home/home.page";
+import {environment} from "../environments/environment";
+import {WebHomePage} from "./pages/web-home/web-home.page";
 
 @Component({
   selector: 'app-root',
@@ -20,6 +23,8 @@ export class AppComponent implements OnInit {
               private diagnosticService: DiagnosticService,
               private themeService: ThemeService) {
   }
+
+  rootComponent = environment.webVersion ? WebHomePage : HomePage;
 
   async ngOnInit() {
     await this.storage.create();

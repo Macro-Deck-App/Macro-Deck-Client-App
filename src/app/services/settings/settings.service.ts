@@ -12,6 +12,9 @@ const lastConnectionKey: string = "last_connection";
 const skipSslValidationKey: string = "skip_ssl_validation";
 const showMenuButtonKey: string = "show_menu_button";
 const appearanceKey: string = "appearance";
+const usbAutoConnectKey: string = "usb_auto_connect";
+const usbPortKey: string = "usb_port";
+const usbUseSsl: string = "usb_use_ssl";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +23,30 @@ export class SettingsService {
 
 
   constructor(private storage: Storage) {
+  }
+
+  public async setUsbUseSsl(useSsl: boolean) {
+    await this.storage.set(usbUseSsl, useSsl);
+  }
+
+  public async getUsbUseSsl() {
+    return  await this.storage.get(usbUseSsl) ?? false;
+  }
+
+  public async setUsbPort(usbPort: number) {
+    await this.storage.set(usbPortKey, usbPort);
+  }
+
+  public async getUsbPort() {
+    return  await this.storage.get(usbPortKey) ?? 8191;
+  }
+
+  public async setUsbAutoConnect(usbAutoConnect: boolean) {
+    await this.storage.set(usbAutoConnectKey, usbAutoConnect);
+  }
+
+  public async getUsbAutoConnect() {
+    return  await this.storage.get(usbAutoConnectKey) ?? false;
   }
 
   public async setAppearance(appearanceType: AppearanceType) {

@@ -1,21 +1,17 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {ModalController} from "@ionic/angular";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {
-  ConnectionFailedComponent
-} from "../../pages/home/connections/modals/connection-failed/connection-failed.component";
 import {Protocol2Messages} from "../../datatypes/protocol2/protocol2-messages";
 import {SettingsService} from "../settings/settings.service";
-import {
-  InsecureConnectionComponent
-} from "../../pages/home/connections/modals/insecure-connection/insecure-connection.component";
-import {Router} from "@angular/router";
+import {InsecureConnectionComponent} from "../../pages/home/modals/insecure-connection/insecure-connection.component";
 import {ProtocolHandlerService} from "../protocol/protocol-handler.service";
 import {Subject, Subscription} from "rxjs";
 import {LoadingService} from "../loading/loading.service";
 import {webSocket} from "rxjs/webSocket";
-import {ConnectionLostComponent} from "../../pages/home/connections/modals/connection-lost/connection-lost.component";
 import {environment} from "../../../environments/environment";
+import {Connection} from "../../datatypes/connection";
+import {NavigationService} from "../navigation/navigation.service";
+import {NavigationDestination} from "../../enums/navigation-destination";
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +22,13 @@ export class WebsocketService {
   private connecting: boolean = false;
   private closing: boolean = false;
   private url: string = "";
-  private connectionId: string | undefined;
+  private connection: Connection | undefined;
   private socket: WebSocketSubject<any> | undefined;
   private connectionClosed: Subject<CloseEvent> = new Subject<CloseEvent>();
   private connectionOpened: Subject<any> = new Subject<any>();
 
   public connectionLost: EventEmitter<any> = new EventEmitter<any>();
+  public connectionFailed: EventEmitter<any> = new EventEmitter<any>();
   public connected: EventEmitter<any> = new EventEmitter<any>();
   public closed: EventEmitter<any> = new EventEmitter<any>();
 
@@ -40,19 +37,38 @@ export class WebsocketService {
   constructor(private loadingService: LoadingService,
               private modalController: ModalController,
               private settingsService: SettingsService,
-              private router: Router,
-              private protocolHandlerService: ProtocolHandlerService) {
+              private protocolHandlerService: ProtocolHandlerService,
+              private navigationService: NavigationService) {
     this.subscribeOpenClose();
   }
 
-  public async reconnect() {
-    await this.connectToString(this.url);
+  public async connectToConnection(connection: Connection) {
+    if (this.connecting || this.isConnected) {
+      return;
+    }
+
+    if (connection.usbConnection) {
+      await this.loadingService.showLoading(`Connecting via USB...`);
+    } else {
+      await this.loadingService.showLoading(`Connecting to ${connection.name}...`);
+    }
+    this.url = `${connection.ssl ? "wss://" : "ws://"}${connection.host}:${connection.port}`;
+    this.connection = connection;
+    await this.connect();
   }
 
   public async connectToString(connectionString: string) {
     this.url = connectionString;
+    await this.loadingService.showLoading(`Connecting to Macro Deck...`);
+    await this.connect();
+  }
+
+  public getConnection() {
+    return this.connection;
+  }
+
+  private async connect() {
     this.closing = false;
-    await this.loadingService.showLoading(`Connecting to ${this.url}...`);
 
     this.socket = webSocket({
       url: this.url,
@@ -83,15 +99,6 @@ export class WebsocketService {
     });
   }
 
-  public async connect(host: string, port: number, secure: boolean, id: string) {
-    if (this.connecting || this.isConnected) {
-      return;
-    }
-
-    await this.connectToString((secure ? "wss://" : "ws://") + host + ":" + port);
-    this.connectionId = id;
-  }
-
   private subscribeOpenClose() {
     this.connectionClosed.subscribe(async closeEvent => {
       console.info("Closed with code " + closeEvent.code);
@@ -102,17 +109,18 @@ export class WebsocketService {
 
       if (!this.closing) {
         await this.handleError(closeEvent);
+        return;
       }
 
       this.isConnected = false;
-      await this.router.navigate([''], {replaceUrl: false, skipLocationChange: true});
+      await this.navigationService.navigateTo(NavigationDestination.Home);
     });
 
     this.connectionOpened.subscribe(async () => {
       this.connected.emit();
       this.connecting = false;
       await this.settingsService.increaseConnectionCount();
-      await this.settingsService.setLastConnection(this.connectionId ?? "");
+      await this.settingsService.setLastConnection(this.connection?.id ?? "");
       this.protocolHandlerService.setWebsocketSubject(this.socket!);
       this.isConnected = true;
       await this.loadingService.showLoading("Waiting for the host to accept the connection...");
@@ -126,7 +134,7 @@ export class WebsocketService {
     this.closing = true;
     this.socket?.complete();
     this.subscription.unsubscribe();
-    this.connectionId = undefined;
+    this.connection = undefined;
   }
 
   public send(payload: any) {
@@ -145,35 +153,18 @@ export class WebsocketService {
     }
 
     if (this.isConnected) {
-      await this.showConnectionLostModal();
+      this.isConnected = false;
+      await this.navigationService.navigateTo(NavigationDestination.ConnectionLost);
       return;
     }
 
     let closeDetails = `Code: ${closeEvent.code}\nReason: ${closeEvent.reason}\nWas clean: ${closeEvent.wasClean}`;
-    await this.showConnectionFailedModal(closeDetails);
-  }
-
-  private async showConnectionFailedModal(errorInformation: String) {
-    const modal = await this.modalController.create({
-      component: ConnectionFailedComponent,
-      componentProps: {
-        url: this.url,
-        errorInformation: errorInformation
-      }
-    });
-    await modal.present();
+    this.connectionFailed.emit(closeDetails);
   }
 
   private async showInsecureConnectionModal() {
     const modal = await this.modalController.create({
       component: InsecureConnectionComponent
-    });
-    await modal.present();
-  }
-
-  private async showConnectionLostModal() {
-    const modal = await this.modalController.create({
-      component: ConnectionLostComponent
     });
     await modal.present();
   }

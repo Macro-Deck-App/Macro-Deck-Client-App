@@ -8,13 +8,104 @@
 </ion-header>
 
 <ion-content>
-  <app-connections></app-connections>
+  <ng-container *ngIf="usbConnectionAvailable">
+    <ion-item-divider>
+      <ion-label>Wired connections</ion-label>
+    </ion-item-divider>
+    <ion-item button="true" (click)="connectUsb()">
+      <ion-icon slot="start" class="mdi mdi-usb text-success d-flex align-items-center"></ion-icon>
+      <ion-label>
+        <span class="fs-5">Connect via USB</span>
+      </ion-label>
+      <ion-reorder slot="end"></ion-reorder>
+    </ion-item>
+  </ng-container>
+
+  <ion-item-divider *ngIf="usbConnectionAvailable">
+    <ion-label>Wireless connections</ion-label>
+  </ion-item-divider>
+
+  <ion-content *ngIf="savedConnectionsInitialized; else connectionsLoading">
+    <ion-item-group *ngIf="savedConnectionsInitialized">
+      <ion-list lines="full" *ngIf="savedConnections.length > 0; else noConnections">
+        <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder({event : $any($event)})">
+          <ion-item-sliding *ngFor="let connection of savedConnections">
+            <ion-item button="true" (click)="connect(connection)">
+              <ng-container>
+                @if (availableConnections.includes(connection.id)) {
+                  <ion-icon slot="start" class="mdi mdi-wifi text-success d-flex align-items-center"></ion-icon>
+                } @else {
+                  <ion-icon slot="start" class="mdi mdi-wifi-off text-danger d-flex align-items-center"></ion-icon>
+                }
+              </ng-container>
+              <ion-label>
+                <span class="d-flex gap-1 fs-5">
+                  @if (connection.autoConnect) {
+                    <ion-icon class="mdi text-info mdi-refresh-auto d-flex align-items-center"/>
+                  }
+                  {{ connection.name }}
+                </span>
+                <span class="d-flex gap-1 mt-2 fw-light">
+                  @if (connection.ssl) {
+                    <ion-icon aria-hidden="true"
+                              title="Secure connection"
+                              class="text-success"
+                              name="lock-closed-outline"/>
+                  }
+                  {{ connection.host }}:{{ connection.port }}
+                </span>
+              </ion-label>
+              <ion-reorder slot="end"></ion-reorder>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option (click)="editConnection(connection)" color="warning">
+                <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+              </ion-item-option>
+              <ion-item-option (click)="deleteConnection(connection)" color="danger">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+
+
+          </ion-item-sliding>
+        </ion-reorder-group>
+      </ion-list>
+    </ion-item-group>
+
+    <ion-fab *ngIf="savedConnections.length > 0" slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="success" (click)="openAddConnectionModal()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
+
+  <ng-template #connectionsLoading>
+    <div class="ion-padding d-flex flex-column">
+      <div class="justify-content-center d-flex mt-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #noConnections>
+    <div class="ion-padding d-flex flex-column">
+      <span class="d-block text-center">You have set up no saved connections</span>
+      <div class="justify-content-center d-flex mt-3">
+        <ion-button (click)="openAddConnectionModal()" id="add-connection-button">
+          <ion-icon name="add"></ion-icon>
+          <ion-label>Add connection</ion-label>
+        </ion-button>
+      </div>
+    </div>
+  </ng-template>
+
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
-    <ion-text class="ms-3">{{version}} | Client Id: {{clientId}}</ion-text>
-    <ion-buttons *ngIf="showDonateButton()" slot="primary">
+    <ion-text class="ms-3">{{ version }} | Client Id: {{ clientId }}</ion-text>
+    <ion-buttons class="me-2" *ngIf="showDonateButton()" slot="primary">
       <ion-button (click)="openDonate()" fill="solid">
         Donate
         <ion-icon slot="end" name="heart-outline"></ion-icon>

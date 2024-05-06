@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DeckPageRoutingModule } from './deck-routing.module';
-
 import { DeckPage } from './deck.page';
 import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
 import {WidgetContentComponent} from "./widget-grid/widget-content/widget-content.component";
@@ -15,7 +13,6 @@ import {WidgetContentComponent} from "./widget-grid/widget-content/widget-conten
     CommonModule,
     FormsModule,
     IonicModule,
-    DeckPageRoutingModule
   ],
     declarations: [
         DeckPage,

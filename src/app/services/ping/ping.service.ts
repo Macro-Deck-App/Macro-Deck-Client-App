@@ -4,25 +4,38 @@ import {catchError, interval, mergeMap, Observable, of, retry, Subscription, swi
 import {PingResponse} from "../../datatypes/ping-response";
 import {ConnectionService} from "../connection/connection.service";
 import {Connection} from "../../datatypes/connection";
+import {SettingsService} from "../settings/settings.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PingService {
-  public connectionAvailable: EventEmitter<string> = new EventEmitter();
+  public connectionAvailable: EventEmitter<Connection> = new EventEmitter();
 
-  public connectionUnavailable: EventEmitter<string> = new EventEmitter();
+  public connectionUnavailable: EventEmitter<Connection> = new EventEmitter();
 
   private subscription: Subscription = new Subscription();
 
-  private availableConnections: string[] = [];
+  public availableConnections: string[] = [];
+
+  public usbConnectionAvailable: boolean = false;
 
   constructor(private http: HttpClient,
               private connectionService: ConnectionService) { }
 
   async start() {
-    console.log("Start ping");
     this.subscription = new Subscription();
+
+    let usbConnection: Connection = await this.connectionService.getUsbConnection();
+
+    this.subscription.add(this.periodicRequest(this.getPingUrl(usbConnection), 1000).subscribe(response => {
+      if (response !== null) {
+        this.addAvailableConnection(usbConnection);
+      } else {
+        this.removeAvailableConnection(usbConnection);
+      }
+    }));
+
     let connections = await this.connectionService.getConnections();
     for (const connection of connections) {
       this.subscription.add(this.periodicRequest(this.getPingUrl(connection), 1500).subscribe(response => {
@@ -36,7 +49,6 @@ export class PingService {
   }
 
   stop() {
-    console.log("Stop ping");
     this.subscription.unsubscribe();
   }
 
@@ -53,7 +65,10 @@ export class PingService {
     let existingConnectionIndex = this.availableConnections.findIndex(x => x == connection.id);
     if (existingConnectionIndex !== -1) {
       this.availableConnections.splice(existingConnectionIndex, 1);
-      this.connectionUnavailable.emit(connection.id);
+      this.connectionUnavailable.emit(connection);
+      if (connection.usbConnection) {
+        this.usbConnectionAvailable = false;
+      }
     }
   }
 
@@ -61,8 +76,11 @@ export class PingService {
     if (this.availableConnections.find(x => x == connection.id)) {
       return;
     }
+    if (connection.usbConnection) {
+      this.usbConnectionAvailable = true;
+    }
     this.availableConnections.push(connection.id);
-    this.connectionAvailable.emit(connection.id);
+    this.connectionAvailable.emit(connection);
   }
 
   private periodicRequest(url: string, intervalTime: number): Observable<any> {

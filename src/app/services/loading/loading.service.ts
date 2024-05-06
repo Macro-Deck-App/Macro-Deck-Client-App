@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {ModalController} from "@ionic/angular";
-import {ConnectingComponent} from "../../pages/home/connections/modals/connecting/connecting.component";
+import {ConnectingComponent} from "../../pages/home/modals/connecting/connecting.component";
 
 @Injectable({
     providedIn: 'root'
