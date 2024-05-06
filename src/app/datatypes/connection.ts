@@ -5,5 +5,6 @@ export interface Connection {
   port: number,
   ssl: boolean,
   index: number | undefined,
-  autoConnect: boolean | undefined
+  autoConnect: boolean | undefined,
+  usbConnection: boolean | undefined
 }

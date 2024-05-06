@@ -51,6 +51,7 @@ export class WebHomePage implements OnInit {
     const wsProtocol = urlParts[0].toLowerCase().replace('http', 'ws');
     const host = urlParts[2];
     const websocketUrl = `${wsProtocol}//${host}`;
+
     await this.websocketService.connectToString(websocketUrl);
   }
 

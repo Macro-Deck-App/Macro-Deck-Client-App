@@ -8,7 +8,7 @@ import {ModalController} from "@ionic/angular";
 })
 export class ConnectionFailedComponent   {
 
-  url: string = "";
+  name: string = "";
   errorInformation: string = "";
 
   constructor(private modalController: ModalController) { }

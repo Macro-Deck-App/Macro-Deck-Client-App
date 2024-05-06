@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AlertController, ModalController} from "@ionic/angular";
-import {Connection} from "../../../../../datatypes/connection";
+import {Connection} from "../../../../datatypes/connection";
 
 @Component({
   selector: 'app-add-connection-modal',
@@ -38,7 +38,8 @@ export class AddConnectionComponent {
       port: this.port,
       ssl: this.useSsl,
       index: this.index,
-      autoConnect: this.autoConnect
+      autoConnect: this.autoConnect,
+      usbConnection: false
     }
     console.log(connection)
     await this.modalController.dismiss(connection, 'confirm');

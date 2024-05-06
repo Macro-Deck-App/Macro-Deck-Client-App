@@ -11,13 +11,12 @@ export class DiagnosticService {
   constructor(private platform: Platform) { }
 
   async getVersion() {
-    if (Capacitor.isNativePlatform()) {
-      await App.getInfo().then(info => {
-        return `v${info.version}`;
-      });
+    if (this.isiOSorAndroid()) {
+      const info = await App.getInfo();
+      return `v. ${this.versionPrefix()}-${info.version}`;
     }
 
-    return "Web Version";
+    return "Web Client";
   }
 
   public isAndroid() {
@@ -26,6 +25,16 @@ export class DiagnosticService {
 
   public isiOS() {
     return this.platform.is("ios");
+  }
+
+  private versionPrefix(): string {
+    if (this.isAndroid()) {
+      return "a";
+    } else if (this.isiOS()) {
+      return "i";
+    }
+
+    return "";
   }
 
   public isiOSorAndroid() {

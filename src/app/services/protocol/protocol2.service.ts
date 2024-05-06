@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {MacroDeckService} from "../macro-deck/macro-deck.service";
 import {Protocol2Messages} from "../../datatypes/protocol2/protocol2-messages";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {Router} from "@angular/router";
 import {Protocol2Button} from "../../datatypes/protocol2/protocol2-button";
 import {Widget} from "../../datatypes/widgets/widget";
 import {ButtonWidget} from "../../datatypes/widgets/button-widget";
@@ -10,6 +9,8 @@ import {WidgetContentType} from "../../enums/widget-content-type";
 import {WidgetInteraction} from "../../datatypes/widgets/widget-interaction";
 import {WidgetInteractionType} from "../../enums/widget-interaction-type";
 import {LoadingService} from "../loading/loading.service";
+import {NavigationService} from "../navigation/navigation.service";
+import {NavigationDestination} from "../../enums/navigation-destination";
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,7 @@ export class Protocol2Service {
 
     constructor(private macroDeckService: MacroDeckService,
                 private loadingService: LoadingService,
-                private router: Router) {
+                private navigationService: NavigationService) {
         macroDeckService.interaction.subscribe(interaction => {
             this.handleInteraction(interaction);
         })
@@ -38,7 +39,7 @@ export class Protocol2Service {
                 this.macroDeckService.setConfig(message);
                 if (!this.initialConfigReceived) {
                     this.initialConfigReceived = true;
-                    await this.router.navigate(['deck'], {replaceUrl: false, skipLocationChange: true});
+                    await this.navigationService.navigateTo(NavigationDestination.Deck);
                     await this.loadingService.dismiss();
                 }
 

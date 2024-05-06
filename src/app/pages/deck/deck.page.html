@@ -23,7 +23,7 @@
     </ion-list>
   </ion-content>
   <ion-toolbar>
-    <ion-text class="ms-3">{{version}} | Client Id: {{clientId}}</ion-text>
+    <ion-text class="ms-3">{{ version }} | Client Id: {{ clientId }}</ion-text>
   </ion-toolbar>
 </ion-menu>
 
@@ -32,10 +32,11 @@
     <app-widget-grid class="widgets-grid-container"></app-widget-grid>
     <ion-fab *ngIf="showMenuButton" class="fab-menu" slot="fixed" vertical="top" horizontal="start">
       <ion-menu-toggle>
-          <ion-fab-button size="small">
-            <ion-icon name="menu-outline"></ion-icon>
-          </ion-fab-button>
+        <ion-fab-button size="small">
+          <ion-icon name="menu-outline"></ion-icon>
+        </ion-fab-button>
       </ion-menu-toggle>
     </ion-fab>
   </ion-content>
 </div>
+

@@ -6,7 +6,6 @@ import {ScreenOrientationService} from "../../../../services/screen-orientation/
 import {SslHandler} from "../../../../../../capacitor_plugins/sslhandler/src";
 import {environment} from "../../../../../environments/environment.web";
 import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
-import {AppearanceType} from "../../../../enums/appearance-type";
 import {ThemeService} from "../../../../services/theme/theme.service";
 
 @Component({
@@ -17,11 +16,14 @@ import {ThemeService} from "../../../../services/theme/theme.service";
 export class SettingsModalComponent  implements OnInit {
 
   preventScreenTimeout: boolean = false;
-  showMenuButton: boolean = true;
+  showMenuButton: boolean = false;
   skipSslValidation: boolean = false;
   buttonLongPressDelay: number = 1000;
   appearanceType: string = "0";
   screenOrientation: string = "0";
+  usbAutoConnect: boolean = false;
+  usbPort: number = 8191;
+  usbUseSsl: boolean = false;
 
   constructor(private modalController: ModalController,
               private settingsService: SettingsService,
@@ -51,6 +53,10 @@ export class SettingsModalComponent  implements OnInit {
     await this.settingsService.setButtonLongPressDelay(this.buttonLongPressDelay);
     await this.settingsService.setAppearance(Number.parseInt(this.appearanceType));
     await this.settingsService.setScreenOrientation(Number.parseInt(this.screenOrientation));
+    await this.settingsService.setUsbAutoConnect(this.usbAutoConnect);
+    await this.settingsService.setUsbPort(this.usbPort);
+    await this.settingsService.setUsbUseSsl(this.usbUseSsl);
+
     await this.wakelockService.updateWakeLock();
     await this.screenOrientationService.updateScreenOrientation();
     await this.themeService.updateTheme();
@@ -66,6 +72,9 @@ export class SettingsModalComponent  implements OnInit {
     this.buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
     this.appearanceType = (await this.settingsService.getAppearance()).toString();
     this.screenOrientation = (await this.settingsService.getScreenOrientation()).toString();
+    this.usbAutoConnect = await this.settingsService.getUsbAutoConnect();
+    this.usbPort = await this.settingsService.getUsbPort();
+    this.usbUseSsl = await this.settingsService.getUsbUseSsl();
   }
 
   async preventScreenTimeoutChange(event: any) {
