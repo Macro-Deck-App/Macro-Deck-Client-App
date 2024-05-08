@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {AlertController, ModalController, Platform} from "@ionic/angular";
 import {SettingsService} from "../../../../services/settings/settings.service";
 import {WakelockService} from "../../../../services/wakelock/wakelock.service";
@@ -7,6 +7,7 @@ import {SslHandler} from "../../../../../../capacitor_plugins/sslhandler/src";
 import {environment} from "../../../../../environments/environment.web";
 import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
 import {ThemeService} from "../../../../services/theme/theme.service";
+import {ButtonWidgetBorderStyle} from "../../../../widget-content-components/button-widget/button-widget-border-style";
 
 @Component({
   selector: 'app-settings-modal',
@@ -14,6 +15,8 @@ import {ThemeService} from "../../../../services/theme/theme.service";
   styleUrls: ['./settings-modal.component.scss'],
 })
 export class SettingsModalComponent  implements OnInit {
+
+  public static settingsApplied: EventEmitter<any> = new EventEmitter();
 
   preventScreenTimeout: boolean = false;
   showMenuButton: boolean = false;
@@ -24,6 +27,7 @@ export class SettingsModalComponent  implements OnInit {
   usbAutoConnect: boolean = false;
   usbPort: number = 8191;
   usbUseSsl: boolean = false;
+  buttonWidgetBorderStyle: string = "0";
 
   constructor(private modalController: ModalController,
               private settingsService: SettingsService,
@@ -40,6 +44,7 @@ export class SettingsModalComponent  implements OnInit {
   async confirm() {
     await this.saveSettings();
     await this.modalController.dismiss(null, 'confirm');
+    SettingsModalComponent.settingsApplied.emit();
   }
 
   async cancel() {
@@ -56,6 +61,7 @@ export class SettingsModalComponent  implements OnInit {
     await this.settingsService.setUsbAutoConnect(this.usbAutoConnect);
     await this.settingsService.setUsbPort(this.usbPort);
     await this.settingsService.setUsbUseSsl(this.usbUseSsl);
+    await this.settingsService.setButtonWidgetBorderStyle(Number.parseInt(this.buttonWidgetBorderStyle));
 
     await this.wakelockService.updateWakeLock();
     await this.screenOrientationService.updateScreenOrientation();
@@ -75,6 +81,7 @@ export class SettingsModalComponent  implements OnInit {
     this.usbAutoConnect = await this.settingsService.getUsbAutoConnect();
     this.usbPort = await this.settingsService.getUsbPort();
     this.usbUseSsl = await this.settingsService.getUsbUseSsl();
+    this.buttonWidgetBorderStyle = (await this.settingsService.getButtonWidgetBorderStyle()).toString();
   }
 
   async preventScreenTimeoutChange(event: any) {

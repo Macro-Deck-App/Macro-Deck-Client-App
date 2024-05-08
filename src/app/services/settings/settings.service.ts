@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Storage} from "@ionic/storage";
 import {ScreenOrientationType} from "../../enums/screen-orientation-type";
 import {AppearanceType} from "../../enums/appearance-type";
+import {ButtonWidgetBorderStyle} from "../../widget-content-components/button-widget/button-widget-border-style";
 
 const clientIdStorageKey: string = "client_id";
 const wakeLockKey: string = "wake_lock_enabled";
@@ -14,7 +15,8 @@ const showMenuButtonKey: string = "show_menu_button";
 const appearanceKey: string = "appearance";
 const usbAutoConnectKey: string = "usb_auto_connect";
 const usbPortKey: string = "usb_port";
-const usbUseSsl: string = "usb_use_ssl";
+const usbUseSslKey: string = "usb_use_ssl";
+const buttonWidgetBorderStyleKey: string = "button_widget_border_style";
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +27,20 @@ export class SettingsService {
   constructor(private storage: Storage) {
   }
 
+  public async setButtonWidgetBorderStyle(style: ButtonWidgetBorderStyle) {
+    await this.storage.set(buttonWidgetBorderStyleKey, style);
+  }
+
+  public async getButtonWidgetBorderStyle() {
+    return  await this.storage.get(buttonWidgetBorderStyleKey) ?? ButtonWidgetBorderStyle.None;
+  }
+
   public async setUsbUseSsl(useSsl: boolean) {
-    await this.storage.set(usbUseSsl, useSsl);
+    await this.storage.set(usbUseSslKey, useSsl);
   }
 
   public async getUsbUseSsl() {
-    return  await this.storage.get(usbUseSsl) ?? false;
+    return  await this.storage.get(usbUseSslKey) ?? false;
   }
 
   public async setUsbPort(usbPort: number) {

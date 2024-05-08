@@ -1,18 +1,21 @@
-import {Component, Renderer2} from '@angular/core';
+import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Widget} from "../../datatypes/widgets/widget";
 import {ButtonWidget} from "../../datatypes/widgets/button-widget";
 import {WidgetGridComponent} from "../../pages/deck/widget-grid/widget-grid.component";
 import {MacroDeckService} from "../../services/macro-deck/macro-deck.service";
 import {WidgetInteractionType} from "../../enums/widget-interaction-type";
-import { DomSanitizer } from '@angular/platform-browser';
+import {DomSanitizer} from '@angular/platform-browser';
 import {SettingsService} from "../../services/settings/settings.service";
+import {ButtonWidgetBorderStyle} from "./button-widget-border-style";
+import {Subscription} from "rxjs";
+import {SettingsModalComponent} from "../../pages/shared/modals/settings-modal/settings-modal.component";
 
 @Component({
   selector: 'app-button-widget',
   templateUrl: './button-widget.component.html',
   styleUrls: ['./button-widget.component.scss'],
 })
-export class ButtonWidgetComponent {
+export class ButtonWidgetComponent implements OnInit, OnDestroy {
   protected readonly widgetGridComponent = WidgetGridComponent;
 
   foregroundImage: any;
@@ -20,10 +23,13 @@ export class ButtonWidgetComponent {
   backgroundStyle: any;
   borderColor: string | undefined;
   widget: Widget | undefined;
+  borderStyle: any;
 
   private longPressTrigger: boolean = false;
   private longPressTimeout: any;
   private pressed: boolean = false;
+
+  private subscription: Subscription = new Subscription();
 
   constructor(private renderer: Renderer2,
               private macroDeckService: MacroDeckService,
@@ -31,7 +37,30 @@ export class ButtonWidgetComponent {
               private settingsService: SettingsService) {
   }
 
-  updateWidget(widget: Widget) {
+  ngOnInit(): void {
+    this.subscription.add(this.widgetGridComponent.updated.subscribe(async _ => {
+      await this.updateSelf();
+    }));
+
+    this.subscription.add(SettingsModalComponent.settingsApplied.subscribe(async _ => {
+      await this.updateSelf();
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  async updateSelf() {
+    if (this.widget === undefined) {
+      return;
+    }
+
+    await this.updateWidget(this.widget);
+  }
+
+  async updateWidget(widget: Widget) {
+    let borderStyle = await this.settingsService.getButtonWidgetBorderStyle();
     this.widget = widget;
     const widgetContent = widget.widgetContent as ButtonWidget;
     this.foregroundImage = widgetContent?.labelBase64
@@ -42,6 +71,24 @@ export class ButtonWidgetComponent {
       : undefined;
     this.backgroundStyle = {'background-color': widget.backgroundColorHex};
     this.borderColor = widget.backgroundColorHex ? this.adjustColor(widget.backgroundColorHex, -40) : undefined;
+    this.setBorderStyle(borderStyle);
+  }
+
+  private setBorderStyle(borderStyle: ButtonWidgetBorderStyle) {
+    switch (borderStyle) {
+      case ButtonWidgetBorderStyle.None:
+        this.borderStyle = {
+          'border-radius': this.widgetGridComponent.borderRadiusPoints + 'pt'
+        }
+        break;
+      case ButtonWidgetBorderStyle.Colored:
+        this.borderStyle = {
+          'border-radius': this.widgetGridComponent.borderRadiusPoints + 'pt',
+          'border': '2pt solid ' + this.borderColor,
+          'padding': '2pt'
+        }
+        break;
+    }
   }
 
   onMouseUp(event: Event) {

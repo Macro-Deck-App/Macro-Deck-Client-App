@@ -1,4 +1,14 @@
-import {AfterContentInit, AfterViewInit, ApplicationRef, Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ApplicationRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {Widget} from "../../../datatypes/widgets/widget";
 import {Subscription} from "rxjs";
 import {MacroDeckService} from "../../../services/macro-deck/macro-deck.service";
@@ -15,6 +25,8 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
     constructor(private macroDeckService: MacroDeckService,
                 private applicationRef: ApplicationRef) {
     }
+
+    public static updated: EventEmitter<any> = new EventEmitter<any>();
 
     private subscription: Subscription = new Subscription();
 
@@ -68,6 +80,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
 
         this.widgetSpacingPoints = (((this.macroDeckService.buttonSpacing / 100) * this.buttonSize) * 72 / 96) / 2;
         WidgetGridComponent.borderRadiusPoints = (((this.macroDeckService.buttonRadius / 100) * this.buttonSize) * 72 / 96) / 2;
+        WidgetGridComponent.updated.emit();
     }
 
     countTotalWidgets(): number {
