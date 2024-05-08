@@ -1,8 +1,4 @@
-<div [ngStyle]="{
-        'border-radius': widgetGridComponent.borderRadiusPoints + 'pt',
-        'border': '2pt solid ' + borderColor,
-        'padding': '2pt'
-        }"
+<div [ngStyle]="borderStyle"
      (down)="onMouseDown($event)"
      (up)="onMouseUp($event)"
      (mouseleave)="onMouseLeave($event)"

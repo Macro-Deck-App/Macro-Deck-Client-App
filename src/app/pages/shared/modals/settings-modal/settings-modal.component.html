@@ -23,23 +23,6 @@
       </ion-toggle>
     </ion-item>
 
-    <ion-item>
-      <ion-icon name="menu-outline" slot="start"></ion-icon>
-      <ion-toggle
-        (ngModelChange)="displayMenuButtonChange($event)"
-        [(ngModel)]="showMenuButton">Show menu button
-      </ion-toggle>
-    </ion-item>
-
-    <ion-item>
-      <ion-icon slot="start" class="mdi mdi-theme-light-dark d-flex align-items-center"></ion-icon>
-      <ion-select [(ngModel)]="appearanceType" label="Appearance">
-        <ion-select-option value="0">System</ion-select-option>
-        <ion-select-option value="1">Dark</ion-select-option>
-        <ion-select-option value="2">Light</ion-select-option>
-      </ion-select>
-    </ion-item>
-
     @if (isAndroid()) {
       <ion-item>
         <ion-icon slot="start" class="mdi mdi-lock-off d-flex align-items-center"></ion-icon>
@@ -74,6 +57,35 @@
         </ion-select>
       </ion-item>
     }
+
+    <ion-item-divider>
+      <ion-label>Appearance</ion-label>
+    </ion-item-divider>
+
+    <ion-item>
+      <ion-icon name="menu-outline" slot="start"></ion-icon>
+      <ion-toggle
+        (ngModelChange)="displayMenuButtonChange($event)"
+        [(ngModel)]="showMenuButton">Show menu button
+      </ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon slot="start" class="mdi mdi-theme-light-dark d-flex align-items-center"></ion-icon>
+      <ion-select [(ngModel)]="appearanceType" label="Appearance">
+        <ion-select-option value="0">System</ion-select-option>
+        <ion-select-option value="1">Dark</ion-select-option>
+        <ion-select-option value="2">Light</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon slot="start" class="mdi mdi-border-all-variant d-flex align-items-center"></ion-icon>
+      <ion-select [(ngModel)]="buttonWidgetBorderStyle" label="Button widget border">
+        <ion-select-option value="0">None</ion-select-option>
+        <ion-select-option value="1">Colored</ion-select-option>
+      </ion-select>
+    </ion-item>
 
     @if (isAndroid()) {
       <ion-item-divider>
