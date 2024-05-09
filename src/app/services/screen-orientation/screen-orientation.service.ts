@@ -18,6 +18,10 @@ export class ScreenOrientationService {
       return;
     }
 
+    if (await this.diagnosticService.isAndroidOreo()) {
+      return;
+    }
+
     let screenOrientation = await this.settingsService.getScreenOrientation();
     try {
       switch (screenOrientation) {

@@ -18,6 +18,7 @@ export class SettingsModalComponent  implements OnInit {
 
   public static settingsApplied: EventEmitter<any> = new EventEmitter();
 
+  isAndroidOreo: boolean = false;
   preventScreenTimeout: boolean = false;
   showMenuButton: boolean = false;
   skipSslValidation: boolean = false;
@@ -39,6 +40,7 @@ export class SettingsModalComponent  implements OnInit {
 
   async ngOnInit() {
     await this.loadCurrentSettings();
+    this.isAndroidOreo = await this.diagnosticService.isAndroidOreo();
   }
 
   async confirm() {

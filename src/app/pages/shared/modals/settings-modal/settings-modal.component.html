@@ -49,12 +49,17 @@
     @if (isiOSorAndroid()) {
       <ion-item>
         <ion-icon slot="start" class="mdi mdi-screen-rotation d-flex align-items-center"></ion-icon>
-        <ion-select [(ngModel)]="screenOrientation" label="Screen orientation">
-          <ion-select-option value="0">Auto</ion-select-option>
-          <ion-select-option value="1">Landscape</ion-select-option>
-          <ion-select-option value="2">Landscape alternative</ion-select-option>
-          <ion-select-option value="3">Portrait</ion-select-option>
-        </ion-select>
+        @if (!isAndroidOreo) {
+          <ion-select [(ngModel)]="screenOrientation" label="Screen orientation">
+            <ion-select-option value="0">Auto</ion-select-option>
+            <ion-select-option value="1">Landscape</ion-select-option>
+            <ion-select-option value="2">Landscape alternative</ion-select-option>
+            <ion-select-option value="3">Portrait</ion-select-option>
+          </ion-select>
+        } @else {
+          <ion-label>Screen orientation</ion-label>
+          <ion-label slot="end">Not available</ion-label>
+        }
       </ion-item>
     }
 
