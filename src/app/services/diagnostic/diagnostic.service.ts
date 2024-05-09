@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {App} from "@capacitor/app";
 import {Platform} from "@ionic/angular";
-import {Capacitor} from "@capacitor/core";
+import {Device} from "@capacitor/device";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,20 @@ export class DiagnosticService {
     return "Web Client";
   }
 
+  async isAndroidOreo() {
+    if (!this.isAndroid()) {
+      return false;
+    }
+
+    let androidSdk = await this.getAndroidSdkVersion();
+    return androidSdk == 26 || androidSdk == 27;
+  }
+
+  async getAndroidSdkVersion() {
+    const info = await Device.getInfo();
+    return info.androidSDKVersion;
+  }
+
   public isAndroid() {
     return this.platform.is("android");
   }
@@ -34,7 +48,7 @@ export class DiagnosticService {
       return "i";
     }
 
-    return "";
+    return "pwa";
   }
 
   public isiOSorAndroid() {
