@@ -15,6 +15,7 @@ import {ConnectionFailedComponent} from "../connection-failed/connection-failed.
 })
 export class AddConnectionComponent implements OnInit, OnDestroy {
 
+  editConnection: boolean = false;
   quickSetupQrCodeData: QuickSetupQrCodeData | undefined;
   id: string = "";
   name: string | undefined;
@@ -36,7 +37,7 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    if (this.diagnosticService.isiOSorAndroid()) {
+    if (this.diagnosticService.isiOSorAndroid() && !this.editConnection) {
       this.subscription.add(QrCodeScannerComponent.quickSetupQrCodeScanned.subscribe(async qrCodeScanner => {
         const dataBase64 = qrCodeScanner.split("quick-setup/").pop();
         if (dataBase64) {

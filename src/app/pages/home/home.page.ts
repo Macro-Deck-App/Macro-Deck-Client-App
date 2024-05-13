@@ -120,6 +120,7 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
         useSsl: existingConnection?.ssl ?? false,
         autoConnect: existingConnection?.autoConnect ?? false,
         index: existingConnection?.index ?? 0,
+        editConnection: true
       };
     } else if (quickSetupQrCodeData) {
       props = {

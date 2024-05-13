@@ -68,7 +68,7 @@ SPEC CHECKSUMS:
   CapacitorHaptics: 7c7c206f0c96a628fed073830c96d28c4b2e772e
   CapacitorKeyboard: aec619a578235c6ce279075009a2689c2cf5c42c
   CapawesomeCapacitorScreenOrientation: a757a72cd4a113142638c049af61441793721f07
-  CordovaPlugins: 335e584d47267c702c76d59ff99face9ed48cbe8
+  CordovaPlugins: d4671f1d2a1af985cd35caa0d8bbb58b95ef3c70
   Sslhandler: 5b1dfaa41fdbad6e788cea98538cb0c2995b9153
 
 PODFILE CHECKSUM: da7bb84d682684c56c1176daada29c914a7af786

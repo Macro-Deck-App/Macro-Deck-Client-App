@@ -17,7 +17,7 @@ dependencies {
     implementation project(':capacitor-keyboard')
     implementation project(':capawesome-capacitor-screen-orientation')
     implementation project(':sslhandler')
-    implementation "androidx.exifinterface:exifinterface:1.2.0"
+
 }
 
 

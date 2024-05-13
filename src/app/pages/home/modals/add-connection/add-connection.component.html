@@ -3,8 +3,12 @@
     <ion-buttons slot="start">
       <ion-button (click)="cancel()">Cancel</ion-button>
     </ion-buttons>
-    <ion-title>Add connection</ion-title>
-    @if (host.length > 0) {
+    @if (editConnection) {
+      <ion-title>Edit connection</ion-title>
+    } @else {
+      <ion-title>Add connection</ion-title>
+    }
+    @if (host.length > 0 && port > 1) {
       <ion-buttons slot="end">
         <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
       </ion-buttons>
@@ -13,7 +17,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  @if (quickSetupQrCodeData === undefined) {
+  @if (quickSetupQrCodeData === undefined && !editConnection) {
     <ion-segment [(ngModel)]="page" value="quick-setup">
       <ion-segment-button value="quick-setup">
         <ion-label>Quick Setup</ion-label>
@@ -24,7 +28,7 @@
     </ion-segment>
   }
 
-  @if (page === "quick-setup") {
+  @if (page === "quick-setup" && !editConnection) {
     @if (quickSetupQrCodeData !== undefined) {
       <ng-template [ngTemplateOutlet]="generalConnectionInfo"/>
 
@@ -77,6 +81,6 @@
     </ion-input>
   </ion-item>
   <ion-item>
-    <ion-toggle [(ngModel)]="autoConnect">Automatically connect</ion-toggle>
+    <ion-toggle [(ngModel)]="autoConnect">Connect automatically</ion-toggle>
   </ion-item>
 </ng-template>
