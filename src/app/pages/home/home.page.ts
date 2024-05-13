@@ -96,10 +96,6 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
       await this.openAddConnectionModal(null, data);
     }));
     await this.pingService.start();
-
-    /*const dataJson = atob("eyJpbnN0YW5jZU5hbWUiOiJNQU5VRUwtUEMiLCJuZXR3b3JrSW50ZXJmYWNlcyI6WyIxMC44LjAuMyIsIjE5Mi4xNjguMTIuMjEiLCIxOTIuMTY4Ljg4LjEiLCIxOTIuMTY4LjcyLjEiXSwicG9ydCI6ODE5MSwic3NsIjpmYWxzZX0=");
-    const data = JSON.parse(dataJson);
-    AppComponent.quickSetupLinkScanned.emit(data);*/
   }
 
   private async loadConnections() {
