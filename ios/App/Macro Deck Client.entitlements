@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:macro-deck.app?mode=developer</string>
+		<string>applinks:macro-deck.app</string>
 	</array>
 </dict>
 </plist>
