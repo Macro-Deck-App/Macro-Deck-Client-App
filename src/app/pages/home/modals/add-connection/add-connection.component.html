@@ -3,37 +3,84 @@
     <ion-buttons slot="start">
       <ion-button (click)="cancel()">Cancel</ion-button>
     </ion-buttons>
-    <ion-title>Add connection</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
-    </ion-buttons>
+    @if (editConnection) {
+      <ion-title>Edit connection</ion-title>
+    } @else {
+      <ion-title>Add connection</ion-title>
+    }
+    @if (host.length > 0 && port > 1) {
+      <ion-buttons slot="end">
+        <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+      </ion-buttons>
+    }
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  @if (quickSetupQrCodeData === undefined && !editConnection) {
+    <ion-segment [(ngModel)]="page" value="quick-setup">
+      <ion-segment-button value="quick-setup">
+        <ion-label>Quick Setup</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="manual">
+        <ion-label>Manual Setup</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  }
 
+  @if (page === "quick-setup" && !editConnection) {
+    @if (quickSetupQrCodeData !== undefined) {
+      <ng-template [ngTemplateOutlet]="generalConnectionInfo"/>
+
+      <ion-item class="mt-2">
+        <ion-label slot="start">IP Address / Hostname</ion-label>
+        <ion-label slot="end">{{ host }}</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label slot="start">Port</ion-label>
+        <ion-label slot="end">{{ port }}</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label slot="start">SSL</ion-label>
+        <ion-label slot="end">{{ useSsl ? "Yes" : "No" }}</ion-label>
+      </ion-item>
+
+      <div class="w-100 mt-4 d-flex justify-content-center">
+        <ion-button fill="outline" (click)="reset()">Reset</ion-button>
+      </div>
+    } @else {
+      <app-qr-code-scanner></app-qr-code-scanner>
+    }
+  } @else {
+    <ng-template [ngTemplateOutlet]="generalConnectionInfo"/>
+
+    <ion-item class="mt-2">
+      <ion-input labelPlacement="floating" type="text" [(ngModel)]="host" [clearInput]="true">
+        <div slot="label">IP Address / Hostname</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input min="1" labelPlacement="floating" type="number" [(ngModel)]="port">
+        <div slot="label">Port</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-toggle [(ngModel)]="useSsl">Use SSL</ion-toggle>
+    </ion-item>
+  }
+</ion-content>
+
+<ng-template #generalConnectionInfo>
   <ion-item>
     <ion-input labelPlacement="floating" type="text" [placeholder]="host" [(ngModel)]="name" [clearInput]="true">
       <div slot="label">Name</div>
     </ion-input>
   </ion-item>
   <ion-item>
-    <ion-toggle [(ngModel)]="autoConnect">Automatically connect</ion-toggle>
+    <ion-toggle [(ngModel)]="autoConnect">Connect automatically</ion-toggle>
   </ion-item>
-
-  <ion-item class="mt-2">
-    <ion-input labelPlacement="floating" type="text" [(ngModel)]="host" [clearInput]="true">
-      <div slot="label">IP Address / Hostname</div>
-    </ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-input min="1" labelPlacement="floating" type="number" [(ngModel)]="port">
-      <div slot="label">Port</div>
-    </ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-toggle [(ngModel)]="useSsl">Use SSL</ion-toggle>
-  </ion-item>
-</ion-content>
+</ng-template>

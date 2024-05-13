@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit} from '@angular/core';
 import {Storage} from "@ionic/storage";
 import {WakelockService} from "./services/wakelock/wakelock.service";
 import {ScreenOrientationService} from "./services/screen-orientation/screen-orientation.service";
@@ -9,6 +9,9 @@ import {ThemeService} from "./services/theme/theme.service";
 import {HomePage} from "./pages/home/home.page";
 import {environment} from "../environments/environment";
 import {WebHomePage} from "./pages/web-home/web-home.page";
+import {App, AppUrlOpen, URLOpenListenerEvent} from "@capacitor/app";
+import {QuickSetupQrCodeData} from "./datatypes/quick-setup-qr-code-data";
+import {QrCodeScannerComponent} from "./pages/home/modals/add-connection/qr-code-scanner/qr-code-scanner.component";
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,8 @@ import {WebHomePage} from "./pages/web-home/web-home.page";
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  public static quickSetupLinkScanned: EventEmitter<QuickSetupQrCodeData> = new EventEmitter();
+
   constructor(private storage: Storage,
               private wakeLockService: WakelockService,
               private screenOrientationService: ScreenOrientationService,
@@ -36,5 +41,14 @@ export class AppComponent implements OnInit {
       let skipSslValidation = await this.settingsService.getSkipSslValidation();
       SslHandler.skipValidation({value: skipSslValidation});
     }
+
+    App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+      const dataBase64 = event.url.split("quick-setup/").pop();
+      if (dataBase64) {
+        const dataJson = atob(dataBase64);
+        const data = JSON.parse(dataJson) as QuickSetupQrCodeData;
+        AppComponent.quickSetupLinkScanned.emit(data);
+      }
+    });
   }
 }
