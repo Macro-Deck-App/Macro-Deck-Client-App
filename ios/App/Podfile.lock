@@ -3,9 +3,13 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (5.0.7):
     - Capacitor
+  - CapacitorCommunityBarcodeScanner (4.0.1):
+    - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
   - CapacitorCordova (5.7.5)
+  - CapacitorDevice (6.0.0):
+    - Capacitor
   - CapacitorHaptics (5.0.7):
     - Capacitor
   - CapacitorKeyboard (5.0.8):
@@ -20,8 +24,10 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCommunityBarcodeScanner (from `../../node_modules/@capacitor-community/barcode-scanner`)"
   - "CapacitorCommunityKeepAwake (from `../../node_modules/@capacitor-community/keep-awake`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapawesomeCapacitorScreenOrientation (from `../../node_modules/@capawesome/capacitor-screen-orientation`)"
@@ -33,10 +39,14 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorCommunityBarcodeScanner:
+    :path: "../../node_modules/@capacitor-community/barcode-scanner"
   CapacitorCommunityKeepAwake:
     :path: "../../node_modules/@capacitor-community/keep-awake"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorDevice:
+    :path: "../../node_modules/@capacitor/device"
   CapacitorHaptics:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
@@ -51,14 +61,16 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 7d42085cb786b2d3ea9ac8a17ebd7e3305be7b72
   CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
+  CapacitorCommunityBarcodeScanner: 7feb206489c8555a8ca0c74c57ddf49ead774eb8
   CapacitorCommunityKeepAwake: f3442e3e9b666dd0162522fbd053da1fe81ede20
   CapacitorCordova: c946a6052b547e1e185fc46862003f7b9130ead1
+  CapacitorDevice: f8fd88f9edd1261c55a109f32015b09bbbfdc4a0
   CapacitorHaptics: 7c7c206f0c96a628fed073830c96d28c4b2e772e
   CapacitorKeyboard: aec619a578235c6ce279075009a2689c2cf5c42c
   CapawesomeCapacitorScreenOrientation: a757a72cd4a113142638c049af61441793721f07
-  CordovaPlugins: d4671f1d2a1af985cd35caa0d8bbb58b95ef3c70
+  CordovaPlugins: 335e584d47267c702c76d59ff99face9ed48cbe8
   Sslhandler: 5b1dfaa41fdbad6e788cea98538cb0c2995b9153
 
-PODFILE CHECKSUM: 4824b7d1cba227e54345c8671e97841c8e6cf1e7
+PODFILE CHECKSUM: da7bb84d682684c56c1176daada29c914a7af786
 
 COCOAPODS: 1.12.1

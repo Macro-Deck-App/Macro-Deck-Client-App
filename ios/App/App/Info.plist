@@ -17,6 +17,8 @@
 	<string>Macro Deck Client</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>NSCameraUsageDescription</key>
+  <string>The app enables the scanning of various barcodes.</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

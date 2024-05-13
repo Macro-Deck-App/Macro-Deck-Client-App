@@ -13,3 +13,27 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+.scanner-ui {
+  display: none;
+}
+
+.scanner-hide {
+  visibility: visible;
+}
+
+body.barcode-scanner-active {
+  background-color: transparent;
+}
+
+body.barcode-scanner-active .scanner-ui {
+  display: block;
+}
+
+body.barcode-scanner-active .scanner-hide {
+  visibility: hidden;
+  display: none;
+  --background: transparent;
+  --ion-background-color: transparent;
+  --bs-body-bg: transparent;
+}

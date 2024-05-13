@@ -22,7 +22,8 @@ export class ConnectionService {
       host: "127.0.0.1",
       port: await this.settingsService.getUsbPort(),
       ssl: await this.settingsService.getUsbUseSsl(),
-      usbConnection: true
+      usbConnection: true,
+      token: undefined
     }
   }
 

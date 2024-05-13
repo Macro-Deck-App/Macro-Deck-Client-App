@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Searching network interface...</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (!scanning && networkInterfacesAvailable.length > 1) {
+    <p class="ion-padding">Multiple network interfaces were found. Tap on the correct network interface to apply it.</p>
+  }
+
+  @if (scanning) {
+    <ion-list lines="full">
+      <ion-item *ngFor="let networkInterface of networkInterfaces">
+        <ion-label>{{ networkInterface }}</ion-label>
+        @if (networkInterfacesUnavailable.includes(networkInterface)) {
+          <ion-icon color="danger" aria-hidden="true" name="close-circle-outline" slot="end"></ion-icon>
+        } @else if (networkInterfacesAvailable.includes(networkInterface)) {
+          <ion-icon color="success" aria-hidden="true" name="checkmark-circle-outline" slot="end"></ion-icon>
+        } @else {
+          <ion-icon slot="end" class="spinner-grow spinner-grow-xl d-flex align-items-center"></ion-icon>
+        }
+      </ion-item>
+    </ion-list>
+  } @else {
+    <ion-list lines="full">
+      <ion-item
+        button="true"
+        (click)="applyInterface(networkInterface)"
+        *ngFor="let networkInterface of networkInterfacesAvailable">
+          <ion-label>{{ networkInterface }}</ion-label>
+          <ion-icon color="success" aria-hidden="true" name="checkmark-circle-outline" slot="end"></ion-icon>
+      </ion-item>
+    </ion-list>
+  }
+</ion-content>

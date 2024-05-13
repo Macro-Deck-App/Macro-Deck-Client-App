@@ -54,7 +54,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
           this.calculateWidgetSize();
           this.applicationRef.tick();
         }, 100)
-      }, false)
+      }, false);
 
       setTimeout(() => {
         this.calculateWidgetSize();

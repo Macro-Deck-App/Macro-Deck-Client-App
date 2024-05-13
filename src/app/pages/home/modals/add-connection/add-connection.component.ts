@@ -1,25 +1,88 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, ModalController} from "@ionic/angular";
 import {Connection} from "../../../../datatypes/connection";
+import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
+import {ScanNetworkInterfacesComponent} from "../scan-network-interfaces/scan-network-interfaces.component";
+import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
+import {Subscription} from "rxjs";
+import {QrCodeScannerComponent} from "./qr-code-scanner/qr-code-scanner.component";
+import {ConnectionFailedComponent} from "../connection-failed/connection-failed.component";
 
 @Component({
   selector: 'app-add-connection-modal',
   templateUrl: './add-connection.component.html',
   styleUrls: ['./add-connection.component.scss'],
 })
-export class AddConnectionComponent {
+export class AddConnectionComponent implements OnInit, OnDestroy {
 
+  quickSetupQrCodeData: QuickSetupQrCodeData | undefined;
   id: string = "";
   name: string | undefined;
   host: string = "";
   port: number = 8191;
   useSsl: boolean = false;
-  autoConnect: boolean = true;
+  autoConnect: boolean = false;
   index: number = 0;
+  page: string = "quick-setup";
+  subscription: Subscription = new Subscription();
 
   constructor(private modalController: ModalController,
-              private alertController: AlertController) {
+              private alertController: AlertController,
+              private diagnosticService: DiagnosticService) {
+  }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  async ngOnInit() {
+    if (this.diagnosticService.isiOSorAndroid()) {
+      this.subscription.add(QrCodeScannerComponent.quickSetupQrCodeScanned.subscribe(async qrCodeScanner => {
+        const dataBase64 = qrCodeScanner.split("quick-setup/").pop();
+        if (dataBase64) {
+          const dataJson = atob(dataBase64);
+          this.quickSetupQrCodeData = JSON.parse(dataJson) as QuickSetupQrCodeData;
+          await this.handleQuickSetupQrCode();
+        }
+      }));
+      await this.handleQuickSetupQrCode();
+    }
+  }
+
+  async handleQuickSetupQrCode() {
+    if (this.quickSetupQrCodeData === undefined) {
+      return;
+    }
+
+    this.name = this.quickSetupQrCodeData.instanceName;
+    this.port = this.quickSetupQrCodeData.port;
+    this.useSsl = this.quickSetupQrCodeData.ssl;
+
+    const modal = await this.modalController.create({
+      component: ScanNetworkInterfacesComponent,
+      componentProps: {
+        quickSetupQrCodeData: this.quickSetupQrCodeData
+      }
+    });
+    await modal.present();
+    const {data, role} = await modal.onWillDismiss();
+    if (role === 'confirm') {
+      this.host = data;
+      return;
+    }
+
+    if (role === 'no-network-interfaces') {
+      const modal = await this.modalController.create({
+        component: ConnectionFailedComponent,
+        componentProps: {
+          name: this.quickSetupQrCodeData.instanceName,
+          errorInformation: `Tried interfaces: ${this.quickSetupQrCodeData.networkInterfaces.join(", ")}\nPort: ${this.quickSetupQrCodeData.port}\nSSL: ${this.quickSetupQrCodeData.ssl ? "Yes" : "No"}`,
+        }
+      });
+      await modal.present();
+      await modal.onWillDismiss();
+      this.reset();
+    }
   }
 
   async cancel() {
@@ -39,7 +102,10 @@ export class AddConnectionComponent {
       ssl: this.useSsl,
       index: this.index,
       autoConnect: this.autoConnect,
-      usbConnection: false
+      usbConnection: false,
+      token: this.quickSetupQrCodeData?.token !== undefined && this.quickSetupQrCodeData.token.length > 0
+        ? this.quickSetupQrCodeData.token
+        : undefined
     }
     console.log(connection)
     await this.modalController.dismiss(connection, 'confirm');
@@ -68,5 +134,14 @@ export class AddConnectionComponent {
     });
 
     await alert.present();
+  }
+
+  reset() {
+    this.quickSetupQrCodeData = undefined;
+    this.host = "";
+    this.port = 8191;
+    this.useSsl = false;
+    this.name = "";
+    this.autoConnect = false;
   }
 }

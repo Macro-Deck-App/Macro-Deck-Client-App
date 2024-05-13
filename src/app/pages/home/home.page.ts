@@ -19,6 +19,8 @@ import {WebsocketService} from "../../services/websocket/websocket.service";
 import {WakelockService} from "../../services/wakelock/wakelock.service";
 import {Subscription} from "rxjs";
 import {ConnectionFailedComponent} from "./modals/connection-failed/connection-failed.component";
+import {AppComponent} from "../../app.component";
+import {QuickSetupQrCodeData} from "../../datatypes/quick-setup-qr-code-data";
 
 @Component({
   selector: 'app-home',
@@ -90,7 +92,14 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
     this.subscription.add(this.websocketService.connectionFailed.subscribe(async details => {
       await this.showConnectionFailedModal(details);
     }));
+    this.subscription.add(AppComponent.quickSetupLinkScanned.subscribe(async data => {
+      await this.openAddConnectionModal(null, data);
+    }));
     await this.pingService.start();
+
+    /*const dataJson = atob("eyJpbnN0YW5jZU5hbWUiOiJNQU5VRUwtUEMiLCJuZXR3b3JrSW50ZXJmYWNlcyI6WyIxMC44LjAuMyIsIjE5Mi4xNjguMTIuMjEiLCIxOTIuMTY4Ljg4LjEiLCIxOTIuMTY4LjcyLjEiXSwicG9ydCI6ODE5MSwic3NsIjpmYWxzZX0=");
+    const data = JSON.parse(dataJson);
+    AppComponent.quickSetupLinkScanned.emit(data);*/
   }
 
   private async loadConnections() {
@@ -98,10 +107,12 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
     this.savedConnectionsInitialized = true;
   }
 
-  async openAddConnectionModal(existingConnection?: Connection | null) {
-    const modal = await this.modalController.create({
-      component: AddConnectionComponent,
-      componentProps: {
+  async openAddConnectionModal(existingConnection?: Connection | null, quickSetupQrCodeData?: QuickSetupQrCodeData | null) {
+    this.pingService.stop();
+    let props = {};
+
+    if (existingConnection) {
+      props = {
         id: existingConnection?.id,
         name: existingConnection?.name,
         host: existingConnection?.host,
@@ -109,18 +120,27 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
         useSsl: existingConnection?.ssl ?? false,
         autoConnect: existingConnection?.autoConnect ?? false,
         index: existingConnection?.index ?? 0,
-      }
+      };
+    } else if (quickSetupQrCodeData) {
+      props = {
+        quickSetupQrCodeData: quickSetupQrCodeData
+      };
+    }
+
+    const modal = await this.modalController.create({
+      component: AddConnectionComponent,
+      componentProps: props,
+      cssClass: "scanner-hide"
     });
     await modal.present();
 
     const {data, role} = await modal.onWillDismiss();
-    if (role !== 'confirm') {
-      return;
+    if (role === 'confirm') {
+      await this.connectionService.addUpdateConnection(data);
     }
 
-    await this.connectionService.addUpdateConnection(data);
     await this.loadConnections();
-    await this.pingService.restart();
+    await this.pingService.start();
   }
 
   async handleReorder({event}: { event: CustomEvent<ItemReorderEventDetail> }) {

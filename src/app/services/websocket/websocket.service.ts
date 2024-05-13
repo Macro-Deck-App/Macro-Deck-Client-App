@@ -107,7 +107,7 @@ export class WebsocketService {
       this.closed.emit();
       this.connecting = false;
 
-      if (!this.closing) {
+      if (!this.closing && closeEvent.code !== 1000) {
         await this.handleError(closeEvent);
         return;
       }
@@ -125,7 +125,7 @@ export class WebsocketService {
       this.isConnected = true;
       await this.loadingService.showLoading("Waiting for the host to accept the connection...");
       let clientId = await this.settingsService.getClientId();
-      this.socket?.next(Protocol2Messages.getConnectedMessage(clientId));
+      this.socket?.next(Protocol2Messages.getConnectedMessage(clientId, this.connection?.token));
     });
   }
 

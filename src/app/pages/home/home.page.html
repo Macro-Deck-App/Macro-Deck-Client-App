@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="scanner-hide">
   <ion-toolbar>
     <ion-title>Macro Deck</ion-title>
     <ion-buttons slot="primary">
@@ -7,7 +7,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<app-qr-code-scanner-ui class="scanner-ui w-100 h-100"></app-qr-code-scanner-ui>
+
+<ion-content class="scanner-hide">
   <ng-container *ngIf="usbConnectionAvailable">
     <ion-item-divider>
       <ion-label>Wired connections</ion-label>

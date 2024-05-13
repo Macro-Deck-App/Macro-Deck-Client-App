@@ -11,6 +11,11 @@ import {ConnectingComponent} from "./modals/connecting/connecting.component";
 import {ConnectionFailedComponent} from "./modals/connection-failed/connection-failed.component";
 import {ConnectionLostComponent} from "./modals/connection-lost/connection-lost.component";
 import {InsecureConnectionComponent} from "./modals/insecure-connection/insecure-connection.component";
+import {ScanNetworkInterfacesComponent} from "./modals/scan-network-interfaces/scan-network-interfaces.component";
+import {QrCodeScannerComponent} from "./modals/add-connection/qr-code-scanner/qr-code-scanner.component";
+import {
+  QrCodeScannerUiComponent
+} from "./modals/add-connection/qr-code-scanner/qr-code-scanner-ui/qr-code-scanner-ui.component";
 
 @NgModule({
   imports: [
@@ -25,7 +30,10 @@ import {InsecureConnectionComponent} from "./modals/insecure-connection/insecure
     ConnectingComponent,
     ConnectionFailedComponent,
     ConnectionLostComponent,
-    InsecureConnectionComponent
+    InsecureConnectionComponent,
+    ScanNetworkInterfacesComponent,
+    QrCodeScannerComponent,
+    QrCodeScannerUiComponent
   ]
 })
 export class HomePageModule {}

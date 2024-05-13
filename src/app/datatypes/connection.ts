@@ -6,5 +6,6 @@ export interface Connection {
   ssl: boolean,
   index: number | undefined,
   autoConnect: boolean | undefined,
-  usbConnection: boolean | undefined
+  usbConnection: boolean | undefined,
+  token: string | undefined
 }
