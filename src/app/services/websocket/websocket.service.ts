@@ -63,6 +63,12 @@ export class WebsocketService {
     await this.connect();
   }
 
+  public async connectToLocalhost(ssl: boolean, port: number) {
+    this.url = `${ssl ? "wss://" : "ws://"}localhost:${port}`;
+    await this.loadingService.showLoading(`Connecting to Macro Deck on port ${port} (${ssl ? "SSL" : "No SSL"})`);
+    await this.connect();
+  }
+
   public getConnection() {
     return this.connection;
   }

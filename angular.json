@@ -84,6 +84,34 @@
               "sourceMap": true,
               "namedChunks": true
             },
+            "car_thing_production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.car_thing.prod.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "car_thing": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.car_thing.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "budgets": [
                 {
@@ -133,6 +161,12 @@
             },
             "development": {
               "browserTarget": "app:build:development"
+            },
+            "car_thing_production": {
+              "browserTarget": "app:build:car_thing_production"
+            },
+            "car_thing": {
+              "browserTarget": "app:build:car_thing"
             },
             "ci": {
               "progress": false
@@ -192,7 +226,8 @@
   "cli": {
     "schematicCollections": [
       "@ionic/angular-toolkit"
-    ]
+    ],
+    "analytics": false
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

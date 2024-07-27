@@ -4,10 +4,9 @@ import {SettingsService} from "../../../../services/settings/settings.service";
 import {WakelockService} from "../../../../services/wakelock/wakelock.service";
 import {ScreenOrientationService} from "../../../../services/screen-orientation/screen-orientation.service";
 import {SslHandler} from "../../../../../../capacitor_plugins/sslhandler/src";
-import {environment} from "../../../../../environments/environment.web";
+import {environment} from "../../../../../environments/environment";
 import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
 import {ThemeService} from "../../../../services/theme/theme.service";
-import {ButtonWidgetBorderStyle} from "../../../../widget-content-components/button-widget/button-widget-border-style";
 
 @Component({
   selector: 'app-settings-modal',
@@ -122,5 +121,7 @@ export class SettingsModalComponent  implements OnInit {
     return this.diagnosticService.isiOSorAndroid();
   }
 
-  protected readonly environment = environment;
+  public isCarThing() {
+    return environment.carThing;
+  }
 }

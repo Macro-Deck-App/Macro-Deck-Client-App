@@ -9,9 +9,11 @@ import {ThemeService} from "./services/theme/theme.service";
 import {HomePage} from "./pages/home/home.page";
 import {environment} from "../environments/environment";
 import {WebHomePage} from "./pages/web-home/web-home.page";
-import {App, AppUrlOpen, URLOpenListenerEvent} from "@capacitor/app";
+import {App, URLOpenListenerEvent} from "@capacitor/app";
 import {QuickSetupQrCodeData} from "./datatypes/quick-setup-qr-code-data";
-import {QrCodeScannerComponent} from "./pages/home/modals/add-connection/qr-code-scanner/qr-code-scanner.component";
+import {CarThingHomeComponent} from "./pages/car-thing-home/car-thing-home.component";
+import {SettingsModalComponent} from "./pages/shared/modals/settings-modal/settings-modal.component";
+import {ModalController} from "@ionic/angular";
 
 @Component({
   selector: 'app-root',
@@ -21,15 +23,28 @@ import {QrCodeScannerComponent} from "./pages/home/modals/add-connection/qr-code
 export class AppComponent implements OnInit {
   public static quickSetupLinkScanned: EventEmitter<QuickSetupQrCodeData> = new EventEmitter();
 
+  private settingsOpened: boolean = false;
+
   constructor(private storage: Storage,
               private wakeLockService: WakelockService,
               private screenOrientationService: ScreenOrientationService,
               private settingsService: SettingsService,
               private diagnosticService: DiagnosticService,
-              private themeService: ThemeService) {
+              private themeService: ThemeService,
+              private modalController: ModalController) {
   }
 
-  rootComponent = environment.webVersion ? WebHomePage : HomePage;
+  public get rootComponent() {
+    if (environment.webVersion) {
+      return WebHomePage;
+    }
+
+    if (environment.carThing) {
+      return CarThingHomeComponent;
+    }
+
+    return HomePage
+  }
 
   async ngOnInit() {
     await this.storage.create();
@@ -50,5 +65,30 @@ export class AppComponent implements OnInit {
         AppComponent.quickSetupLinkScanned.emit(data);
       }
     });
+
+    if (environment.carThing) {
+      document.onkeydown = (e) => {
+        if (e.key === "m") {
+          this.openSettings();
+        }
+      };
+    }
+  }
+
+  async openSettings() {
+    if (this.settingsOpened) {
+      await this.modalController.dismiss();
+      return;
+    }
+
+    this.settingsOpened = true;
+
+    const modal = await this.modalController.create({
+      component: SettingsModalComponent
+    });
+    await modal.present();
+    await modal.onWillDismiss();
+
+    this.settingsOpened = false;
   }
 }

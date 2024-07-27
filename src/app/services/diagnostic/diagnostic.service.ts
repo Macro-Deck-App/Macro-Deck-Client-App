@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {App} from "@capacitor/app";
 import {Platform} from "@ionic/angular";
 import {Device} from "@capacitor/device";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class DiagnosticService {
     if (this.isiOSorAndroid()) {
       const info = await App.getInfo();
       return `v. ${this.versionPrefix()}-${info.version}`;
+    }
+
+    if (environment.carThing) {
+      return "Car Thing";
     }
 
     return "Web Client";

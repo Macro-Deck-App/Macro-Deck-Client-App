@@ -1,13 +1,15 @@
+import {environment} from "../../../environments/environment";
+
 export class Protocol2Messages {
   public static getConnectedMessage(clientId: string, token: string | undefined) {
     let obj: any = {
       "Method": "CONNECTED",
       "Client-Id": clientId,
       "API": "20",
-      "Device-Type": "Web"
+      "Device-Type": environment.carThing ? "CarThing" : "Web"
     }
 
-    if (token !== undefined) {
+    if (token) {
       obj.Token = token;
     }
 

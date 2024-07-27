@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  webVersion: true,
-  carThing: false,
+  webVersion: false,
+  carThing: true,
   version: "3.0.0",
 };

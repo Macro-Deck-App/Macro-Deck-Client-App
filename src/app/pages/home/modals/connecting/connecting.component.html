@@ -4,7 +4,11 @@
     <div class="spinner-grow mt-4" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-    <ion-button *ngIf="!environment.webVersion" (click)="cancel()" class="mt-5">Cancel</ion-button>
-  </div>
 
+    @if (environment.carThing) {
+      <ion-button (click)="cancel()" class="mt-5">Settings</ion-button>
+    } @else if(!environment.webVersion) {
+      <ion-button (click)="cancel()" class="mt-5">Cancel</ion-button>
+    }
+  </div>
 </ion-content>

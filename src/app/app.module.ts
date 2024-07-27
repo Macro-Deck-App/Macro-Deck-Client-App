@@ -14,6 +14,7 @@ import {WebHomePageModule} from "./pages/web-home/web-home.module";
 import {HomePageModule} from "./pages/home/home.module";
 import {DeckPageModule} from "./pages/deck/deck.module";
 import {ConnectionLostPageModule} from "./pages/connection-lost/connection-lost.module";
+import {NgxTouchKeyboardModule} from "ngx-touch-keyboard";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {ConnectionLostPageModule} from "./pages/connection-lost/connection-lost.
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    NgxTouchKeyboardModule
   ],
   providers: [],
   bootstrap: [AppComponent],

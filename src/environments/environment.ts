@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   webVersion: false,
+  carThing: false,
   version: "3.0.0",
 };
 

@@ -13,6 +13,7 @@ import {Widget} from "../../../datatypes/widgets/widget";
 import {Subscription} from "rxjs";
 import {MacroDeckService} from "../../../services/macro-deck/macro-deck.service";
 import {WidgetContentType} from "../../../enums/widget-content-type";
+import {environment} from "../../../../environments/environment";
 
 @Component({
     selector: 'app-widget-grid',
@@ -134,4 +135,6 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
         }
         return widget;
     }
+
+  protected readonly environment = environment;
 }
