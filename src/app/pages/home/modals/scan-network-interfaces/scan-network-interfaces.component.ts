@@ -2,12 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
 import {HttpClient} from "@angular/common/http";
 import {catchError, of, timeout} from "rxjs";
-import {ModalController} from "@ionic/angular";
+import {IonicModule, ModalController} from "@ionic/angular";
+
 
 @Component({
   selector: 'app-scan-network-interfaces',
   templateUrl: './scan-network-interfaces.component.html',
   styleUrls: ['./scan-network-interfaces.component.scss'],
+  imports: [
+    IonicModule
+]
 })
 export class ScanNetworkInterfacesComponent  implements OnInit {
 

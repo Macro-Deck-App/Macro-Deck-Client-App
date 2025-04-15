@@ -1,11 +1,13 @@
 <ion-content>
   <div class="d-flex justify-content-center align-items-center align-content-center h-100">
-    <div *ngIf="connectionLost" class="d-flex flex-column align-items-center">
-      <div class="icon mb-2"></div>
-      <h4>I lost the connection to the server 🫤</h4>
-      <p>I'll try to reconnect in {{retryCountdown}}...</p>
-      <ion-button (click)="connect()" class="mt-5">Retry now</ion-button>
-    </div>
+    @if (connectionLost) {
+      <div class="d-flex flex-column align-items-center">
+        <div class="icon mb-2"></div>
+        <h4>I lost the connection to the server 🫤</h4>
+        <p>I'll try to reconnect in {{retryCountdown}}...</p>
+        <ion-button (click)="connect()" class="mt-5">Retry now</ion-button>
+      </div>
+    }
   </div>
 </ion-content>
 

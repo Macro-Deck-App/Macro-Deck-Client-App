@@ -9,11 +9,15 @@ import {SettingsService} from "../../services/settings/settings.service";
 import {ButtonWidgetBorderStyle} from "./button-widget-border-style";
 import {Subscription} from "rxjs";
 import {SettingsModalComponent} from "../../pages/shared/modals/settings-modal/settings-modal.component";
+import { NgStyle } from "@angular/common";
 
 @Component({
   selector: 'app-button-widget',
   templateUrl: './button-widget.component.html',
   styleUrls: ['./button-widget.component.scss'],
+  imports: [
+    NgStyle
+]
 })
 export class ButtonWidgetComponent implements OnInit, OnDestroy {
   protected readonly widgetGridComponent = WidgetGridComponent;

@@ -4,12 +4,15 @@ import {Connection} from "../../datatypes/connection";
 import {Subscription} from "rxjs";
 import {NavigationService} from "../../services/navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
-import {ViewDidEnter, ViewDidLeave} from "@ionic/angular";
+import {IonicModule, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
 
 @Component({
   selector: 'app-connection-lost',
   templateUrl: './connection-lost.page.html',
   styleUrls: ['./connection-lost.page.scss'],
+  imports: [
+    IonicModule
+  ]
 })
 export class ConnectionLostPage implements ViewDidEnter, ViewDidLeave {
 

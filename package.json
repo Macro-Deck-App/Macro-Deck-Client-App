@@ -6,11 +6,11 @@
   "homepage": "https://macro-deck.app",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve app --configuration development",
+    "build": "ng build app --configuration development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "lint": "ng lint"
+    "test": "ng test app",
+    "lint": "ng lint app"
   },
   "private": true,
   "dependencies": {

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, ModalController} from "@ionic/angular";
+import {AlertController, IonicModule, ModalController} from "@ionic/angular";
 import {BarcodeScanner, SupportedFormat} from "@capacitor-community/barcode-scanner";
 import {Subscription} from "rxjs";
 import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.component";
@@ -8,6 +8,9 @@ import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.
   selector: 'app-qr-code-scanner',
   templateUrl: './qr-code-scanner.component.html',
   styleUrls: ['./qr-code-scanner.component.scss'],
+  imports: [
+    IonicModule
+  ]
 })
 export class QrCodeScannerComponent implements OnInit, OnDestroy {
 

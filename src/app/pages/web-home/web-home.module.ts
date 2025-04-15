@@ -10,11 +10,11 @@ import { WebHomePage } from './web-home.page';
     imports: [
         CommonModule,
         FormsModule,
-        IonicModule
+        IonicModule,
+        WebHomePage
     ],
     exports: [
         WebHomePage
-    ],
-    declarations: [WebHomePage]
+    ]
 })
 export class WebHomePageModule {}

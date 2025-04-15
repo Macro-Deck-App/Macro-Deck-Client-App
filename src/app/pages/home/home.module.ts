@@ -18,22 +18,20 @@ import {
 } from "./modals/add-connection/qr-code-scanner/qr-code-scanner-ui/qr-code-scanner-ui.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    WebHomePageModule
-  ],
-  declarations: [
-    HomePage,
-    AddConnectionComponent,
-    ConnectingComponent,
-    ConnectionFailedComponent,
-    ConnectionLostComponent,
-    InsecureConnectionComponent,
-    ScanNetworkInterfacesComponent,
-    QrCodeScannerComponent,
-    QrCodeScannerUiComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        WebHomePageModule,
+        HomePage,
+        AddConnectionComponent,
+        ConnectingComponent,
+        ConnectionFailedComponent,
+        ConnectionLostComponent,
+        InsecureConnectionComponent,
+        ScanNetworkInterfacesComponent,
+        QrCodeScannerComponent,
+        QrCodeScannerUiComponent
+    ]
 })
 export class HomePageModule {}

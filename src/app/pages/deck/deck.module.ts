@@ -9,15 +9,13 @@ import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
 import {WidgetContentComponent} from "./widget-grid/widget-content/widget-content.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-  ],
-    declarations: [
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
         DeckPage,
         WidgetGridComponent,
-        WidgetContentComponent
+        WidgetContentComponent,
     ]
 })
 export class DeckPageModule {}

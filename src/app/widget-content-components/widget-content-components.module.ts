@@ -8,14 +8,12 @@ import {EmptyWidgetComponent} from "./empty-widget/empty-widget.component";
     imports: [
         NgStyle,
         TouchEventModule,
-        NgIf
+        NgIf,
+        ButtonWidgetComponent,
+        EmptyWidgetComponent
     ],
     exports: [
         TouchEventModule
-    ],
-    declarations: [
-        ButtonWidgetComponent,
-        EmptyWidgetComponent
     ]
 })
 export class WidgetContentComponentsModule {

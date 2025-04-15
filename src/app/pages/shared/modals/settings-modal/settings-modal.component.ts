@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
-import {AlertController, ModalController, Platform} from "@ionic/angular";
+import {AlertController, IonicModule, ModalController, Platform} from "@ionic/angular";
 import {SettingsService} from "../../../../services/settings/settings.service";
 import {WakelockService} from "../../../../services/wakelock/wakelock.service";
 import {ScreenOrientationService} from "../../../../services/screen-orientation/screen-orientation.service";
@@ -8,11 +8,16 @@ import {environment} from "../../../../../environments/environment.web";
 import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
 import {ThemeService} from "../../../../services/theme/theme.service";
 import {ButtonWidgetBorderStyle} from "../../../../widget-content-components/button-widget/button-widget-border-style";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['./settings-modal.component.scss'],
+  imports: [
+    IonicModule,
+    FormsModule
+  ]
 })
 export class SettingsModalComponent  implements OnInit {
 

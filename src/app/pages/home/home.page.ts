@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  AlertController,
+  AlertController, IonicModule,
   ItemReorderEventDetail,
   ModalController,
   ViewDidEnter,
@@ -21,11 +21,19 @@ import {Subscription} from "rxjs";
 import {ConnectionFailedComponent} from "./modals/connection-failed/connection-failed.component";
 import {AppComponent} from "../../app.component";
 import {QuickSetupQrCodeData} from "../../datatypes/quick-setup-qr-code-data";
+import {
+  QrCodeScannerUiComponent
+} from "./modals/add-connection/qr-code-scanner/qr-code-scanner-ui/qr-code-scanner-ui.component";
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
+  imports: [
+    IonicModule,
+    QrCodeScannerUiComponent
+]
 })
 export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLeave {
   clientId: string | undefined;

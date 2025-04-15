@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, ModalController} from "@ionic/angular";
+import {AlertController, IonicModule, ModalController} from "@ionic/angular";
 import {Connection} from "../../../../datatypes/connection";
 import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
 import {ScanNetworkInterfacesComponent} from "../scan-network-interfaces/scan-network-interfaces.component";
@@ -7,11 +7,19 @@ import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.serv
 import {Subscription} from "rxjs";
 import {QrCodeScannerComponent} from "./qr-code-scanner/qr-code-scanner.component";
 import {ConnectionFailedComponent} from "../connection-failed/connection-failed.component";
+import {FormsModule} from "@angular/forms";
+import {NgTemplateOutlet} from "@angular/common";
 
 @Component({
   selector: 'app-add-connection-modal',
   templateUrl: './add-connection.component.html',
   styleUrls: ['./add-connection.component.scss'],
+  imports: [
+    IonicModule,
+    FormsModule,
+    NgTemplateOutlet,
+    QrCodeScannerComponent
+  ]
 })
 export class AddConnectionComponent implements OnInit, OnDestroy {
 

@@ -16,30 +16,28 @@ import {DeckPageModule} from "./pages/deck/deck.module";
 import {ConnectionLostPageModule} from "./pages/connection-lost/connection-lost.module";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SettingsModalComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    IonicModule.forRoot({swipeBackEnabled: false}),
-    IonicStorageModule.forRoot(),
-    FormsModule,
-    WidgetContentComponentsModule,
-    WebHomePageModule,
-    HomePageModule,
-    DeckPageModule,
-    ConnectionLostPageModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        IonicModule.forRoot({ swipeBackEnabled: false }),
+        IonicStorageModule.forRoot(),
+        FormsModule,
+        WidgetContentComponentsModule,
+        WebHomePageModule,
+        HomePageModule,
+        DeckPageModule,
+        ConnectionLostPageModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+        AppComponent,
+        SettingsModalComponent
+    ],
+    providers: [],
+    bootstrap: [AppComponent],
 })
 export class AppModule {
 }

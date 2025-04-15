@@ -7,11 +7,11 @@ import { IonicModule } from '@ionic/angular';
 import { ConnectionLostPage } from './connection-lost.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule
-  ],
-  declarations: [ConnectionLostPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        ConnectionLostPage
+    ]
 })
 export class ConnectionLostPageModule {}

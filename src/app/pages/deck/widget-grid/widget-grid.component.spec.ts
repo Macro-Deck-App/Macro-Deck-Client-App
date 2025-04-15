@@ -9,9 +9,8 @@ describe('WidgetGridComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ WidgetGridComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), WidgetGridComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(WidgetGridComponent);
     component = fixture.componentInstance;
