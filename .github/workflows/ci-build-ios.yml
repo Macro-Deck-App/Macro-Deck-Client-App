@@ -17,7 +17,7 @@ on:
 jobs:
   build:
     name: Build project
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: "Check out code"
