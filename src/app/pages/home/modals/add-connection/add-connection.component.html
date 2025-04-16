@@ -18,14 +18,16 @@
 
 <ion-content class="ion-padding">
   @if (quickSetupQrCodeData === undefined && !editConnection) {
-    <ion-segment [(ngModel)]="page" value="quick-setup">
-      <ion-segment-button value="quick-setup">
-        <ion-label>Quick Setup</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="manual">
-        <ion-label>Manual Setup</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <div class="mb-3">
+      <ion-segment [(ngModel)]="page" value="quick-setup">
+        <ion-segment-button value="quick-setup">
+          <ion-label>Quick Setup</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="manual">
+          <ion-label>Manual Setup</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
   }
 
   @if (page === "quick-setup" && !editConnection) {

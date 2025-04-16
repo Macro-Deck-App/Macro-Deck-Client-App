@@ -1,9 +1,13 @@
 <div [ngStyle]="borderStyle"
-     (down)="onMouseDown($event)"
-     (up)="onMouseUp($event)"
-     (mouseleave)="onMouseLeave($event)"
-     class="button-widget-wrapper">
-    <img *ngIf="foregroundImage" [src]="foregroundImage" class="foreground" />
-    <img *ngIf="iconImage" [src]="iconImage" class="icon" />
-    <div [ngStyle]=backgroundStyle class="background"></div>
+  (mousedown)="onMouseDown($event)"
+  (mouseup)="onMouseUp($event)"
+  (mouseleave)="onMouseLeave($event)"
+  class="button-widget-wrapper">
+  @if (foregroundImage) {
+    <img [src]="foregroundImage" class="foreground" />
+  }
+  @if (iconImage) {
+    <img [src]="iconImage" class="icon" />
+  }
+  <div [ngStyle]=backgroundStyle class="background"></div>
 </div>

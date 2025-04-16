@@ -9,14 +9,18 @@ import {ThemeService} from "./services/theme/theme.service";
 import {HomePage} from "./pages/home/home.page";
 import {environment} from "../environments/environment";
 import {WebHomePage} from "./pages/web-home/web-home.page";
-import {App, AppUrlOpen, URLOpenListenerEvent} from "@capacitor/app";
+import {App, URLOpenListenerEvent} from "@capacitor/app";
 import {QuickSetupQrCodeData} from "./datatypes/quick-setup-qr-code-data";
 import {QrCodeScannerComponent} from "./pages/home/modals/add-connection/qr-code-scanner/qr-code-scanner.component";
+import {IonicModule} from "@ionic/angular";
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  imports: [
+    IonicModule
+  ]
 })
 export class AppComponent implements OnInit {
   public static quickSetupLinkScanned: EventEmitter<QuickSetupQrCodeData> = new EventEmitter();

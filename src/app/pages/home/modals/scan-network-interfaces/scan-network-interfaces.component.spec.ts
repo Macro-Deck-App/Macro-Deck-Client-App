@@ -9,9 +9,8 @@ describe('ScanNetworkInterfacesComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScanNetworkInterfacesComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), ScanNetworkInterfacesComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ScanNetworkInterfacesComponent);
     component = fixture.componentInstance;

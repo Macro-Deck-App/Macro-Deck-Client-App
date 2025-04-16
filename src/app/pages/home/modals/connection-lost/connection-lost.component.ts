@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {ModalController} from "@ionic/angular";
+import {IonicModule, ModalController} from "@ionic/angular";
 
 @Component({
   selector: 'app-connection-lost',
   templateUrl: './connection-lost.component.html',
   styleUrls: ['./connection-lost.component.scss'],
+  imports: [
+    IonicModule
+  ]
 })
 export class ConnectionLostComponent {
 

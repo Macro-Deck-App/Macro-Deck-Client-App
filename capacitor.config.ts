@@ -6,6 +6,9 @@ const config: CapacitorConfig = {
   webDir: 'www',
   server: {
     androidScheme: 'http'
+  },
+  ios: {
+    scheme: 'Macro Deck Client'
   }
 };
 

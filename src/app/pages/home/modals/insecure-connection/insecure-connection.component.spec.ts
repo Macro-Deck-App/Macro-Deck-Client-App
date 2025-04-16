@@ -9,9 +9,8 @@ describe('InsecureConnectionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InsecureConnectionComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), InsecureConnectionComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(InsecureConnectionComponent);
     component = fixture.componentInstance;
