@@ -1,4 +1,4 @@
-FROM node:18.18.2-buster-slim as node
+FROM node:22.14.0-bullseye-slim@sha256:73a9dfbb6c761aebdf4666cce2627635a30d1d4c20f67ff642d01b8f09e709a3 as node
 
 WORKDIR /src
 COPY . .
