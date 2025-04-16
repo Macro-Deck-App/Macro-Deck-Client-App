@@ -33,7 +33,9 @@ export class ConnectionService {
       return [];
     }
 
-    return JSON.parse(connectionsData).sort((a: Connection, b: Connection) => (a.index ?? 0) - (b.index ?? 0));
+    const connections = JSON.parse(connectionsData).sort((a: Connection, b: Connection) => (a.index ?? 0) - (b.index ?? 0));
+    console.log(connections);
+    return connections;
   }
 
   public async saveConnections(connections: Connection[]) {
@@ -44,7 +46,7 @@ export class ConnectionService {
     const connectionsData = await this.storage.get(this.connectionsStorageKey);
     let connectionsObject = JSON.parse(connectionsData) ?? [];
 
-    if (connection.id === undefined) {
+    if (!connection.id) {
       connection.id = `connection${Math.floor(Date.now() / 1000)}`;
       connection.index = connectionsObject.length;
       connectionsObject.push(connection);

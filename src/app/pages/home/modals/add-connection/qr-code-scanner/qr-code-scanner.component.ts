@@ -22,7 +22,6 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await BarcodeScanner.prepare({targetedFormats: [SupportedFormat.QR_CODE]});
     this.subscription.add(QrCodeScannerUiComponent.backTapped.subscribe(async () => {
       await this.stopScan();
     }));
@@ -45,12 +44,14 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
       return;
     }
 
+    await BarcodeScanner.prepare({targetedFormats: [SupportedFormat.QR_CODE]});
+
     document.querySelector('body')?.classList.add('barcode-scanner-active');
 
     await BarcodeScanner.startScanning({targetedFormats: [SupportedFormat.QR_CODE]}, async result => {
       if (result.hasContent && result.content.toLowerCase().startsWith("https://macro-deck.app/quick-setup")) {
-        QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
         await this.stopScan();
+        QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
       }
     });
   }

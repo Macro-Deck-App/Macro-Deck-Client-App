@@ -223,11 +223,11 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
     await modal.present();
   }
 
-  showDonateButton() {
+  public showDonateButton() {
     return !this.diagnosticsService.isiOS();
   }
 
-  openDonate() {
+  public openDonate() {
     window.open("https://ko-fi.com/manuelmayer", "_blank");
   }
 }

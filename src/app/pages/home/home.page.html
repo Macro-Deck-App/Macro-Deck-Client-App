@@ -79,7 +79,7 @@
             </ion-list>
           } @else {
             <div class="ion-padding d-flex flex-column">
-              <span class="d-block text-center">You have set up no saved connections</span>
+              <span class="d-block text-center">Click the button below to add your first connection!</span>
               <div class="justify-content-center d-flex mt-3">
                 <ion-button (click)="openAddConnectionModal()" id="add-connection-button">
                   <ion-icon name="add"></ion-icon>
@@ -105,14 +105,11 @@
       </div>
     </div>
   }
-
-
-
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
-    <ion-text class="ms-3">{{ version }} | Client Id: {{ clientId }}</ion-text>
+    <ion-text class="ms-3">{{ version }} | Client ID: {{ clientId }}</ion-text>
     @if (showDonateButton()) {
       <ion-buttons class="me-2" slot="primary">
         <ion-button (click)="openDonate()" fill="solid">

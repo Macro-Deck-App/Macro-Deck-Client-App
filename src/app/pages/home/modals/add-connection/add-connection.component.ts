@@ -59,7 +59,7 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
   }
 
   async handleQuickSetupQrCode() {
-    if (this.quickSetupQrCodeData === undefined) {
+    if (!this.quickSetupQrCodeData) {
       return;
     }
 
@@ -71,12 +71,25 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
       component: ScanNetworkInterfacesComponent,
       componentProps: {
         quickSetupQrCodeData: this.quickSetupQrCodeData
-      }
+      },
+      presentingElement: await this.modalController.getTop()
     });
+
     await modal.present();
-    const {data, role} = await modal.onWillDismiss();
+    const {data, role} = await modal.onDidDismiss();
+
     if (role === 'confirm') {
       this.host = data;
+      const alert = await this.alertController.create({
+        subHeader: `Network interface ${data} was selected!`,
+        buttons: [
+          {
+            text: 'Ok',
+            role: 'cancel'
+          }
+        ],
+      });
+      await alert.present();
       return;
     }
 
@@ -86,10 +99,11 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
         componentProps: {
           name: this.quickSetupQrCodeData.instanceName,
           errorInformation: `Tried interfaces: ${this.quickSetupQrCodeData.networkInterfaces.join(", ")}\nPort: ${this.quickSetupQrCodeData.port}\nSSL: ${this.quickSetupQrCodeData.ssl ? "Yes" : "No"}`,
-        }
+        },
+        presentingElement: await this.modalController.getTop()
       });
       await modal.present();
-      await modal.onWillDismiss();
+      await modal.onDidDismiss();
       this.reset();
     }
   }
@@ -116,7 +130,7 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
         ? this.quickSetupQrCodeData.token
         : undefined
     }
-    console.log(connection)
+
     await this.modalController.dismiss(connection, 'confirm');
   }
 
