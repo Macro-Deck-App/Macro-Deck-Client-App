@@ -2,17 +2,23 @@ import {Component} from '@angular/core';
 import {WebsocketService} from "../../services/websocket/websocket.service";
 import {Router} from "@angular/router";
 import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
-import {ModalController, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
+import {IonicModule, ModalController, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
 import {environment} from "../../../environments/environment";
 import {SettingsService} from "../../services/settings/settings.service";
 import {DiagnosticService} from "../../services/diagnostic/diagnostic.service";
 import {NavigationService} from "../../services/navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
+import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
+
 
 @Component({
   selector: 'app-deck',
   templateUrl: './deck.page.html',
   styleUrls: ['./deck.page.scss'],
+  imports: [
+    IonicModule,
+    WidgetGridComponent
+]
 })
 export class DeckPage implements ViewDidEnter {
 

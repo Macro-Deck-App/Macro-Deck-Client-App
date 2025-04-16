@@ -13,11 +13,17 @@ import {Widget} from "../../../datatypes/widgets/widget";
 import {Subscription} from "rxjs";
 import {MacroDeckService} from "../../../services/macro-deck/macro-deck.service";
 import {WidgetContentType} from "../../../enums/widget-content-type";
+import { NgStyle } from "@angular/common";
+import {WidgetContentComponent} from "./widget-content/widget-content.component";
 
 @Component({
-    selector: 'app-widget-grid',
-    templateUrl: './widget-grid.component.html',
-    styleUrls: ['./widget-grid.component.scss'],
+  selector: 'app-widget-grid',
+  templateUrl: './widget-grid.component.html',
+  styleUrls: ['./widget-grid.component.scss'],
+  imports: [
+    NgStyle,
+    WidgetContentComponent
+]
 })
 export class WidgetGridComponent implements AfterContentInit, OnDestroy {
     @ViewChild('widgetsWrapper', {static: false}) wrapperElement!: ElementRef;

@@ -9,9 +9,8 @@ describe('WidgetContentComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ WidgetContentComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), WidgetContentComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(WidgetContentComponent);
     component = fixture.componentInstance;

@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import {ModalController} from "@ionic/angular";
+import {IonicModule, ModalController} from "@ionic/angular";
 
 @Component({
   selector: 'app-connection-failed',
   templateUrl: './connection-failed.component.html',
   styleUrls: ['./connection-failed.component.scss'],
+  imports: [
+    IonicModule
+  ]
 })
 export class ConnectionFailedComponent   {
 

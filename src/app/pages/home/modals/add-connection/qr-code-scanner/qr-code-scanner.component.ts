@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, ModalController} from "@ionic/angular";
+import {AlertController, IonicModule, ModalController} from "@ionic/angular";
 import {BarcodeScanner, SupportedFormat} from "@capacitor-community/barcode-scanner";
 import {Subscription} from "rxjs";
 import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.component";
@@ -8,6 +8,9 @@ import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.
   selector: 'app-qr-code-scanner',
   templateUrl: './qr-code-scanner.component.html',
   styleUrls: ['./qr-code-scanner.component.scss'],
+  imports: [
+    IonicModule
+  ]
 })
 export class QrCodeScannerComponent implements OnInit, OnDestroy {
 
@@ -19,7 +22,6 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await BarcodeScanner.prepare({targetedFormats: [SupportedFormat.QR_CODE]});
     this.subscription.add(QrCodeScannerUiComponent.backTapped.subscribe(async () => {
       await this.stopScan();
     }));
@@ -42,12 +44,14 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
       return;
     }
 
+    await BarcodeScanner.prepare({targetedFormats: [SupportedFormat.QR_CODE]});
+
     document.querySelector('body')?.classList.add('barcode-scanner-active');
 
     await BarcodeScanner.startScanning({targetedFormats: [SupportedFormat.QR_CODE]}, async result => {
       if (result.hasContent && result.content.toLowerCase().startsWith("https://macro-deck.app/quick-setup")) {
-        QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
         await this.stopScan();
+        QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
       }
     });
   }

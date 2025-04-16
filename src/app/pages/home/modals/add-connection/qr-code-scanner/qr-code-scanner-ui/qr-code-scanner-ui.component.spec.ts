@@ -9,9 +9,8 @@ describe('QrCodeScannerUiComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ QrCodeScannerUiComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), QrCodeScannerUiComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(QrCodeScannerUiComponent);
     component = fixture.componentInstance;

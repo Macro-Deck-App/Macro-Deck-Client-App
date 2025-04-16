@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Searching network interface...</ion-title>
+    <ion-title>Scanning networks...</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -11,26 +11,30 @@
 
   @if (scanning) {
     <ion-list lines="full">
-      <ion-item *ngFor="let networkInterface of networkInterfaces">
-        <ion-label>{{ networkInterface }}</ion-label>
-        @if (networkInterfacesUnavailable.includes(networkInterface)) {
-          <ion-icon color="danger" aria-hidden="true" name="close-circle-outline" slot="end"></ion-icon>
-        } @else if (networkInterfacesAvailable.includes(networkInterface)) {
-          <ion-icon color="success" aria-hidden="true" name="checkmark-circle-outline" slot="end"></ion-icon>
-        } @else {
-          <ion-icon slot="end" class="spinner-grow spinner-grow-xl d-flex align-items-center"></ion-icon>
-        }
-      </ion-item>
+      @for (networkInterface of networkInterfaces; track networkInterface) {
+        <ion-item>
+          <ion-label>{{ networkInterface }}</ion-label>
+          @if (networkInterfacesUnavailable.includes(networkInterface)) {
+            <ion-icon color="danger" aria-hidden="true" name="close-circle-outline" slot="end"></ion-icon>
+          } @else if (networkInterfacesAvailable.includes(networkInterface)) {
+            <ion-icon color="success" aria-hidden="true" name="checkmark-circle-outline" slot="end"></ion-icon>
+          } @else {
+            <ion-icon slot="end" class="spinner-grow spinner-grow-xl d-flex align-items-center"></ion-icon>
+          }
+        </ion-item>
+      }
     </ion-list>
   } @else {
     <ion-list lines="full">
-      <ion-item
-        button="true"
-        (click)="applyInterface(networkInterface)"
-        *ngFor="let networkInterface of networkInterfacesAvailable">
+      @for (networkInterface of networkInterfacesAvailable; track networkInterface) {
+        <ion-item
+          button="true"
+          (click)="applyInterface(networkInterface)"
+          >
           <ion-label>{{ networkInterface }}</ion-label>
           <ion-icon color="success" aria-hidden="true" name="checkmark-circle-outline" slot="end"></ion-icon>
-      </ion-item>
+        </ion-item>
+      }
     </ion-list>
   }
 </ion-content>

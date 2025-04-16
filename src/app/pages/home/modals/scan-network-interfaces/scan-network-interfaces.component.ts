@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
 import {HttpClient} from "@angular/common/http";
-import {catchError, of, timeout} from "rxjs";
-import {ModalController} from "@ionic/angular";
+import {catchError, firstValueFrom, of, timeout} from "rxjs";
+import {IonicModule, ModalController} from "@ionic/angular";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+
 
 @Component({
   selector: 'app-scan-network-interfaces',
   templateUrl: './scan-network-interfaces.component.html',
   styleUrls: ['./scan-network-interfaces.component.scss'],
+  imports: [
+    IonicModule
+  ]
 })
-export class ScanNetworkInterfacesComponent  implements OnInit {
+export class ScanNetworkInterfacesComponent implements AfterViewInit {
 
   quickSetupQrCodeData: QuickSetupQrCodeData | undefined;
 
@@ -19,51 +24,61 @@ export class ScanNetworkInterfacesComponent  implements OnInit {
   networkInterfacesAvailable: string[] = [];
   networkInterfacesUnavailable: string[] = [];
 
-  constructor(private http: HttpClient,
-              private modalController: ModalController) { }
+  private destroyRef = inject(DestroyRef);
 
-  async ngOnInit() {
-    await this.testConnections();
+  constructor(private http: HttpClient,
+              private modalController: ModalController) {
+  }
+
+  public ngAfterViewInit() {
+    setTimeout(async () => {
+      await this.testConnections();
+    })
   }
 
   private async testConnections() {
-    if (this.quickSetupQrCodeData === undefined) {
-      return;
-    }
+    if (!this.quickSetupQrCodeData) return;
 
     this.scanning = true;
 
-    const ssl = this.quickSetupQrCodeData.ssl;
-    this.port = this.quickSetupQrCodeData.port;
-    this.networkInterfaces = this.quickSetupQrCodeData.networkInterfaces;
+    const {ssl, port, networkInterfaces} = this.quickSetupQrCodeData;
+    this.port = port;
+    this.networkInterfaces = networkInterfaces;
 
-    for (const networkInterface of this.networkInterfaces) {
-      const url = `${ssl ? "https" : "http"}://${networkInterface}:${this.port}/ping`;
-      this.http.get(url).pipe(
-        timeout(3000),
-        catchError(error => {
-          return of(null);
-        })).subscribe(async response => {
-          if (response !== null) {
-            this.networkInterfacesAvailable.push(networkInterface);
-          } else {
-            this.networkInterfacesUnavailable.push(networkInterface);
-          }
+    const checkPromises = networkInterfaces.map(async (networkInterface) => {
+      const url = `${ssl ? 'https' : 'http'}://${networkInterface}:${port}/ping`;
 
-          if (this.networkInterfacesAvailable.length + this.networkInterfacesUnavailable.length == this.networkInterfaces.length) {
-            this.scanning = false;
+      try {
+        const response = await firstValueFrom(
+          this.http.get(url).pipe(
+            takeUntilDestroyed(this.destroyRef),
+            timeout(3000),
+            catchError(() => of(null))
+          )
+        );
 
-            if (this.networkInterfacesAvailable.length === 0) {
-              await this.modalController.dismiss(null, 'no-network-interfaces');
-              return;
-            }
+        return {networkInterface, available: response !== null};
+      } catch {
+        return {networkInterface, available: false};
+      }
+    });
 
-            if (this.networkInterfacesAvailable.length === 1) {
-              const networkInterface = this.networkInterfacesAvailable[0];
-              await this.modalController.dismiss(networkInterface, 'confirm');
-            }
-          }
-      });
+    const results = await Promise.all(checkPromises);
+
+    this.networkInterfacesAvailable = results
+      .filter(result => result.available)
+      .map(result => result.networkInterface);
+
+    this.networkInterfacesUnavailable = results
+      .filter(result => !result.available)
+      .map(result => result.networkInterface);
+
+    this.scanning = false;
+
+    if (this.networkInterfacesAvailable.length === 0) {
+      await this.modalController.dismiss(null, 'no-network-interfaces');
+    } else if (this.networkInterfacesAvailable.length === 1) {
+      await this.modalController.dismiss(this.networkInterfacesAvailable[0], 'confirm');
     }
   }
 
