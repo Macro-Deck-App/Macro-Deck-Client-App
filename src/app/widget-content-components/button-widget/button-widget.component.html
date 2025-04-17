@@ -1,7 +1,7 @@
 <div [ngStyle]="borderStyle"
-  (mousedown)="onMouseDown($event)"
-  (mouseup)="onMouseUp($event)"
-  (mouseleave)="onMouseLeave($event)"
+  (pointerdown)="onMouseDown($event)"
+  (pointerup)="onMouseUp($event)"
+  (pointerleave)="onMouseLeave($event)"
   class="button-widget-wrapper">
   @if (foregroundImage) {
     <img [src]="foregroundImage" class="foreground" />
