@@ -8,9 +8,10 @@
 # You can see what browsers were selected by your queries by running:
 #   npx browserslist
 
-Chrome >=61
-ChromeAndroid >=61
-Firefox >=60
-Edge >=79
-Safari >=11
-iOS >=11
+# Modern browsers for Ionic / Capacitor
+last 2 Chrome versions
+last 2 ChromeAndroid versions
+last 2 Firefox versions
+last 2 Edge versions
+last 2 Safari versions
+iOS >= 15.2

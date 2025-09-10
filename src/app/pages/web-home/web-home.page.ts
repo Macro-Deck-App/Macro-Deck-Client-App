@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, DOCUMENT} from '@angular/core';
 import {SettingsService} from "../../services/settings/settings.service";
-import { DOCUMENT } from "@angular/common";
+
 import {WebsocketService} from "../../services/websocket/websocket.service";
 import {environment} from "../../../environments/environment";
 import {IonicModule} from "@ionic/angular";
