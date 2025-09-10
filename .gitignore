@@ -70,3 +70,8 @@ yarn.lock
 /android/fastlane/metadata/**/*
 
 /android/vendor/**/*
+
+/capacitor_plugins/*
+/ios/*
+
+/.vscode/*
