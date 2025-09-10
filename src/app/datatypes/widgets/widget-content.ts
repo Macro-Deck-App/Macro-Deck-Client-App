@@ -1,2 +1,1 @@
-export interface WidgetContent {
-}
+export interface WidgetContent {}

@@ -1,21 +1,19 @@
-import {Injectable} from '@angular/core';
-import {SettingsService} from "../settings/settings.service";
-import {KeepAwake} from "@capacitor-community/keep-awake";
+import { Injectable } from '@angular/core';
+import { SettingsService } from '../settings/settings.service';
+import { KeepAwake } from '@capacitor-community/keep-awake';
 import NoSleep from 'nosleep.js';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WakelockService {
-
   private noSleep: NoSleep = new NoSleep();
 
-  constructor(private settingsService: SettingsService) {
-  }
+  constructor(private settingsService: SettingsService) {}
 
   public async updateWakeLock() {
     try {
-      if (await this.settingsService.getWakeLockEnabled() === true) {
+      if ((await this.settingsService.getWakeLockEnabled()) === true) {
         await this.enableWakeLock();
       } else {
         await this.disableWakeLock();

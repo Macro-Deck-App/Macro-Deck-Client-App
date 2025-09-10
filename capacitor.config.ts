@@ -5,11 +5,11 @@ const config: CapacitorConfig = {
   appName: 'Macro Deck Client',
   webDir: 'www',
   server: {
-    androidScheme: 'http'
+    androidScheme: 'http',
   },
   ios: {
-    scheme: 'Macro Deck Client'
-  }
+    scheme: 'Macro Deck Client',
+  },
 };
 
 export default config;

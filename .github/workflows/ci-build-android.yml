@@ -6,17 +6,17 @@ on:
       version:
         type: string
         required: true
-        description: "Version name"
+        description: 'Version name'
   workflow_call:
     inputs:
       version:
         type: string
         required: true
-        description: "Version name"
+        description: 'Version name'
 
 env:
-  KEYSTORE_PATH: "${{ github.workspace }}/keystore.jks"
-  FIREBASE_CREDENTIALS_PATH: "${{ github.workspace }}/firebase.json"
+  KEYSTORE_PATH: '${{ github.workspace }}/keystore.jks'
+  FIREBASE_CREDENTIALS_PATH: '${{ github.workspace }}/firebase.json'
 
 jobs:
   build:
@@ -24,22 +24,22 @@ jobs:
     runs-on: macos-14
 
     steps:
-      - name: "Check out code"
+      - name: 'Check out code'
         uses: actions/checkout@v3
 
-      - name: "Setup dependencies: Node"
+      - name: 'Setup dependencies: Node'
         uses: actions/setup-node@v4
 
-      - name: "Install dependencies"
+      - name: 'Install dependencies'
         uses: Macro-Deck-App/Actions/setup-ionic@main
 
-      - name: "Build Ionic app"
+      - name: 'Build Ionic app'
         run: ionic build -c production
 
-      - name: "Sync Android project"
+      - name: 'Sync Android project'
         run: cap sync android
 
-      - name: "Save signing keystore"
+      - name: 'Save signing keystore'
         run: base64 -d <<< "${{secrets.ANDROID_KEYSTORE_BASE64}}" > $KEYSTORE_PATH
 
       - name: Set Up JDK
@@ -54,13 +54,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: "Cache bundles"
+      - name: 'Cache bundles'
         uses: actions/cache@v3
         with:
           key: "android-bundle-${{ hashFiles('android/Gemfile') }}"
           path: android/App/vendor/bundle
 
-      - name: "Build project"
+      - name: 'Build project'
         env:
           VERSION_NUMBER: ${{ inputs.version }}
           KEYSTORE_FILE_PATH: ${{env.KEYSTORE_PATH}}
@@ -74,7 +74,7 @@ jobs:
           bundle install
           bundle exec fastlane build
 
-      - name: "Upload to Play Store"
+      - name: 'Upload to Play Store'
         env:
           PLAYSTORE_CREDENTIALS: ${{secrets.PLAYSTORE_CREDENTIALS}}
         run: |

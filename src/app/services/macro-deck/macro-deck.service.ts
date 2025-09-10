@@ -1,10 +1,10 @@
-import {EventEmitter, Injectable, Output} from '@angular/core';
-import {WebsocketService} from "../websocket/websocket.service";
-import {Widget} from "../../datatypes/widgets/widget";
-import {WidgetInteraction} from "../../datatypes/widgets/widget-interaction";
+import { EventEmitter, Injectable, Output } from '@angular/core';
+import { WebsocketService } from '../websocket/websocket.service';
+import { Widget } from '../../datatypes/widgets/widget';
+import { WidgetInteraction } from '../../datatypes/widgets/widget-interaction';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MacroDeckService {
   @Output() configUpdate = new EventEmitter();
@@ -17,8 +17,7 @@ export class MacroDeckService {
   buttonRadius: number = 40;
   buttonBackground: boolean = true;
 
-  constructor() {
-  }
+  constructor() {}
 
   setConfig(message: any) {
     this.rows = message.Rows;
@@ -34,7 +33,9 @@ export class MacroDeckService {
   }
 
   updateWidget(widget: Widget) {
-    let existingWidgetIndex = this.widgets.findIndex(x => x.row == widget.row && x.column == widget.column);
+    let existingWidgetIndex = this.widgets.findIndex(
+      (x) => x.row == widget.row && x.column == widget.column,
+    );
     if (existingWidgetIndex !== -1) {
       this.widgets[existingWidgetIndex] = widget;
     } else {

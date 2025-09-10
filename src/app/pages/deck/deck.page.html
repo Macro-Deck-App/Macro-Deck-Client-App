@@ -19,7 +19,12 @@
         </ion-item>
         @if (!environment.webVersion) {
           <ion-item [button]="true" (click)="close()">
-            <ion-icon color="danger" slot="start" name="close" size="large"></ion-icon>
+            <ion-icon
+              color="danger"
+              slot="start"
+              name="close"
+              size="large"
+            ></ion-icon>
             <ion-label>Close connection</ion-label>
           </ion-item>
         }
@@ -45,4 +50,3 @@
     }
   </ion-content>
 </div>
-

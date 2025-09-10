@@ -1,5 +1,9 @@
-import {ChangeDetectionStrategy, Component, EventEmitter} from '@angular/core';
-import {IonicModule} from "@ionic/angular";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+} from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-qr-code-scanner-ui',
@@ -7,15 +11,12 @@ import {IonicModule} from "@ionic/angular";
   styleUrls: ['./qr-code-scanner-ui.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonicModule
-  ]
+  imports: [IonicModule],
 })
 export class QrCodeScannerUiComponent {
-
   public static backTapped: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  constructor() {}
 
   back() {
     QrCodeScannerUiComponent.backTapped.emit();

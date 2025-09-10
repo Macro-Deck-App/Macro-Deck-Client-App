@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   AlertController,
   IonicModule,
@@ -39,9 +45,7 @@ import { AsyncPipe } from '@angular/common';
   standalone: true,
   imports: [FormsModule, IonicModule, QrCodeScannerUiComponent, AsyncPipe],
 })
-export class HomePage
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   clientId: string | undefined;
   version: string | undefined;
   savedConnections: Connection[] = [];
@@ -59,9 +63,8 @@ export class HomePage
     private alertController: AlertController,
     private websocketService: WebsocketService,
     private wakeLockService: WakelockService,
-    private pingService: PingService
+    private pingService: PingService,
   ) {}
-
 
   async ngOnInit() {
     this.clientId = await this.settingsService.getClientId();
@@ -69,7 +72,7 @@ export class HomePage
 
     // Mapping because this creates a new array and not a reference
     this.availableConnections = this.pingService.availableConnections.map(
-      (object) => object
+      (object) => object,
     );
     this.usbConnectionAvailable = this.pingService.usbConnectionAvailable;
   }
@@ -95,13 +98,13 @@ export class HomePage
           }
 
           let savedConnection = this.savedConnections.find(
-            (x) => x.id == connection.id
+            (x) => x.id == connection.id,
           );
           if (savedConnection?.autoConnect === true) {
             await this.connect(savedConnection);
           }
         }
-      })
+      }),
     );
     this.subscription.add(
       this.pingService.connectionUnavailable.subscribe((connection) => {
@@ -111,25 +114,25 @@ export class HomePage
         if (this.availableConnections.includes(connection.id)) {
           this.availableConnections.splice(
             this.availableConnections.indexOf(connection.id),
-            1
+            1,
           );
         }
-      })
+      }),
     );
     this.subscription.add(
       this.websocketService.closed.subscribe(async () => {
         await this.pingService.start();
-      })
+      }),
     );
     this.subscription.add(
       this.websocketService.connectionFailed.subscribe(async (details) => {
         await this.showConnectionFailedModal(details);
-      })
+      }),
     );
     this.subscription.add(
       AppComponent.quickSetupLinkScanned.subscribe(async (data) => {
         await this.openAddConnectionModal(null, data);
-      })
+      }),
     );
     await this.pingService.start();
   }
@@ -142,7 +145,7 @@ export class HomePage
 
   async openAddConnectionModal(
     existingConnection?: Connection | null,
-    quickSetupQrCodeData?: QuickSetupQrCodeData | null
+    quickSetupQrCodeData?: QuickSetupQrCodeData | null,
   ) {
     this.pingService.stop();
     let props = {};

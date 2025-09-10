@@ -29,7 +29,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
 
   constructor(
     private macroDeckService: MacroDeckService,
-    private applicationRef: ApplicationRef
+    private applicationRef: ApplicationRef,
   ) {}
 
   public static updated: EventEmitter<any> = new EventEmitter<any>();
@@ -54,7 +54,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
       this.macroDeckService.configUpdate.subscribe(() => {
         this.calculateWidgetSize();
         this.applicationRef.tick();
-      })
+      }),
     );
 
     window.addEventListener(
@@ -65,7 +65,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
           this.applicationRef.tick();
         }, 100);
       },
-      false
+      false,
     );
 
     setTimeout(() => {
@@ -81,7 +81,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
 
     const wrapperStyle = window.getComputedStyle(
       this.wrapperElement.nativeElement,
-      null
+      null,
     );
     this.wrapperPaddingX =
       parseInt(wrapperStyle.getPropertyValue('padding-left')) +
@@ -118,7 +118,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
     const row = Math.trunc(index / this.macroDeckService.columns);
     const column = Math.trunc(index % this.macroDeckService.columns);
     const widget = this.macroDeckService.widgets.find(
-      (x) => x.row == row && x.column == column
+      (x) => x.row == row && x.column == column,
     );
 
     const width = this.buttonSize * (widget?.colSpan ?? 1);
@@ -153,7 +153,7 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
     const row = Math.trunc(index / this.macroDeckService.columns);
     const column = Math.trunc(index % this.macroDeckService.columns);
     let widget: Widget | undefined = this.macroDeckService.widgets.find(
-      (x) => x.row == row && x.column == column
+      (x) => x.row == row && x.column == column,
     );
     if (!widget) {
       widget = {

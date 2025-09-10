@@ -15,79 +15,107 @@
       <ion-label>Wired connections</ion-label>
     </ion-item-divider>
     <ion-item button="true" (click)="connectUsb()">
-      <ion-icon slot="start" class="mdi mdi-usb text-success d-flex align-items-center"></ion-icon>
+      <ion-icon
+        slot="start"
+        class="mdi mdi-usb text-success d-flex align-items-center"
+      ></ion-icon>
       <ion-label>
         <span class="fs-5">Connect via USB</span>
       </ion-label>
       <ion-reorder slot="end"></ion-reorder>
     </ion-item>
   }
-
   @if (usbConnectionAvailable) {
     <ion-item-divider>
       <ion-label>Wireless connections</ion-label>
     </ion-item-divider>
   }
-
   @if (savedConnectionsInitialized | async) {
     <ion-content>
-        <ion-item-group>
-          @if (savedConnections.length > 0) {
-            <ion-list lines="full">
-              <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder({event : $any($event)})">
-                @for (connection of savedConnections; track connection) {
-                  <ion-item-sliding>
-                    <ion-item button="true" (click)="connect(connection)">
-                      <ng-container>
-                        @if (availableConnections.includes(connection.id)) {
-                          <ion-icon slot="start" class="mdi mdi-wifi text-success d-flex align-items-center"></ion-icon>
-                        } @else {
-                          <ion-icon slot="start" class="mdi mdi-wifi-off text-danger d-flex align-items-center"></ion-icon>
+      <ion-item-group>
+        @if (savedConnections.length > 0) {
+          <ion-list lines="full">
+            <ion-reorder-group
+              [disabled]="false"
+              (ionItemReorder)="handleReorder({ event: $any($event) })"
+            >
+              @for (connection of savedConnections; track connection) {
+                <ion-item-sliding>
+                  <ion-item button="true" (click)="connect(connection)">
+                    <ng-container>
+                      @if (availableConnections.includes(connection.id)) {
+                        <ion-icon
+                          slot="start"
+                          class="mdi mdi-wifi text-success d-flex align-items-center"
+                        ></ion-icon>
+                      } @else {
+                        <ion-icon
+                          slot="start"
+                          class="mdi mdi-wifi-off text-danger d-flex align-items-center"
+                        ></ion-icon>
+                      }
+                    </ng-container>
+                    <ion-label>
+                      <span class="d-flex gap-1 fs-5">
+                        @if (connection.autoConnect) {
+                          <ion-icon
+                            class="mdi text-info mdi-refresh-auto d-flex align-items-center"
+                          />
                         }
-                      </ng-container>
-                      <ion-label>
-                        <span class="d-flex gap-1 fs-5">
-                          @if (connection.autoConnect) {
-                            <ion-icon class="mdi text-info mdi-refresh-auto d-flex align-items-center"/>
-                          }
-                          {{ connection.name }}
-                        </span>
-                        <span class="d-flex gap-1 mt-2 fw-light">
-                          @if (connection.ssl) {
-                            <ion-icon aria-hidden="true"
-                              title="Secure connection"
-                              class="text-success"
-                              name="lock-closed-outline"/>
-                          }
-                          {{ connection.host }}:{{ connection.port }}
-                        </span>
-                      </ion-label>
-                      <ion-reorder slot="end"></ion-reorder>
-                    </ion-item>
-                    <ion-item-options side="end">
-                      <ion-item-option (click)="editConnection(connection)" color="warning">
-                        <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
-                      </ion-item-option>
-                      <ion-item-option (click)="deleteConnection(connection)" color="danger">
-                        <ion-icon slot="icon-only" name="trash"></ion-icon>
-                      </ion-item-option>
-                    </ion-item-options>
-                  </ion-item-sliding>
-                }
-              </ion-reorder-group>
-            </ion-list>
-          } @else {
-            <div class="ion-padding d-flex flex-column">
-              <span class="d-block text-center">Click the button below to add your first connection!</span>
-              <div class="justify-content-center d-flex mt-3">
-                <ion-button (click)="openAddConnectionModal()" id="add-connection-button">
-                  <ion-icon name="add"></ion-icon>
-                  <ion-label>Add connection</ion-label>
-                </ion-button>
-              </div>
+                        {{ connection.name }}
+                      </span>
+                      <span class="d-flex gap-1 mt-2 fw-light">
+                        @if (connection.ssl) {
+                          <ion-icon
+                            aria-hidden="true"
+                            title="Secure connection"
+                            class="text-success"
+                            name="lock-closed-outline"
+                          />
+                        }
+                        {{ connection.host }}:{{ connection.port }}
+                      </span>
+                    </ion-label>
+                    <ion-reorder slot="end"></ion-reorder>
+                  </ion-item>
+                  <ion-item-options side="end">
+                    <ion-item-option
+                      (click)="editConnection(connection)"
+                      color="warning"
+                    >
+                      <ion-icon
+                        slot="icon-only"
+                        name="ellipsis-horizontal"
+                      ></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option
+                      (click)="deleteConnection(connection)"
+                      color="danger"
+                    >
+                      <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-item-option>
+                  </ion-item-options>
+                </ion-item-sliding>
+              }
+            </ion-reorder-group>
+          </ion-list>
+        } @else {
+          <div class="ion-padding d-flex flex-column">
+            <span class="d-block text-center"
+              >Click the button below to add your first connection!</span
+            >
+            <div class="justify-content-center d-flex mt-3">
+              <ion-button
+                (click)="openAddConnectionModal()"
+                id="add-connection-button"
+              >
+                <ion-icon name="add"></ion-icon>
+                <ion-label>Add connection</ion-label>
+              </ion-button>
             </div>
-          }
-        </ion-item-group>
+          </div>
+        }
+      </ion-item-group>
       @if (savedConnections.length > 0) {
         <ion-fab slot="fixed" vertical="bottom" horizontal="end">
           <ion-fab-button color="success" (click)="openAddConnectionModal()">

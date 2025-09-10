@@ -1,31 +1,33 @@
-import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
-import {AlertController, IonicModule, ModalController} from "@ionic/angular";
-import {BarcodeScanner, SupportedFormat} from "@capacitor-community/barcode-scanner";
-import {Subscription} from "rxjs";
-import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.component";
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { AlertController, IonicModule, ModalController } from '@ionic/angular';
+import {
+  BarcodeScanner,
+  SupportedFormat,
+} from '@capacitor-community/barcode-scanner';
+import { Subscription } from 'rxjs';
+import { QrCodeScannerUiComponent } from './qr-code-scanner-ui/qr-code-scanner-ui.component';
 
 @Component({
   selector: 'app-qr-code-scanner',
   templateUrl: './qr-code-scanner.component.html',
   styleUrls: ['./qr-code-scanner.component.scss'],
   standalone: true,
-  imports: [
-    IonicModule
-  ]
+  imports: [IonicModule],
 })
 export class QrCodeScannerComponent implements OnInit, OnDestroy {
-
-  public static quickSetupQrCodeScanned: EventEmitter<string> = new EventEmitter();
+  public static quickSetupQrCodeScanned: EventEmitter<string> =
+    new EventEmitter();
 
   private subscription: Subscription = new Subscription();
 
-  constructor(private alertController: AlertController) {
-  }
+  constructor(private alertController: AlertController) {}
 
   async ngOnInit() {
-    this.subscription.add(QrCodeScannerUiComponent.backTapped.subscribe(async () => {
-      await this.stopScan();
-    }));
+    this.subscription.add(
+      QrCodeScannerUiComponent.backTapped.subscribe(async () => {
+        await this.stopScan();
+      }),
+    );
   }
 
   async ngOnDestroy() {
@@ -45,20 +47,30 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
       return;
     }
 
-    await BarcodeScanner.prepare({targetedFormats: [SupportedFormat.QR_CODE]});
+    await BarcodeScanner.prepare({
+      targetedFormats: [SupportedFormat.QR_CODE],
+    });
 
     document.querySelector('body')?.classList.add('barcode-scanner-active');
 
-    await BarcodeScanner.startScanning({targetedFormats: [SupportedFormat.QR_CODE]}, async result => {
-      if (result.hasContent && result.content.toLowerCase().startsWith("https://macro-deck.app/quick-setup")) {
-        await this.stopScan();
-        QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
-      }
-    });
+    await BarcodeScanner.startScanning(
+      { targetedFormats: [SupportedFormat.QR_CODE] },
+      async (result) => {
+        if (
+          result.hasContent &&
+          result.content
+            .toLowerCase()
+            .startsWith('https://macro-deck.app/quick-setup')
+        ) {
+          await this.stopScan();
+          QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
+        }
+      },
+    );
   }
 
   async requestPermissions(): Promise<boolean> {
-    const camera = await BarcodeScanner.checkPermission({force: true});
+    const camera = await BarcodeScanner.checkPermission({ force: true });
     return camera.granted === true;
   }
 

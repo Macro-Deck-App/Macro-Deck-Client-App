@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  OnInit,
+} from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { WakelockService } from './services/wakelock/wakelock.service';
 import { ScreenOrientationService } from './services/screen-orientation/screen-orientation.service';
@@ -22,11 +27,7 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonicModule,
-    FormsModule,
-    RouterModule,
-  ],
+  imports: [IonicModule, FormsModule, RouterModule],
 })
 export class AppComponent implements OnInit {
   public static quickSetupLinkScanned: EventEmitter<QuickSetupQrCodeData> =
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
     private screenOrientationService: ScreenOrientationService,
     private settingsService: SettingsService,
     private diagnosticService: DiagnosticService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   readonly webVersion = environment.webVersion;

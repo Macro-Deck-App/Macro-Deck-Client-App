@@ -1,13 +1,15 @@
-<div [ngStyle]="borderStyle"
+<div
+  [ngStyle]="borderStyle"
   (pointerdown)="onMouseDown($event)"
   (pointerup)="onMouseUp($event)"
   (pointerleave)="onMouseLeave($event)"
-  class="button-widget-wrapper">
+  class="button-widget-wrapper"
+>
   @if (foregroundImage) {
     <img [src]="foregroundImage" class="foreground" />
   }
   @if (iconImage) {
     <img [src]="iconImage" class="icon" />
   }
-  <div [ngStyle]=backgroundStyle class="background"></div>
+  <div [ngStyle]="backgroundStyle" class="background"></div>
 </div>

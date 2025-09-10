@@ -9,8 +9,8 @@ describe('ButtonWidgetComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), ButtonWidgetComponent]
-}).compileComponents();
+      imports: [IonicModule.forRoot(), ButtonWidgetComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonWidgetComponent);
     component = fixture.componentInstance;

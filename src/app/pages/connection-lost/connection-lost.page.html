@@ -1,9 +1,11 @@
 <ion-content>
-  <div class="d-flex justify-content-center align-items-center align-content-center h-100">
+  <div
+    class="d-flex justify-content-center align-items-center align-content-center h-100"
+  >
     <div class="d-flex flex-column align-items-center">
       <div class="icon mb-2"></div>
       <h4>I lost the connection to the server</h4>
-      <p>I'll try to reconnect in {{retryCountdown}}...</p>
+      <p>I'll try to reconnect in {{ retryCountdown }}...</p>
 
       <div class="d-flex flex-row gap-3 mt-1">
         <ion-button (click)="connect()">Retry now</ion-button>

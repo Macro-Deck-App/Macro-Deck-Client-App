@@ -1,11 +1,16 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
-import {HttpClient} from "@angular/common/http";
-import {catchError, firstValueFrom, of, timeout} from "rxjs";
-import {IonicModule } from "@ionic/angular";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import { ModalController } from '@ionic/angular/standalone'; 
-
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
+import { QuickSetupQrCodeData } from '../../../../datatypes/quick-setup-qr-code-data';
+import { HttpClient } from '@angular/common/http';
+import { catchError, firstValueFrom, of, timeout } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ModalController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-scan-network-interfaces',
@@ -13,12 +18,9 @@ import { ModalController } from '@ionic/angular/standalone';
   styleUrls: ['./scan-network-interfaces.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonicModule
-  ]
+  imports: [IonicModule],
 })
 export class ScanNetworkInterfacesComponent implements AfterViewInit {
-
   quickSetupQrCodeData: QuickSetupQrCodeData | undefined;
 
   scanning: boolean = false;
@@ -29,14 +31,15 @@ export class ScanNetworkInterfacesComponent implements AfterViewInit {
 
   private destroyRef = inject(DestroyRef);
 
-  constructor(private http: HttpClient,
-              private modalController: ModalController) {
-  }
+  constructor(
+    private http: HttpClient,
+    private modalController: ModalController,
+  ) {}
 
   public ngAfterViewInit() {
     setTimeout(async () => {
       await this.testConnections();
-    })
+    });
   }
 
   private async testConnections() {
@@ -44,7 +47,7 @@ export class ScanNetworkInterfacesComponent implements AfterViewInit {
 
     this.scanning = true;
 
-    const {ssl, port, networkInterfaces} = this.quickSetupQrCodeData;
+    const { ssl, port, networkInterfaces } = this.quickSetupQrCodeData;
     this.port = port;
     this.networkInterfaces = networkInterfaces;
 
@@ -56,32 +59,35 @@ export class ScanNetworkInterfacesComponent implements AfterViewInit {
           this.http.get(url).pipe(
             takeUntilDestroyed(this.destroyRef),
             timeout(3000),
-            catchError(() => of(null))
-          )
+            catchError(() => of(null)),
+          ),
         );
 
-        return {networkInterface, available: response !== null};
+        return { networkInterface, available: response !== null };
       } catch {
-        return {networkInterface, available: false};
+        return { networkInterface, available: false };
       }
     });
 
     const results = await Promise.all(checkPromises);
 
     this.networkInterfacesAvailable = results
-      .filter(result => result.available)
-      .map(result => result.networkInterface);
+      .filter((result) => result.available)
+      .map((result) => result.networkInterface);
 
     this.networkInterfacesUnavailable = results
-      .filter(result => !result.available)
-      .map(result => result.networkInterface);
+      .filter((result) => !result.available)
+      .map((result) => result.networkInterface);
 
     this.scanning = false;
 
     if (this.networkInterfacesAvailable.length === 0) {
       await this.modalController.dismiss(null, 'no-network-interfaces');
     } else if (this.networkInterfacesAvailable.length === 1) {
-      await this.modalController.dismiss(this.networkInterfacesAvailable[0], 'confirm');
+      await this.modalController.dismiss(
+        this.networkInterfacesAvailable[0],
+        'confirm',
+      );
     }
   }
 

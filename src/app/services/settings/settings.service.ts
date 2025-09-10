@@ -1,38 +1,38 @@
 import { Injectable } from '@angular/core';
-import {Storage} from "@ionic/storage";
-import {ScreenOrientationType} from "../../enums/screen-orientation-type";
-import {AppearanceType} from "../../enums/appearance-type";
-import {ButtonWidgetBorderStyle} from "../../widget-content-components/button-widget/button-widget-border-style";
+import { Storage } from '@ionic/storage';
+import { ScreenOrientationType } from '../../enums/screen-orientation-type';
+import { AppearanceType } from '../../enums/appearance-type';
+import { ButtonWidgetBorderStyle } from '../../widget-content-components/button-widget/button-widget-border-style';
 
-const clientIdStorageKey: string = "client_id";
-const wakeLockKey: string = "wake_lock_enabled";
-const buttonLongPressDelay: string = "button_long_press_delay";
-const screenOrientationKey: string = "screen_orientation";
-const connectionCountKey: string = "connection_count";
-const lastConnectionKey: string = "last_connection";
-const skipSslValidationKey: string = "skip_ssl_validation";
-const showMenuButtonKey: string = "show_menu_button";
-const appearanceKey: string = "appearance";
-const usbAutoConnectKey: string = "usb_auto_connect";
-const usbPortKey: string = "usb_port";
-const usbUseSslKey: string = "usb_use_ssl";
-const buttonWidgetBorderStyleKey: string = "button_widget_border_style";
+const clientIdStorageKey: string = 'client_id';
+const wakeLockKey: string = 'wake_lock_enabled';
+const buttonLongPressDelay: string = 'button_long_press_delay';
+const screenOrientationKey: string = 'screen_orientation';
+const connectionCountKey: string = 'connection_count';
+const lastConnectionKey: string = 'last_connection';
+const skipSslValidationKey: string = 'skip_ssl_validation';
+const showMenuButtonKey: string = 'show_menu_button';
+const appearanceKey: string = 'appearance';
+const usbAutoConnectKey: string = 'usb_auto_connect';
+const usbPortKey: string = 'usb_port';
+const usbUseSslKey: string = 'usb_use_ssl';
+const buttonWidgetBorderStyleKey: string = 'button_widget_border_style';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingsService {
-
-
-  constructor(private storage: Storage) {
-  }
+  constructor(private storage: Storage) {}
 
   public async setButtonWidgetBorderStyle(style: ButtonWidgetBorderStyle) {
     await this.storage.set(buttonWidgetBorderStyleKey, style);
   }
 
   public async getButtonWidgetBorderStyle() {
-    return  await this.storage.get(buttonWidgetBorderStyleKey) ?? ButtonWidgetBorderStyle.None;
+    return (
+      (await this.storage.get(buttonWidgetBorderStyleKey)) ??
+      ButtonWidgetBorderStyle.None
+    );
   }
 
   public async setUsbUseSsl(useSsl: boolean) {
@@ -40,7 +40,7 @@ export class SettingsService {
   }
 
   public async getUsbUseSsl() {
-    return  await this.storage.get(usbUseSslKey) ?? false;
+    return (await this.storage.get(usbUseSslKey)) ?? false;
   }
 
   public async setUsbPort(usbPort: number) {
@@ -48,7 +48,7 @@ export class SettingsService {
   }
 
   public async getUsbPort() {
-    return  await this.storage.get(usbPortKey) ?? 8191;
+    return (await this.storage.get(usbPortKey)) ?? 8191;
   }
 
   public async setUsbAutoConnect(usbAutoConnect: boolean) {
@@ -56,7 +56,7 @@ export class SettingsService {
   }
 
   public async getUsbAutoConnect() {
-    return  await this.storage.get(usbAutoConnectKey) ?? false;
+    return (await this.storage.get(usbAutoConnectKey)) ?? false;
   }
 
   public async setAppearance(appearanceType: AppearanceType) {
@@ -64,7 +64,7 @@ export class SettingsService {
   }
 
   public async getAppearance() {
-    return  await this.storage.get(appearanceKey) ?? AppearanceType.Dark;
+    return (await this.storage.get(appearanceKey)) ?? AppearanceType.Dark;
   }
 
   public async setShowMenuButton(showMenuButton: boolean) {
@@ -72,7 +72,7 @@ export class SettingsService {
   }
 
   public async getShowMenuButton() {
-    return await this.storage.get(showMenuButtonKey) ?? true;
+    return (await this.storage.get(showMenuButtonKey)) ?? true;
   }
 
   public async setSkipSslValidation(lastConnection: boolean) {
@@ -80,7 +80,7 @@ export class SettingsService {
   }
 
   public async getSkipSslValidation() {
-    return await this.storage.get(skipSslValidationKey) ?? false;
+    return (await this.storage.get(skipSslValidationKey)) ?? false;
   }
 
   public async setLastConnection(lastConnection: String) {
@@ -96,7 +96,10 @@ export class SettingsService {
   }
 
   public async getScreenOrientation() {
-    return  await this.storage.get(screenOrientationKey) ?? ScreenOrientationType.Auto;
+    return (
+      (await this.storage.get(screenOrientationKey)) ??
+      ScreenOrientationType.Auto
+    );
   }
 
   public async setButtonLongPressDelay(delay: number) {
@@ -104,7 +107,7 @@ export class SettingsService {
   }
 
   public async getButtonLongPressDelay() {
-    return await this.storage.get(buttonLongPressDelay) ?? 1000;
+    return (await this.storage.get(buttonLongPressDelay)) ?? 1000;
   }
 
   public async setWakeLockEnabled(state: boolean) {
@@ -112,11 +115,11 @@ export class SettingsService {
   }
 
   public async getWakeLockEnabled() {
-    return await this.storage.get(wakeLockKey) ?? false;
+    return (await this.storage.get(wakeLockKey)) ?? false;
   }
 
   public async getConnectionCount() {
-    return await this.storage.get(connectionCountKey) ?? 0;
+    return (await this.storage.get(connectionCountKey)) ?? 0;
   }
 
   public async increaseConnectionCount() {

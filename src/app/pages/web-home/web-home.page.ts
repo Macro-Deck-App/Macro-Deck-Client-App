@@ -1,9 +1,15 @@
-import {Component, Inject, OnInit, DOCUMENT, ChangeDetectionStrategy} from '@angular/core';
-import {SettingsService} from "../../services/settings/settings.service";
+import {
+  Component,
+  Inject,
+  OnInit,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { SettingsService } from '../../services/settings/settings.service';
 
-import {WebsocketService} from "../../services/websocket/websocket.service";
-import {environment} from "../../../environments/environment";
-import {IonicModule} from "@ionic/angular";
+import { WebsocketService } from '../../services/websocket/websocket.service';
+import { environment } from '../../../environments/environment';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-web-home',
@@ -11,12 +17,9 @@ import {IonicModule} from "@ionic/angular";
   styleUrls: ['./web-home.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonicModule
-]
+  imports: [IonicModule],
 })
 export class WebHomePage implements OnInit {
-
   clientId: string | undefined;
   version: string | undefined;
 
@@ -25,13 +28,15 @@ export class WebHomePage implements OnInit {
 
   private interval: any;
 
-  constructor(@Inject(DOCUMENT) private document: Document,
-              private websocketService: WebsocketService,
-              private settingsService: SettingsService) { }
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private websocketService: WebsocketService,
+    private settingsService: SettingsService,
+  ) {}
 
   async ngOnInit() {
     this.clientId = await this.settingsService.getClientId();
-    this.version = "Web Version";
+    this.version = 'Web Version';
     await this.connect();
     this.websocketService.connectionLost.subscribe(async () => {
       await this.lostConnection();

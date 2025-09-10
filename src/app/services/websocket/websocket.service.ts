@@ -1,26 +1,26 @@
-import {EventEmitter, inject, Injectable} from '@angular/core';
-import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {Protocol2Messages} from "../../datatypes/protocol2/protocol2-messages";
-import {SettingsService} from "../settings/settings.service";
-import {InsecureConnectionComponent} from "../../pages/home/modals/insecure-connection/insecure-connection.component";
-import {ProtocolHandlerService} from "../protocol/protocol-handler.service";
-import {Subject, Subscription} from "rxjs";
-import {LoadingService} from "../loading/loading.service";
-import {webSocket} from "rxjs/webSocket";
-import {environment} from "../../../environments/environment";
-import {Connection} from "../../datatypes/connection";
-import { ModalController } from '@ionic/angular/standalone'; 
+import { EventEmitter, inject, Injectable } from '@angular/core';
+import { WebSocketSubject } from 'rxjs/internal/observable/dom/WebSocketSubject';
+import { Protocol2Messages } from '../../datatypes/protocol2/protocol2-messages';
+import { SettingsService } from '../settings/settings.service';
+import { InsecureConnectionComponent } from '../../pages/home/modals/insecure-connection/insecure-connection.component';
+import { ProtocolHandlerService } from '../protocol/protocol-handler.service';
+import { Subject, Subscription } from 'rxjs';
+import { LoadingService } from '../loading/loading.service';
+import { webSocket } from 'rxjs/webSocket';
+import { environment } from '../../../environments/environment';
+import { Connection } from '../../datatypes/connection';
+import { ModalController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebsocketService {
   public isConnected: Boolean = false;
 
   private connecting: boolean = false;
   private closing: boolean = false;
-  private url: string = "";
+  private url: string = '';
   private connection: Connection | undefined;
   private socket: WebSocketSubject<any> | undefined;
   private connectionClosed: Subject<CloseEvent> = new Subject<CloseEvent>();
@@ -35,10 +35,12 @@ export class WebsocketService {
 
   private readonly router = inject(Router);
 
-  constructor(private loadingService: LoadingService,
-              private modalController: ModalController,
-              private settingsService: SettingsService,
-              private protocolHandlerService: ProtocolHandlerService) {
+  constructor(
+    private loadingService: LoadingService,
+    private modalController: ModalController,
+    private settingsService: SettingsService,
+    private protocolHandlerService: ProtocolHandlerService,
+  ) {
     this.subscribeOpenClose();
   }
 
@@ -50,9 +52,11 @@ export class WebsocketService {
     if (connection.usbConnection) {
       await this.loadingService.showLoading(`Connecting via USB...`);
     } else {
-      await this.loadingService.showLoading(`Connecting to ${connection.name}...`);
+      await this.loadingService.showLoading(
+        `Connecting to ${connection.name}...`,
+      );
     }
-    this.url = `${connection.ssl ? "wss://" : "ws://"}${connection.host}:${connection.port}`;
+    this.url = `${connection.ssl ? 'wss://' : 'ws://'}${connection.host}:${connection.port}`;
     this.connection = connection;
     await this.connect();
   }
@@ -73,35 +77,37 @@ export class WebsocketService {
     this.socket = webSocket({
       url: this.url,
       closeObserver: this.connectionClosed,
-      openObserver: this.connectionOpened
+      openObserver: this.connectionOpened,
     });
 
-    this.subscription.add(this.loadingService.canceled.subscribe(() => {
-      this.close();
-    }))
+    this.subscription.add(
+      this.loadingService.canceled.subscribe(() => {
+        this.close();
+      }),
+    );
 
     this.subscription = this.socket.subscribe({
       next: async (message: any) => {
         await this.protocolHandlerService.handleMessage(message);
       },
-      error: async error => {
+      error: async (error) => {
         await this.loadingService.dismiss();
         this.closed.emit();
         this.connecting = false;
         if (error instanceof DOMException) {
           switch (error.name) {
-            case "SecurityError":
+            case 'SecurityError':
               await this.showInsecureConnectionModal();
               break;
           }
         }
-      }
+      },
     });
   }
 
   private subscribeOpenClose() {
-    this.connectionClosed.subscribe(async closeEvent => {
-      console.info("Closed with code " + closeEvent.code);
+    this.connectionClosed.subscribe(async (closeEvent) => {
+      console.info('Closed with code ' + closeEvent.code);
       await this.loadingService.dismiss();
       this.subscription.unsubscribe();
       this.closed.emit();
@@ -120,17 +126,21 @@ export class WebsocketService {
       this.connected.emit();
       this.connecting = false;
       await this.settingsService.increaseConnectionCount();
-      await this.settingsService.setLastConnection(this.connection?.id ?? "");
+      await this.settingsService.setLastConnection(this.connection?.id ?? '');
       this.protocolHandlerService.setWebsocketSubject(this.socket!);
       this.isConnected = true;
-      await this.loadingService.showLoading("Waiting for the host to accept the connection...");
+      await this.loadingService.showLoading(
+        'Waiting for the host to accept the connection...',
+      );
       let clientId = await this.settingsService.getClientId();
-      this.socket?.next(Protocol2Messages.getConnectedMessage(clientId, this.connection?.token));
+      this.socket?.next(
+        Protocol2Messages.getConnectedMessage(clientId, this.connection?.token),
+      );
     });
   }
 
   public close() {
-    console.log("Close requested");
+    console.log('Close requested');
     this.closing = true;
     this.socket?.complete();
     this.subscription.unsubscribe();
@@ -164,7 +174,7 @@ export class WebsocketService {
 
   private async showInsecureConnectionModal() {
     const modal = await this.modalController.create({
-      component: InsecureConnectionComponent
+      component: InsecureConnectionComponent,
     });
     await modal.present();
   }

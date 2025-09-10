@@ -1,27 +1,23 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {AlertController, IonicModule, Platform} from "@ionic/angular";
-import {SettingsService} from "../../../../services/settings/settings.service";
-import {WakelockService} from "../../../../services/wakelock/wakelock.service";
-import {ScreenOrientationService} from "../../../../services/screen-orientation/screen-orientation.service";
-import {SslHandler} from "../../../../../../capacitor_plugins/sslhandler/src";
-import {environment} from "../../../../../environments/environment.web";
-import {DiagnosticService} from "../../../../services/diagnostic/diagnostic.service";
-import {ThemeService} from "../../../../services/theme/theme.service";
-import {ButtonWidgetBorderStyle} from "../../../../widget-content-components/button-widget/button-widget-border-style";
-import {FormsModule} from "@angular/forms";
-import { ModalController } from '@ionic/angular/standalone'; 
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { AlertController, IonicModule, Platform } from '@ionic/angular';
+import { SettingsService } from '../../../../services/settings/settings.service';
+import { WakelockService } from '../../../../services/wakelock/wakelock.service';
+import { ScreenOrientationService } from '../../../../services/screen-orientation/screen-orientation.service';
+import { SslHandler } from '../../../../../../capacitor_plugins/sslhandler/src';
+import { environment } from '../../../../../environments/environment.web';
+import { DiagnosticService } from '../../../../services/diagnostic/diagnostic.service';
+import { ThemeService } from '../../../../services/theme/theme.service';
+import { ButtonWidgetBorderStyle } from '../../../../widget-content-components/button-widget/button-widget-border-style';
+import { FormsModule } from '@angular/forms';
+import { ModalController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['./settings-modal.component.scss'],
-  imports: [
-    IonicModule,
-    FormsModule
-  ]
+  imports: [IonicModule, FormsModule],
 })
-export class SettingsModalComponent  implements OnInit {
-
+export class SettingsModalComponent implements OnInit {
   public static settingsApplied: EventEmitter<any> = new EventEmitter();
 
   isAndroidOreo: boolean = false;
@@ -29,20 +25,22 @@ export class SettingsModalComponent  implements OnInit {
   showMenuButton: boolean = false;
   skipSslValidation: boolean = false;
   buttonLongPressDelay: number = 1000;
-  appearanceType: string = "0";
-  screenOrientation: string = "0";
+  appearanceType: string = '0';
+  screenOrientation: string = '0';
   usbAutoConnect: boolean = false;
   usbPort: number = 8191;
   usbUseSsl: boolean = false;
-  buttonWidgetBorderStyle: string = "0";
+  buttonWidgetBorderStyle: string = '0';
 
-  constructor(private modalController: ModalController,
-              private settingsService: SettingsService,
-              private wakelockService: WakelockService,
-              private alertController: AlertController,
-              private screenOrientationService: ScreenOrientationService,
-              public diagnosticService: DiagnosticService,
-              private themeService: ThemeService) { }
+  constructor(
+    private modalController: ModalController,
+    private settingsService: SettingsService,
+    private wakelockService: WakelockService,
+    private alertController: AlertController,
+    private screenOrientationService: ScreenOrientationService,
+    public diagnosticService: DiagnosticService,
+    private themeService: ThemeService,
+  ) {}
 
   async ngOnInit() {
     await this.loadCurrentSettings();
@@ -63,19 +61,27 @@ export class SettingsModalComponent  implements OnInit {
     await this.settingsService.setWakeLockEnabled(this.preventScreenTimeout);
     await this.settingsService.setShowMenuButton(this.showMenuButton);
     await this.settingsService.setSkipSslValidation(this.skipSslValidation);
-    await this.settingsService.setButtonLongPressDelay(this.buttonLongPressDelay);
-    await this.settingsService.setAppearance(Number.parseInt(this.appearanceType));
-    await this.settingsService.setScreenOrientation(Number.parseInt(this.screenOrientation));
+    await this.settingsService.setButtonLongPressDelay(
+      this.buttonLongPressDelay,
+    );
+    await this.settingsService.setAppearance(
+      Number.parseInt(this.appearanceType),
+    );
+    await this.settingsService.setScreenOrientation(
+      Number.parseInt(this.screenOrientation),
+    );
     await this.settingsService.setUsbAutoConnect(this.usbAutoConnect);
     await this.settingsService.setUsbPort(this.usbPort);
     await this.settingsService.setUsbUseSsl(this.usbUseSsl);
-    await this.settingsService.setButtonWidgetBorderStyle(Number.parseInt(this.buttonWidgetBorderStyle));
+    await this.settingsService.setButtonWidgetBorderStyle(
+      Number.parseInt(this.buttonWidgetBorderStyle),
+    );
 
     await this.wakelockService.updateWakeLock();
     await this.screenOrientationService.updateScreenOrientation();
     await this.themeService.updateTheme();
     if (this.diagnosticService.isAndroid()) {
-      SslHandler.skipValidation({value: this.skipSslValidation});
+      SslHandler.skipValidation({ value: this.skipSslValidation });
     }
   }
 
@@ -83,13 +89,20 @@ export class SettingsModalComponent  implements OnInit {
     this.preventScreenTimeout = await this.settingsService.getWakeLockEnabled();
     this.showMenuButton = await this.settingsService.getShowMenuButton();
     this.skipSslValidation = await this.settingsService.getSkipSslValidation();
-    this.buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
-    this.appearanceType = (await this.settingsService.getAppearance()).toString();
-    this.screenOrientation = (await this.settingsService.getScreenOrientation()).toString();
+    this.buttonLongPressDelay =
+      await this.settingsService.getButtonLongPressDelay();
+    this.appearanceType = (
+      await this.settingsService.getAppearance()
+    ).toString();
+    this.screenOrientation = (
+      await this.settingsService.getScreenOrientation()
+    ).toString();
     this.usbAutoConnect = await this.settingsService.getUsbAutoConnect();
     this.usbPort = await this.settingsService.getUsbPort();
     this.usbUseSsl = await this.settingsService.getUsbUseSsl();
-    this.buttonWidgetBorderStyle = (await this.settingsService.getButtonWidgetBorderStyle()).toString();
+    this.buttonWidgetBorderStyle = (
+      await this.settingsService.getButtonWidgetBorderStyle()
+    ).toString();
   }
 
   async preventScreenTimeoutChange(event: any) {
@@ -99,7 +112,8 @@ export class SettingsModalComponent  implements OnInit {
 
     const alert = await this.alertController.create({
       header: 'Warning',
-      message: 'Displaying a static image for a long time can cause screen burn-in on some screens.',
+      message:
+        'Displaying a static image for a long time can cause screen burn-in on some screens.',
       buttons: ['OK'],
     });
 
@@ -121,7 +135,7 @@ export class SettingsModalComponent  implements OnInit {
   }
 
   public isAndroid() {
-    return this.diagnosticService.isAndroid()
+    return this.diagnosticService.isAndroid();
   }
 
   public isiOSorAndroid() {

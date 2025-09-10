@@ -1,14 +1,14 @@
-import {inject, Injectable} from '@angular/core';
-import {MacroDeckService} from "../macro-deck/macro-deck.service";
-import {Protocol2Messages} from "../../datatypes/protocol2/protocol2-messages";
-import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {Protocol2Button} from "../../datatypes/protocol2/protocol2-button";
-import {Widget} from "../../datatypes/widgets/widget";
-import {ButtonWidget} from "../../datatypes/widgets/button-widget";
-import {WidgetContentType} from "../../enums/widget-content-type";
-import {WidgetInteraction} from "../../datatypes/widgets/widget-interaction";
-import {WidgetInteractionType} from "../../enums/widget-interaction-type";
-import {LoadingService} from "../loading/loading.service";
+import { inject, Injectable } from '@angular/core';
+import { MacroDeckService } from '../macro-deck/macro-deck.service';
+import { Protocol2Messages } from '../../datatypes/protocol2/protocol2-messages';
+import { WebSocketSubject } from 'rxjs/internal/observable/dom/WebSocketSubject';
+import { Protocol2Button } from '../../datatypes/protocol2/protocol2-button';
+import { Widget } from '../../datatypes/widgets/widget';
+import { ButtonWidget } from '../../datatypes/widgets/button-widget';
+import { WidgetContentType } from '../../enums/widget-content-type';
+import { WidgetInteraction } from '../../datatypes/widgets/widget-interaction';
+import { WidgetInteractionType } from '../../enums/widget-interaction-type';
+import { LoadingService } from '../loading/loading.service';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class Protocol2Service {
 
   constructor(
     private macroDeckService: MacroDeckService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
   ) {
     macroDeckService.interaction.subscribe((interaction) => {
       this.handleInteraction(interaction);
@@ -53,7 +53,7 @@ export class Protocol2Service {
         let widgets: Widget[] = message.Buttons.map(
           (button: Protocol2Button) => {
             return this.mapProtocol2ButtonToWidget(button);
-          }
+          },
         );
 
         this.macroDeckService.setWidgets(widgets);
@@ -76,7 +76,7 @@ export class Protocol2Service {
         let existingWidget = this.macroDeckService.widgets.find(
           (x) =>
             x.row === receivedButton.Position_Y &&
-            x.column === receivedButton.Position_X
+            x.column === receivedButton.Position_X,
         );
         if (existingWidget === undefined) {
           return;

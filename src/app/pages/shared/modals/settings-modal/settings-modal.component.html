@@ -19,21 +19,28 @@
       <ion-icon name="timer" slot="start"></ion-icon>
       <ion-toggle
         (ngModelChange)="preventScreenTimeoutChange($event)"
-        [(ngModel)]="preventScreenTimeout">Prevent screen timeout
+        [(ngModel)]="preventScreenTimeout"
+        >Prevent screen timeout
       </ion-toggle>
     </ion-item>
 
     @if (isAndroid()) {
       <ion-item>
-        <ion-icon slot="start" class="mdi mdi-lock-off d-flex align-items-center"></ion-icon>
-        <ion-toggle
-          [(ngModel)]="skipSslValidation">Skip SSL validation
+        <ion-icon
+          slot="start"
+          class="mdi mdi-lock-off d-flex align-items-center"
+        ></ion-icon>
+        <ion-toggle [(ngModel)]="skipSslValidation"
+          >Skip SSL validation
         </ion-toggle>
       </ion-item>
     }
 
     <ion-item>
-      <ion-icon slot="start" class="mdi mdi-gesture-tap-box d-flex align-items-center"></ion-icon>
+      <ion-icon
+        slot="start"
+        class="mdi mdi-gesture-tap-box d-flex align-items-center"
+      ></ion-icon>
       <ion-range
         label-placement="start"
         label="Button long press delay"
@@ -42,18 +49,27 @@
         snaps="true"
         min="100"
         max="2000"
-        [(ngModel)]="buttonLongPressDelay"></ion-range>
+        [(ngModel)]="buttonLongPressDelay"
+      ></ion-range>
       <ion-label slot="end">{{ buttonLongPressDelay }}ms</ion-label>
     </ion-item>
 
     @if (isiOSorAndroid()) {
       <ion-item>
-        <ion-icon slot="start" class="mdi mdi-screen-rotation d-flex align-items-center"></ion-icon>
+        <ion-icon
+          slot="start"
+          class="mdi mdi-screen-rotation d-flex align-items-center"
+        ></ion-icon>
         @if (!isAndroidOreo) {
-          <ion-select [(ngModel)]="screenOrientation" label="Screen orientation">
+          <ion-select
+            [(ngModel)]="screenOrientation"
+            label="Screen orientation"
+          >
             <ion-select-option value="0">Auto</ion-select-option>
             <ion-select-option value="1">Landscape</ion-select-option>
-            <ion-select-option value="2">Landscape alternative</ion-select-option>
+            <ion-select-option value="2"
+              >Landscape alternative</ion-select-option
+            >
             <ion-select-option value="3">Portrait</ion-select-option>
           </ion-select>
         } @else {
@@ -71,12 +87,16 @@
       <ion-icon name="menu-outline" slot="start"></ion-icon>
       <ion-toggle
         (ngModelChange)="displayMenuButtonChange($event)"
-        [(ngModel)]="showMenuButton">Show menu button
+        [(ngModel)]="showMenuButton"
+        >Show menu button
       </ion-toggle>
     </ion-item>
 
     <ion-item>
-      <ion-icon slot="start" class="mdi mdi-theme-light-dark d-flex align-items-center"></ion-icon>
+      <ion-icon
+        slot="start"
+        class="mdi mdi-theme-light-dark d-flex align-items-center"
+      ></ion-icon>
       <ion-select [(ngModel)]="appearanceType" label="Appearance">
         <ion-select-option value="0">System</ion-select-option>
         <ion-select-option value="1">Dark</ion-select-option>
@@ -85,8 +105,14 @@
     </ion-item>
 
     <ion-item>
-      <ion-icon slot="start" class="mdi mdi-border-all-variant d-flex align-items-center"></ion-icon>
-      <ion-select [(ngModel)]="buttonWidgetBorderStyle" label="Button widget border">
+      <ion-icon
+        slot="start"
+        class="mdi mdi-border-all-variant d-flex align-items-center"
+      ></ion-icon>
+      <ion-select
+        [(ngModel)]="buttonWidgetBorderStyle"
+        label="Button widget border"
+      >
         <ion-select-option value="0">None</ion-select-option>
         <ion-select-option value="1">Colored</ion-select-option>
       </ion-select>
@@ -98,24 +124,34 @@
       </ion-item-divider>
 
       <ion-item>
-        <ion-icon slot="start" class="mdi mdi-refresh-auto d-flex align-items-center"></ion-icon>
-        <ion-toggle [(ngModel)]="usbAutoConnect">Automatically connect</ion-toggle>
+        <ion-icon
+          slot="start"
+          class="mdi mdi-refresh-auto d-flex align-items-center"
+        ></ion-icon>
+        <ion-toggle [(ngModel)]="usbAutoConnect"
+          >Automatically connect</ion-toggle
+        >
       </ion-item>
 
       <ion-item>
-        <ion-icon slot="start" class="mdi mdi-usb d-flex align-items-center"></ion-icon>
-        <ion-input min="1" labelPlacement="floating" type="number" [(ngModel)]="usbPort">
+        <ion-icon
+          slot="start"
+          class="mdi mdi-usb d-flex align-items-center"
+        ></ion-icon>
+        <ion-input
+          min="1"
+          labelPlacement="floating"
+          type="number"
+          [(ngModel)]="usbPort"
+        >
           <div slot="label">Port</div>
         </ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-icon slot="start" name="lock-closed-outline"/>
-        <ion-toggle
-          [(ngModel)]="usbUseSsl">Use SSL
-        </ion-toggle>
+        <ion-icon slot="start" name="lock-closed-outline" />
+        <ion-toggle [(ngModel)]="usbUseSsl">Use SSL </ion-toggle>
       </ion-item>
     }
-
   </ion-list>
 </ion-content>

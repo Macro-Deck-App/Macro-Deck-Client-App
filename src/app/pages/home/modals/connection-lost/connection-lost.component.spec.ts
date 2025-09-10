@@ -9,8 +9,8 @@ describe('ConnectionLostComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), ConnectionLostComponent]
-}).compileComponents();
+      imports: [IonicModule.forRoot(), ConnectionLostComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ConnectionLostComponent);
     component = fixture.componentInstance;

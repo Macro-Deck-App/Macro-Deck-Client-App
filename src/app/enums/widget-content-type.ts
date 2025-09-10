@@ -1,4 +1,4 @@
 export enum WidgetContentType {
-    empty = 0,
-    button = 100
+  empty = 0,
+  button = 100,
 }

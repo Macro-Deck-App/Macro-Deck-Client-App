@@ -1,17 +1,17 @@
 .icon {
-  background-image: url("/assets/icon.png");
+  background-image: url('/assets/icon.png');
   width: 10rem;
   height: 10rem;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  transform: scale(.9);
+  transform: scale(0.9);
   animation: pulseAnimation 2s ease 1s infinite normal forwards;
 }
 
 @keyframes pulseAnimation {
   0% {
-    transform: scale(.9);
+    transform: scale(0.9);
   }
 
   50% {
@@ -19,6 +19,6 @@
   }
 
   100% {
-    transform: scale(.9);
+    transform: scale(0.9);
   }
 }

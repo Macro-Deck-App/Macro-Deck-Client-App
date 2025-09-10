@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Unable to connect to {{name}}</ion-title>
+    <ion-title>Unable to connect to {{ name }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()" [strong]="true">Close</ion-button>
     </ion-buttons>
@@ -13,16 +13,30 @@
         <ion-label>Information</ion-label>
       </ion-item>
       <div class="ion-padding" slot="content">
-        <b class="d-block mt-3">There can be multiple reasons why this happens:</b>
+        <b class="d-block mt-3"
+          >There can be multiple reasons why this happens:</b
+        >
         <ul>
-          <li>Your anti virus software or firewall blocks Macro Deck (Common issue)</li>
-          <li>The wrong network adapter is chosen in the settings on the PC app</li>
+          <li>
+            Your anti virus software or firewall blocks Macro Deck (Common
+            issue)
+          </li>
+          <li>
+            The wrong network adapter is chosen in the settings on the PC app
+          </li>
           <li>The chosen port is used by another application</li>
           <li>Your computer and this device are not in the same network</li>
           <li>If you're using VPN services, disable them</li>
           <li>A restart of your computer can help sometimes</li>
-          <li>If you're using a 5GHz Wi-Fi connection, try to switch to 2,4GHz temporarily</li>
-          <li>Some routers block the communication between Ethernet and Wi-Fi. Check your router settings. Look for SSID isolation or AP isolation and disable it.</li>
+          <li>
+            If you're using a 5GHz Wi-Fi connection, try to switch to 2,4GHz
+            temporarily
+          </li>
+          <li>
+            Some routers block the communication between Ethernet and Wi-Fi.
+            Check your router settings. Look for SSID isolation or AP isolation
+            and disable it.
+          </li>
         </ul>
       </div>
     </ion-accordion>
@@ -30,7 +44,9 @@
       <ion-item slot="header" color="light">
         <ion-label>Details</ion-label>
       </ion-item>
-      <div class="ion-padding" slot="content"><span class="pre-wrap">{{errorInformation}}</span></div>
+      <div class="ion-padding" slot="content">
+        <span class="pre-wrap">{{ errorInformation }}</span>
+      </div>
     </ion-accordion>
   </ion-accordion-group>
 </ion-content>

@@ -30,9 +30,9 @@
     </div>
   }
 
-  @if (page === "quick-setup" && !editConnection) {
+  @if (page === 'quick-setup' && !editConnection) {
     @if (quickSetupQrCodeData !== undefined) {
-      <ng-template [ngTemplateOutlet]="generalConnectionInfo"/>
+      <ng-template [ngTemplateOutlet]="generalConnectionInfo" />
 
       <ion-item class="mt-2">
         <ion-label slot="start">IP Address / Hostname</ion-label>
@@ -46,7 +46,7 @@
 
       <ion-item>
         <ion-label slot="start">SSL</ion-label>
-        <ion-label slot="end">{{ useSsl ? "Yes" : "No" }}</ion-label>
+        <ion-label slot="end">{{ useSsl ? 'Yes' : 'No' }}</ion-label>
       </ion-item>
 
       <div class="w-100 mt-4 d-flex justify-content-center">
@@ -56,16 +56,26 @@
       <app-qr-code-scanner></app-qr-code-scanner>
     }
   } @else {
-    <ng-template [ngTemplateOutlet]="generalConnectionInfo"/>
+    <ng-template [ngTemplateOutlet]="generalConnectionInfo" />
 
     <ion-item class="mt-2">
-      <ion-input labelPlacement="floating" type="text" [(ngModel)]="host" [clearInput]="true">
+      <ion-input
+        labelPlacement="floating"
+        type="text"
+        [(ngModel)]="host"
+        [clearInput]="true"
+      >
         <div slot="label">IP Address / Hostname</div>
       </ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-input min="1" labelPlacement="floating" type="number" [(ngModel)]="port">
+      <ion-input
+        min="1"
+        labelPlacement="floating"
+        type="number"
+        [(ngModel)]="port"
+      >
         <div slot="label">Port</div>
       </ion-input>
     </ion-item>
@@ -78,7 +88,13 @@
 
 <ng-template #generalConnectionInfo>
   <ion-item>
-    <ion-input labelPlacement="floating" type="text" [placeholder]="host" [(ngModel)]="name" [clearInput]="true">
+    <ion-input
+      labelPlacement="floating"
+      type="text"
+      [placeholder]="host"
+      [(ngModel)]="name"
+      [clearInput]="true"
+    >
       <div slot="label">Name</div>
     </ion-input>
   </ion-item>

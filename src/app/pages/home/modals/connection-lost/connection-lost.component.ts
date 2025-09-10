@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { ModalController } from '@ionic/angular/standalone'; 
+import { ModalController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-connection-lost',

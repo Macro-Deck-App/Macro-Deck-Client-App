@@ -3,5 +3,5 @@ export enum ScreenOrientationType {
   Landscape = 1,
   LandscapeAlt = 2,
   Portrait = 3,
-  PortraitAlt = 4
+  PortraitAlt = 4,
 }

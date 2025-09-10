@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {IonicModule } from "@ionic/angular";
-import { ModalController } from '@ionic/angular/standalone'; 
+import { IonicModule } from '@ionic/angular';
+import { ModalController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-connection-failed',
@@ -8,16 +8,13 @@ import { ModalController } from '@ionic/angular/standalone';
   styleUrls: ['./connection-failed.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonicModule
-  ]
+  imports: [IonicModule],
 })
-export class ConnectionFailedComponent   {
+export class ConnectionFailedComponent {
+  name: string = '';
+  errorInformation: string = '';
 
-  name: string = "";
-  errorInformation: string = "";
-
-  constructor(private modalController: ModalController) { }
+  constructor(private modalController: ModalController) {}
 
   async dismiss() {
     await this.modalController.dismiss();

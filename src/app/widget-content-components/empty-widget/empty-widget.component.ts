@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {Widget} from "../../datatypes/widgets/widget";
-import {WidgetGridComponent} from "../../pages/deck/widget-grid/widget-grid.component";
-import {NgStyle} from "@angular/common";
+import { Widget } from '../../datatypes/widgets/widget';
+import { WidgetGridComponent } from '../../pages/deck/widget-grid/widget-grid.component';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-empty-widget',
@@ -9,18 +9,15 @@ import {NgStyle} from "@angular/common";
   styleUrls: ['./empty-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    NgStyle
-  ]
+  imports: [NgStyle],
 })
 export class EmptyWidgetComponent {
-
   backgroundStyle: any;
 
-  constructor() { }
+  constructor() {}
 
   updateWidget(widget: Widget) {
-    this.backgroundStyle = {'background-color' : widget.backgroundColorHex};
+    this.backgroundStyle = { 'background-color': widget.backgroundColorHex };
   }
 
   protected readonly WidgetGridComponent = WidgetGridComponent;

@@ -16,9 +16,11 @@ The Macro Deck Client is crafted with Angular, leveraging the power of the Ionic
 <img height="64px" src="https://macrodeck.org/images/works_with_macrodeck2.png" />
 
 # Technologies
+
 - [Ionic Framework](https://ionicframework.com/)
 - [Angular](https://angular.io/)
 
 # Compatible devices
+
 - Android devices with Android 5.1 and newer
 - iOS devices with iOS 13.0 and newer

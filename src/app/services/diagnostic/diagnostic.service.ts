@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import {App} from "@capacitor/app";
-import {Platform} from "@ionic/angular";
-import {Device} from "@capacitor/device";
+import { App } from '@capacitor/app';
+import { Platform } from '@ionic/angular';
+import { Device } from '@capacitor/device';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DiagnosticService {
-
-  constructor(private platform: Platform) { }
+  constructor(private platform: Platform) {}
 
   async getVersion() {
     if (this.isiOSorAndroid()) {
@@ -16,7 +15,7 @@ export class DiagnosticService {
       return `v. ${this.versionPrefix()}-${info.version}`;
     }
 
-    return "Web Client";
+    return 'Web Client';
   }
 
   async isAndroidOreo() {
@@ -34,21 +33,21 @@ export class DiagnosticService {
   }
 
   public isAndroid() {
-    return this.platform.is("android");
+    return this.platform.is('android');
   }
 
   public isiOS() {
-    return this.platform.is("ios");
+    return this.platform.is('ios');
   }
 
   private versionPrefix(): string {
     if (this.isAndroid()) {
-      return "a";
+      return 'a';
     } else if (this.isiOS()) {
-      return "i";
+      return 'i';
     }
 
-    return "pwa";
+    return 'pwa';
   }
 
   public isiOSorAndroid() {
