@@ -29,9 +29,8 @@
     </ion-item-divider>
   }
 
-  @if (savedConnectionsInitialized) {
+  @if (savedConnectionsInitialized | async) {
     <ion-content>
-      @if (savedConnectionsInitialized) {
         <ion-item-group>
           @if (savedConnections.length > 0) {
             <ion-list lines="full">
@@ -89,7 +88,6 @@
             </div>
           }
         </ion-item-group>
-      }
       @if (savedConnections.length > 0) {
         <ion-fab slot="fixed" vertical="bottom" horizontal="end">
           <ion-fab-button color="success" (click)="openAddConnectionModal()">

@@ -1,6 +1,5 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {WebsocketService} from "../../services/websocket/websocket.service";
-import {Router} from "@angular/router";
 import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
 import {IonicModule, ModalController, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
 import {environment} from "../../../environments/environment";
@@ -15,10 +14,12 @@ import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
   selector: 'app-deck',
   templateUrl: './deck.page.html',
   styleUrls: ['./deck.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     IonicModule,
     WidgetGridComponent
-]
+  ]
 })
 export class DeckPage implements ViewDidEnter {
 

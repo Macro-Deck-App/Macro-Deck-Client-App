@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {ModalController} from "@ionic/angular";
+import { ModalController } from '@ionic/angular/standalone'; 
 import {ConnectingComponent} from "../../pages/home/modals/connecting/connecting.component";
 
 @Injectable({

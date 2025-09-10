@@ -1,9 +1,7 @@
-import {Component, ComponentRef, Input, OnDestroy, ViewChild, ViewContainerRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ComponentRef, Input, OnDestroy, ViewChild, ViewContainerRef} from '@angular/core';
 import {Widget} from "../../../../datatypes/widgets/widget";
 import {WidgetContentType} from "../../../../enums/widget-content-type";
 import {ButtonWidgetComponent} from "../../../../widget-content-components/button-widget/button-widget.component";
-import {MacroDeckService} from "../../../../services/macro-deck/macro-deck.service";
-import {WidgetInteractionType} from "../../../../enums/widget-interaction-type";
 import {Subscription} from "rxjs";
 import {EmptyWidgetComponent} from "../../../../widget-content-components/empty-widget/empty-widget.component";
 
@@ -11,6 +9,8 @@ import {EmptyWidgetComponent} from "../../../../widget-content-components/empty-
   selector: 'app-widget-content',
   templateUrl: './widget-content.component.html',
   styleUrls: ['./widget-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class WidgetContentComponent implements OnDestroy {
   @ViewChild("contentRef", { read: ViewContainerRef }) vcr!: ViewContainerRef;

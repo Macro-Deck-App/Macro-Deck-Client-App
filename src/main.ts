@@ -1,12 +1,37 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { provideServiceWorker } from '@angular/service-worker';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { heartOutline, timer, menuOutline, add, ellipsisHorizontal, trash, qrCodeOutline, } from 'ionicons/icons';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
+import {IonicStorageModule} from "@ionic/storage-angular";
+
+addIcons({
+  'heart-outline': heartOutline,
+  'timer': timer,
+  'menu-outline': menuOutline,
+  'add': add,
+  'ellipsis-horizontal': ellipsisHorizontal,
+  'trash': trash,
+  'qr-code-outline': qrCodeOutline,
+})
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideIonicAngular({ swipeBackEnabled: false }),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    importProvidersFrom(IonicStorageModule.forRoot()),
+  ]
+}).catch(err => console.error(err));

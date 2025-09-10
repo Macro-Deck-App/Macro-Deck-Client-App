@@ -1,5 +1,4 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {ModalController} from "@ionic/angular";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 import {Protocol2Messages} from "../../datatypes/protocol2/protocol2-messages";
 import {SettingsService} from "../settings/settings.service";
@@ -12,6 +11,7 @@ import {environment} from "../../../environments/environment";
 import {Connection} from "../../datatypes/connection";
 import {NavigationService} from "../navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
+import { ModalController } from '@ionic/angular/standalone'; 
 
 @Injectable({
   providedIn: 'root'

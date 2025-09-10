@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Widget} from "../../datatypes/widgets/widget";
 import {ButtonWidget} from "../../datatypes/widgets/button-widget";
 import {WidgetGridComponent} from "../../pages/deck/widget-grid/widget-grid.component";
@@ -15,6 +15,8 @@ import { NgStyle } from "@angular/common";
   selector: 'app-button-widget',
   templateUrl: './button-widget.component.html',
   styleUrls: ['./button-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     NgStyle
 ]

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {Widget} from "../../datatypes/widgets/widget";
 import {WidgetGridComponent} from "../../pages/deck/widget-grid/widget-grid.component";
 import {NgStyle} from "@angular/common";
@@ -7,6 +7,8 @@ import {NgStyle} from "@angular/common";
   selector: 'app-empty-widget',
   templateUrl: './empty-widget.component.html',
   styleUrls: ['./empty-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     NgStyle
   ]

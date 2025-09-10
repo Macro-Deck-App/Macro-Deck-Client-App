@@ -10,6 +10,7 @@ import {IonicModule, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
   selector: 'app-connection-lost',
   templateUrl: './connection-lost.page.html',
   styleUrls: ['./connection-lost.page.scss'],
+  standalone: true,
   imports: [
     IonicModule
   ]

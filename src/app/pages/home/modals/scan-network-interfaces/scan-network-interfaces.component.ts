@@ -1,15 +1,18 @@
-import {AfterViewInit, Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
 import {HttpClient} from "@angular/common/http";
 import {catchError, firstValueFrom, of, timeout} from "rxjs";
-import {IonicModule, ModalController} from "@ionic/angular";
+import {IonicModule } from "@ionic/angular";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import { ModalController } from '@ionic/angular/standalone'; 
 
 
 @Component({
   selector: 'app-scan-network-interfaces',
   templateUrl: './scan-network-interfaces.component.html',
   styleUrls: ['./scan-network-interfaces.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     IonicModule
   ]

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {AlertController, IonicModule, ModalController} from "@ionic/angular";
 import {Connection} from "../../../../datatypes/connection";
 import {QuickSetupQrCodeData} from "../../../../datatypes/quick-setup-qr-code-data";
@@ -14,6 +14,8 @@ import {NgTemplateOutlet} from "@angular/common";
   selector: 'app-add-connection-modal',
   templateUrl: './add-connection.component.html',
   styleUrls: ['./add-connection.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     IonicModule,
     FormsModule,

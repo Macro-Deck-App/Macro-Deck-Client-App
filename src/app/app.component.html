@@ -1,3 +1,7 @@
 <ion-app>
-  <ion-nav [root]="rootComponent"></ion-nav>
+  @if (webVersion) {
+    <app-web-home></app-web-home>
+  } @else {
+    <app-home></app-home>
+  }
 </ion-app>

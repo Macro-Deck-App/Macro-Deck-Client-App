@@ -1,117 +1,149 @@
-import {Component, OnInit} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  AlertController, IonicModule,
+  AlertController,
+  IonicModule,
   ItemReorderEventDetail,
   ModalController,
   ViewDidEnter,
   ViewDidLeave,
-  ViewWillEnter
-} from "@ionic/angular";
-import {SettingsService} from "../../services/settings/settings.service";
-import {environment} from "../../../environments/environment";
-import {DiagnosticService} from "../../services/diagnostic/diagnostic.service";
-import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
-import {PingService} from "../../services/ping/ping.service";
-import {Connection} from "../../datatypes/connection";
-import {AddConnectionComponent} from "./modals/add-connection/add-connection.component";
-import {ConnectionService} from "../../services/connection/connection.service";
-import {WebsocketService} from "../../services/websocket/websocket.service";
-import {WakelockService} from "../../services/wakelock/wakelock.service";
-import {Subscription} from "rxjs";
-import {ConnectionFailedComponent} from "./modals/connection-failed/connection-failed.component";
-import {AppComponent} from "../../app.component";
-import {QuickSetupQrCodeData} from "../../datatypes/quick-setup-qr-code-data";
-import {
-  QrCodeScannerUiComponent
-} from "./modals/add-connection/qr-code-scanner/qr-code-scanner-ui/qr-code-scanner-ui.component";
-
+  ViewWillEnter,
+} from '@ionic/angular';
+import { SettingsService } from '../../services/settings/settings.service';
+import { environment } from '../../../environments/environment';
+import { DiagnosticService } from '../../services/diagnostic/diagnostic.service';
+import { SettingsModalComponent } from '../shared/modals/settings-modal/settings-modal.component';
+import { PingService } from '../../services/ping/ping.service';
+import { Connection } from '../../datatypes/connection';
+import { AddConnectionComponent } from './modals/add-connection/add-connection.component';
+import { ConnectionService } from '../../services/connection/connection.service';
+import { WebsocketService } from '../../services/websocket/websocket.service';
+import { WakelockService } from '../../services/wakelock/wakelock.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { ConnectionFailedComponent } from './modals/connection-failed/connection-failed.component';
+import { AppComponent } from '../../app.component';
+import { QuickSetupQrCodeData } from '../../datatypes/quick-setup-qr-code-data';
+import { QrCodeScannerUiComponent } from './modals/add-connection/qr-code-scanner/qr-code-scanner-ui/qr-code-scanner-ui.component';
+import { FormsModule } from '@angular/forms';
+import { QrCodeScannerComponent } from './modals/add-connection/qr-code-scanner/qr-code-scanner.component';
+import { ConnectingComponent } from './modals/connecting/connecting.component';
+import { ConnectionLostComponent } from './modals/connection-lost/connection-lost.component';
+import { InsecureConnectionComponent } from './modals/insecure-connection/insecure-connection.component';
+import { ScanNetworkInterfacesComponent } from './modals/scan-network-interfaces/scan-network-interfaces.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [
-    IonicModule,
-    QrCodeScannerUiComponent
-]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [FormsModule, IonicModule, QrCodeScannerUiComponent, AsyncPipe],
 })
-export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLeave {
+export class HomePage
+  implements OnInit, AfterViewInit, OnDestroy
+{
   clientId: string | undefined;
   version: string | undefined;
   savedConnections: Connection[] = [];
   availableConnections: string[] = [];
-  savedConnectionsInitialized = false;
+  readonly savedConnectionsInitialized = new BehaviorSubject<boolean>(false);
   usbConnectionAvailable: boolean = false;
 
   private subscription: Subscription = new Subscription();
 
-  constructor(private settingsService: SettingsService,
-              private modalController: ModalController,
-              private diagnosticsService: DiagnosticService,
-              private connectionService: ConnectionService,
-              private alertController: AlertController,
-              private websocketService: WebsocketService,
-              private wakeLockService: WakelockService,
-              private pingService: PingService) {
-  }
+  constructor(
+    private settingsService: SettingsService,
+    private modalController: ModalController,
+    private diagnosticsService: DiagnosticService,
+    private connectionService: ConnectionService,
+    private alertController: AlertController,
+    private websocketService: WebsocketService,
+    private wakeLockService: WakelockService,
+    private pingService: PingService
+  ) {}
 
-  ionViewWillEnter(): void {
+
+  async ngOnInit() {
+    this.clientId = await this.settingsService.getClientId();
+    this.version = await this.diagnosticsService.getVersion();
+
     // Mapping because this creates a new array and not a reference
-    this.availableConnections = this.pingService.availableConnections.map(object => object);
+    this.availableConnections = this.pingService.availableConnections.map(
+      (object) => object
+    );
     this.usbConnectionAvailable = this.pingService.usbConnectionAvailable;
   }
 
-  ionViewDidLeave(): void {
+  ngOnDestroy(): void {
     this.pingService.stop();
     this.subscription.unsubscribe();
   }
 
-  async ionViewDidEnter() {
+  async ngAfterViewInit() {
     this.subscription = new Subscription();
     await this.loadConnections();
-    this.subscription.add(this.pingService.connectionAvailable.subscribe(async connection => {
-      if (!this.availableConnections.includes(connection.id)) {
-        this.availableConnections.push(connection.id);
-        if (connection.usbConnection) {
-          this.usbConnectionAvailable = true;
-          if (connection.autoConnect) {
-            await this.connect(connection);
+    this.subscription.add(
+      this.pingService.connectionAvailable.subscribe(async (connection) => {
+        if (!this.availableConnections.includes(connection.id)) {
+          this.availableConnections.push(connection.id);
+          if (connection.usbConnection) {
+            this.usbConnectionAvailable = true;
+            if (connection.autoConnect) {
+              await this.connect(connection);
+            }
+            return;
           }
-          return;
-        }
 
-        let savedConnection = this.savedConnections.find(x => x.id == connection.id);
-        if (savedConnection?.autoConnect === true) {
-          await this.connect(savedConnection);
+          let savedConnection = this.savedConnections.find(
+            (x) => x.id == connection.id
+          );
+          if (savedConnection?.autoConnect === true) {
+            await this.connect(savedConnection);
+          }
         }
-      }
-    }));
-    this.subscription.add(this.pingService.connectionUnavailable.subscribe(connection => {
-      if (connection.usbConnection) {
-        this.usbConnectionAvailable = false;
-      }
-      if (this.availableConnections.includes(connection.id)) {
-        this.availableConnections.splice(this.availableConnections.indexOf(connection.id), 1);
-      }
-    }));
-    this.subscription.add(this.websocketService.closed.subscribe(async () => {
-      await this.pingService.start();
-    }));
-    this.subscription.add(this.websocketService.connectionFailed.subscribe(async details => {
-      await this.showConnectionFailedModal(details);
-    }));
-    this.subscription.add(AppComponent.quickSetupLinkScanned.subscribe(async data => {
-      await this.openAddConnectionModal(null, data);
-    }));
+      })
+    );
+    this.subscription.add(
+      this.pingService.connectionUnavailable.subscribe((connection) => {
+        if (connection.usbConnection) {
+          this.usbConnectionAvailable = false;
+        }
+        if (this.availableConnections.includes(connection.id)) {
+          this.availableConnections.splice(
+            this.availableConnections.indexOf(connection.id),
+            1
+          );
+        }
+      })
+    );
+    this.subscription.add(
+      this.websocketService.closed.subscribe(async () => {
+        await this.pingService.start();
+      })
+    );
+    this.subscription.add(
+      this.websocketService.connectionFailed.subscribe(async (details) => {
+        await this.showConnectionFailedModal(details);
+      })
+    );
+    this.subscription.add(
+      AppComponent.quickSetupLinkScanned.subscribe(async (data) => {
+        await this.openAddConnectionModal(null, data);
+      })
+    );
     await this.pingService.start();
   }
 
   private async loadConnections() {
-    this.savedConnections = await this.connectionService.getConnections() ?? [];
-    this.savedConnectionsInitialized = true;
+    this.savedConnections =
+      (await this.connectionService.getConnections()) ?? [];
+    this.savedConnectionsInitialized.next(true);
   }
 
-  async openAddConnectionModal(existingConnection?: Connection | null, quickSetupQrCodeData?: QuickSetupQrCodeData | null) {
+  async openAddConnectionModal(
+    existingConnection?: Connection | null,
+    quickSetupQrCodeData?: QuickSetupQrCodeData | null
+  ) {
     this.pingService.stop();
     let props = {};
 
@@ -124,22 +156,22 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
         useSsl: existingConnection?.ssl ?? false,
         autoConnect: existingConnection?.autoConnect ?? false,
         index: existingConnection?.index ?? 0,
-        editConnection: true
+        editConnection: true,
       };
     } else if (quickSetupQrCodeData) {
       props = {
-        quickSetupQrCodeData: quickSetupQrCodeData
+        quickSetupQrCodeData: quickSetupQrCodeData,
       };
     }
 
     const modal = await this.modalController.create({
       component: AddConnectionComponent,
       componentProps: props,
-      cssClass: "scanner-hide"
+      cssClass: 'scanner-hide',
     });
     await modal.present();
 
-    const {data, role} = await modal.onWillDismiss();
+    const { data, role } = await modal.onWillDismiss();
     if (role === 'confirm') {
       await this.connectionService.addUpdateConnection(data);
     }
@@ -148,9 +180,13 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
     await this.pingService.start();
   }
 
-  async handleReorder({event}: { event: CustomEvent<ItemReorderEventDetail> }) {
+  async handleReorder({
+    event,
+  }: {
+    event: CustomEvent<ItemReorderEventDetail>;
+  }) {
     this.savedConnections = event.detail.complete(this.savedConnections);
-    this.updateIndexes()
+    this.updateIndexes();
     await this.connectionService.saveConnections(this.savedConnections);
   }
 
@@ -166,7 +202,7 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
       buttons: [
         {
           text: 'No',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Yes',
@@ -175,7 +211,7 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
             await this.connectionService.deleteConnection(connection.id);
             await this.loadConnections();
           },
-        }
+        },
       ],
     });
 
@@ -192,20 +228,16 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
   }
 
   async connectUsb() {
-    let usbConnection: Connection = await this.connectionService.getUsbConnection();
+    let usbConnection: Connection =
+      await this.connectionService.getUsbConnection();
     await this.connect(usbConnection);
-  }
-
-  async ngOnInit() {
-    this.clientId = await this.settingsService.getClientId();
-    this.version = await this.diagnosticsService.getVersion();
   }
 
   protected readonly environment = environment;
 
   async openSettings() {
     const modal = await this.modalController.create({
-      component: SettingsModalComponent
+      component: SettingsModalComponent,
     });
     await modal.present();
     await modal.onWillDismiss();
@@ -217,8 +249,8 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
       component: ConnectionFailedComponent,
       componentProps: {
         name: this.websocketService.getConnection()?.name,
-        errorInformation: errorInformation
-      }
+        errorInformation: errorInformation,
+      },
     });
     await modal.present();
   }
@@ -228,6 +260,6 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
   }
 
   public openDonate() {
-    window.open("https://ko-fi.com/manuelmayer", "_blank");
+    window.open('https://ko-fi.com/manuelmayer', '_blank');
   }
 }

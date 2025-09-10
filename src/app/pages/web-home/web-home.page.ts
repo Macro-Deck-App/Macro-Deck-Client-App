@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, DOCUMENT} from '@angular/core';
+import {Component, Inject, OnInit, DOCUMENT, ChangeDetectionStrategy} from '@angular/core';
 import {SettingsService} from "../../services/settings/settings.service";
 
 import {WebsocketService} from "../../services/websocket/websocket.service";
@@ -9,6 +9,8 @@ import {IonicModule} from "@ionic/angular";
   selector: 'app-web-home',
   templateUrl: './web-home.page.html',
   styleUrls: ['./web-home.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     IonicModule
 ]

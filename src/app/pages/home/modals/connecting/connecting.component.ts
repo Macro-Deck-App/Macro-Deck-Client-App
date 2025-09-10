@@ -1,5 +1,6 @@
-import {Component, EventEmitter} from '@angular/core';
-import {IonicModule, ModalController} from "@ionic/angular";
+import {ChangeDetectionStrategy, Component, EventEmitter} from '@angular/core';
+import {IonicModule} from "@ionic/angular";
+import {ModalController} from "@ionic/angular/standalone";
 import {environment} from "../../../../../environments/environment";
 
 
@@ -7,6 +8,8 @@ import {environment} from "../../../../../environments/environment";
   selector: 'app-connecting',
   templateUrl: './connecting.component.html',
   styleUrls: ['./connecting.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     IonicModule
 ]

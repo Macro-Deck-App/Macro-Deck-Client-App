@@ -8,6 +8,7 @@ import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.
   selector: 'app-qr-code-scanner',
   templateUrl: './qr-code-scanner.component.html',
   styleUrls: ['./qr-code-scanner.component.scss'],
+  standalone: true,
   imports: [
     IonicModule
   ]
