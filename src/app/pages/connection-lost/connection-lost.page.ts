@@ -1,10 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {WebsocketService} from "../../services/websocket/websocket.service";
 import {Connection} from "../../datatypes/connection";
 import {Subscription} from "rxjs";
-import {NavigationService} from "../../services/navigation/navigation.service";
-import {NavigationDestination} from "../../enums/navigation-destination";
 import {IonicModule, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-connection-lost',
@@ -18,15 +17,13 @@ import {IonicModule, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
 export class ConnectionLostPage implements ViewDidEnter, ViewDidLeave {
 
   retryCountdown: number = 10;
-
   connection: Connection | undefined;
 
+  private readonly router = inject(Router);
   private subscription: Subscription = new Subscription();
-
   private interval: any;
 
-  constructor(private websocketService: WebsocketService,
-              private navigationService: NavigationService) {
+  constructor(private websocketService: WebsocketService) {
     this.connection = websocketService.getConnection();
   }
 
@@ -54,7 +51,7 @@ export class ConnectionLostPage implements ViewDidEnter, ViewDidLeave {
   async connect() {
     clearInterval(this.interval);
     if (this.connection == undefined) {
-      await this.navigationService.navigateTo(NavigationDestination.Home);
+      this.router.navigate([''])
       return;
     }
     await this.websocketService.connectToConnection(this.connection);
@@ -62,6 +59,6 @@ export class ConnectionLostPage implements ViewDidEnter, ViewDidLeave {
 
   async cancel() {
     clearInterval(this.interval);
-    await this.navigationService.navigateTo(NavigationDestination.Home);
+    this.router.navigate([''])
   }
 }

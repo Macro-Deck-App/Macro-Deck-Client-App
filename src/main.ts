@@ -9,6 +9,8 @@ import { heartOutline, timer, menuOutline, add, ellipsisHorizontal, trash, qrCod
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import {IonicStorageModule} from "@ionic/storage-angular";
+import { provideRouter } from '@angular/router';
+import { routes } from './app/routes';
 
 addIcons({
   'heart-outline': heartOutline,
@@ -33,5 +35,6 @@ bootstrapApplication(AppComponent, {
       registrationStrategy: 'registerWhenStable:30000'
     }),
     importProvidersFrom(IonicStorageModule.forRoot()),
+    provideRouter(routes),
   ]
 }).catch(err => console.error(err));

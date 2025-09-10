@@ -1,4 +1,4 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, inject, Injectable} from '@angular/core';
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 import {Protocol2Messages} from "../../datatypes/protocol2/protocol2-messages";
 import {SettingsService} from "../settings/settings.service";
@@ -9,9 +9,8 @@ import {LoadingService} from "../loading/loading.service";
 import {webSocket} from "rxjs/webSocket";
 import {environment} from "../../../environments/environment";
 import {Connection} from "../../datatypes/connection";
-import {NavigationService} from "../navigation/navigation.service";
-import {NavigationDestination} from "../../enums/navigation-destination";
 import { ModalController } from '@ionic/angular/standalone'; 
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -34,11 +33,12 @@ export class WebsocketService {
 
   private subscription: Subscription = new Subscription();
 
+  private readonly router = inject(Router);
+
   constructor(private loadingService: LoadingService,
               private modalController: ModalController,
               private settingsService: SettingsService,
-              private protocolHandlerService: ProtocolHandlerService,
-              private navigationService: NavigationService) {
+              private protocolHandlerService: ProtocolHandlerService) {
     this.subscribeOpenClose();
   }
 
@@ -113,7 +113,7 @@ export class WebsocketService {
       }
 
       this.isConnected = false;
-      await this.navigationService.navigateTo(NavigationDestination.Home);
+      this.router.navigate(['']);
     });
 
     this.connectionOpened.subscribe(async () => {
@@ -154,7 +154,7 @@ export class WebsocketService {
 
     if (this.isConnected) {
       this.isConnected = false;
-      await this.navigationService.navigateTo(NavigationDestination.ConnectionLost);
+      this.router.navigate(['connection-lost']);
       return;
     }
 

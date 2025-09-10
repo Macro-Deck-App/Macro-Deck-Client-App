@@ -1,13 +1,12 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {WebsocketService} from "../../services/websocket/websocket.service";
 import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
 import {IonicModule, ModalController, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
 import {environment} from "../../../environments/environment";
 import {SettingsService} from "../../services/settings/settings.service";
 import {DiagnosticService} from "../../services/diagnostic/diagnostic.service";
-import {NavigationService} from "../../services/navigation/navigation.service";
-import {NavigationDestination} from "../../enums/navigation-destination";
 import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,22 +20,23 @@ import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
     WidgetGridComponent
   ]
 })
-export class DeckPage implements ViewDidEnter {
+export class DeckPage implements AfterViewInit {
 
   showMenuButton: boolean = true;
   clientId: string = "";
   version: string = "";
 
+  private readonly router = inject(Router);
+
   constructor(private websocketService: WebsocketService,
               private modalController: ModalController,
               private settingsService: SettingsService,
-              private diagnosticsService: DiagnosticService,
-              private navigationService: NavigationService) {
+              private diagnosticsService: DiagnosticService) {
   }
 
-  async ionViewDidEnter() {
+  async ngAfterViewInit() {
     if (!this.websocketService.isConnected) {
-      await this.navigationService.navigateTo(NavigationDestination.Home);
+      this.router.navigate(['']);
     }
 
     this.clientId = await this.settingsService.getClientId();

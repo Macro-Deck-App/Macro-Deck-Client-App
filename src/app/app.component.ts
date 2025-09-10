@@ -13,11 +13,8 @@ import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { QuickSetupQrCodeData } from './datatypes/quick-setup-qr-code-data';
 
 import { FormsModule } from '@angular/forms';
-import { SettingsModalComponent } from './pages/shared/modals/settings-modal/settings-modal.component';
-import { DeckPageModule } from './pages/deck/deck.module';
 import { IonicModule } from '@ionic/angular';
-import { ConnectionLostPage } from './pages/connection-lost/connection-lost.page';
-import { DeckPage } from './pages/deck/deck.page';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -28,8 +25,7 @@ import { DeckPage } from './pages/deck/deck.page';
   imports: [
     IonicModule,
     FormsModule,
-    HomePage,
-    WebHomePage,
+    RouterModule,
   ],
 })
 export class AppComponent implements OnInit {
