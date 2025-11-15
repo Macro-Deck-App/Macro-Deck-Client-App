@@ -27,7 +27,7 @@ lane :build do
         clean: true,
         silent: false,
         output_name: "macro-deck-client.ipa",
-        output_directory: artifacts,
+        output_directory: "artifacts",
         export_options: {
           generateAppStoreInformation: true
         }
@@ -57,12 +57,11 @@ end
 
 desc "Deploy a new version of the app to TestFlight"
 lane :release do
+    setup_ci
     app_store_connect
+    get_certs
     upload_to_testflight(
-        distribute_external: true,
-        groups: [
-            "Macro Deck Client testing"
-        ],
+        skip_waiting_for_build_processing: true,
         changelog: ENV["CHANGELOG"]
     )
 end

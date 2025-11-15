@@ -1,4 +1,4 @@
-name: reusable-ios-build.yml
+name: reusable-android-build.yml
 on:
   workflow_call:
     inputs:
@@ -13,9 +13,13 @@ on:
         description: "Name of the uploaded artifact"
         value: ${{ jobs.ios-build.outputs.artifact_name }}
 
+env:
+  KEYSTORE_PATH: "${{ github.workspace }}/keystore.jks"
+  FIREBASE_CREDENTIALS_PATH: "${{ github.workspace }}/firebase.json"
+
 jobs:
   ios-build:
-    name: Build iOS project
+    name: Build Android project
     runs-on: macos-26
     outputs:
       artifact_name: ${{ steps.meta.outputs.artifact_name }}
@@ -34,38 +38,44 @@ jobs:
         with:
           name: ${{ inputs.base-build-artifact-name }}-node
           path: node_modules/
-      - name: Download ios base build artifact
+      - name: Download android base build artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.base-build-artifact-name }}-ios
-          path: ios/
-      - name: "Install SSH key"
-        uses: webfactory/ssh-agent@v0.9.0
+          name: ${{ inputs.base-build-artifact-name }}-android
+          path: android/
+      - name: "Save signing keystore"
+        run: base64 -d <<< "${{secrets.ANDROID_KEYSTORE_BASE64}}" > $KEYSTORE_PATH
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
         with:
-          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
-          known_hosts: ${{ vars.MATCH_KNOWN_HOSTS }}
+          distribution: 'temurin'
+          java-version: |
+            17
+            21
+          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: "Build project"
         env:
           VERSION_NUMBER: ${{ inputs.version }}
-          KEY_ID: ${{secrets.APPSTORE_KEY_ID}}
-          ISSUER_ID: ${{secrets.APPSTORE_KEY_ISSUER_ID}}
-          KEY_CONTENT: ${{secrets.APPSTORE_KEY_CONTENT}}
-          MATCH_PASSWORD: ${{secrets.MATCH_PASSWORD}}
+          KEYSTORE_FILE_PATH: ${{env.KEYSTORE_PATH}}
+          KEYSTORE_FILE_PASSWORD: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
+          KEYSTORE_FILE_ALIAS: ${{secrets.ANDROID_KEYSTORE_KEY}}
         run: |
           export BUILD_NUMBER=$(( ${{ github.run_number }} + 3000 ))
-          cd ios/App
+          cd android
           bundle install
           fastlane build
       - name: Generate artifact name
         id: meta
         run: |
-          ARTIFACT_NAME="ios-build-${{ inputs.version }}-${GITHUB_RUN_ID}"
+          ARTIFACT_NAME="android-build-${{ inputs.version }}-${GITHUB_RUN_ID}"
           echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.meta.outputs.artifact_name }}
           path: |
-            ios/App/artifacts/AppStoreInfo.plist
-            ios/App/artifacts/macro-deck-client.ipa
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 1

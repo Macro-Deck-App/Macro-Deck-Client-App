@@ -24,3 +24,65 @@ jobs:
     with:
       version: ${{ needs.determine-version.outputs.version }}
       base-build-artifact-name: ${{ needs.base-build.outputs.artifact_name }}
+
+  android-build:
+    needs: [determine-version, base-build]
+    uses: ./.github/workflows/reusable-android-build.yml
+    secrets: inherit
+    with:
+      version: ${{ needs.determine-version.outputs.version }}
+      base-build-artifact-name: ${{ needs.base-build.outputs.artifact_name }}
+
+  ios-deploy-app-store:
+    if: github.ref_type == 'tag'
+    needs: ios-build
+    uses: ./.github/workflows/reusable-ios-deployment.yml
+    secrets: inherit
+    with:
+      ios-build-artifact-name: ${{ needs.ios-build.outputs.artifact_name }}
+
+  android-deploy-play-store:
+    if: github.ref_type == 'tag'
+    needs: android-build
+    uses: ./.github/workflows/reusable-android-deployment.yml
+    secrets: inherit
+    with:
+      android-build-artifact-name: ${{ needs.android-build.outputs.artifact_name }}
+
+  attach-artifacts-to-release:
+    if: github.ref_type == 'tag'
+    needs: [ base-build, ios-build, android-build ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download iOS build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.ios-build.outputs.artifact_name }}
+          path: release-artifacts
+      - name: Download android build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.android-build.outputs.artifact_name }}
+          path: release-artifacts
+      - name: Download web client build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.base-build.outputs.artifact_name }}-web-client
+          path: release-artifacts
+      - name: Rename artifacts
+        run: |
+          mv release-artifacts/macro-deck-client.ipa release-artifacts/macro-deck-client-ios.ipa
+          mv release-artifacts/apk/release/app-release.apk release-artifacts/macro-deck-client-android.apk
+          mv release-artifacts/web-client.zip release-artifacts/macro-deck-web-client.zip
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            release-artifacts/macro-deck-client-ios.ipa
+            release-artifacts/macro-deck-client-android.apk
+            release-artifacts/macro-deck-web-client.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

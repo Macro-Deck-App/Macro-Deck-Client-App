@@ -1,0 +1,29 @@
+name: reusable-android-deployment.yml
+on:
+  workflow_call:
+    inputs:
+      android-build-artifact-name:
+        required: true
+        type: string
+
+jobs:
+  android-build:
+    name: Build iOS project
+    runs-on: macos-26
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Download android build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.android-build-artifact-name }}
+          path: android/app/build/outputs
+      - name: "Deploy project"
+        env:
+          PLAYSTORE_CREDENTIALS: ${{secrets.PLAYSTORE_CREDENTIALS}}
+        run: |
+          cd android
+          bundle install
+          fastlane release

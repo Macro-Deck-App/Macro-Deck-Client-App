@@ -1,0 +1,37 @@
+name: reusable-ios-deployment.yml
+on:
+  workflow_call:
+    inputs:
+      ios-build-artifact-name:
+        required: true
+        type: string
+
+jobs:
+  ios-build:
+    name: Build iOS project
+    runs-on: macos-26
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Download ios build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.ios-build-artifact-name }}
+          path: ios/App
+      - name: "Install SSH key"
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ vars.MATCH_KNOWN_HOSTS }}
+      - name: "Deploy project"
+        env:
+          KEY_ID: ${{secrets.APPSTORE_KEY_ID}}
+          ISSUER_ID: ${{secrets.APPSTORE_KEY_ISSUER_ID}}
+          KEY_CONTENT: ${{secrets.APPSTORE_KEY_CONTENT}}
+          MATCH_PASSWORD: ${{secrets.MATCH_PASSWORD}}
+        run: |
+          cd ios/App
+          bundle install
+          fastlane release

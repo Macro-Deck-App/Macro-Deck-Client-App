@@ -28,8 +28,7 @@ jobs:
             echo "version=$VERSION" >> $GITHUB_OUTPUT
             echo "Using tag version: $VERSION"
           else
-            # Use commit SHA
-            VERSION="${{ github.sha }}"
+            VERSION="3.0.0"
             echo "version=$VERSION" >> $GITHUB_OUTPUT
             echo "Using commit SHA: $VERSION"
           fi
