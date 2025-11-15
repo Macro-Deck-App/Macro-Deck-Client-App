@@ -4,13 +4,22 @@ on:
   workflow_call:
   push:
     branches:
-      - '**'
-      - '!main'
-      - '!develop'
+      - 'main'
+    tags:
+      - '*'
+  pull_request:
 
 jobs:
-  image_build:
-    name: Image build
-    uses: ./.github/workflows/ci-build-image.yml
-    if: ${{ github.event_name != 'push' || github.event.pull_request.head.sha != github.sha }}
-    secrets: inherit
+  determine-version:
+    uses: ./.github/workflows/reusable-determine-version.yml
+
+  base-build:
+    needs: determine-version
+    uses: ./.github/workflows/reusable-base-build.yml
+
+  ios-build:
+    needs: [determine-version, base-build]
+    uses: ./.github/workflows/reusable-ios-build.yml
+    with:
+      version: ${{ needs.determine-version.outputs.version }}
+      base-build-artifact-name: ${{ needs.base-build.outputs.artifact_name }}

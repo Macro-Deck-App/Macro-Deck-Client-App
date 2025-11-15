@@ -1,0 +1,59 @@
+name: reusable-ios-build.yml
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      base-build-artifact-name:
+        required: true
+        type: string
+    outputs:
+      artifact_name:
+        description: "Name of the uploaded artifact"
+        value: ${{ jobs.ios-build.outputs.artifact_name }}
+
+jobs:
+  ios-build:
+    name: Build iOS project
+    runs-on: macos-26
+    outputs:
+      artifact_name: ${{ steps.meta.outputs.artifact_name }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Download base build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.base-build-artifact-name }}
+          path: www/
+      - name: "Install dependencies"
+        uses: Macro-Deck-App/Actions/setup-ionic@main
+      - name: "Install SSH key"
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.FASTLANE_CERTIFICATES_KEY }}
+      - name: "Build project"
+        env:
+          VERSION_NUMBER: ${{ inputs.version }}
+          KEY_ID: ${{secrets.APPSTORE_KEY_ID}}
+          ISSUER_ID: ${{secrets.APPSTORE_KEY_ISSUER_ID}}
+          KEY_CONTENT: ${{secrets.APPSTORE_KEY_CONTENT}}
+          MATCH_PASSWORD: ${{secrets.MATCH_PASSWORD}}
+        run: |
+          export BUILD_NUMBER=$(( ${{ github.run_number }} + 3000 ))
+          cd ios/App
+          fastlane build
+      - name: Generate artifact name
+        id: meta
+        run: |
+          ARTIFACT_NAME="ios-build-${{ inputs.version }}-${GITHUB_RUN_ID}"
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.artifact_name }}
+          path: ios/App/artifacts/*
+          if-no-files-found: error
+          retention-days: 1

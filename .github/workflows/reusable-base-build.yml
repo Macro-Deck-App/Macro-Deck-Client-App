@@ -1,0 +1,36 @@
+name: Base Build
+on:
+  workflow_call:
+    outputs:
+      artifact_name:
+        description: "Name of the uploaded artifact"
+        value: ${{ jobs.base-build.outputs.artifact_name }}
+
+jobs:
+  base-build:
+    name: Build project
+    runs-on: ubuntu-latest
+    outputs:
+      artifact_name: ${{ steps.meta.outputs.artifact_name }}
+    steps:
+      - name: "Check out code"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: "Setup dependencies: Node"
+        uses: actions/setup-node@v4
+      - name: "Install dependencies"
+        uses: Macro-Deck-App/Actions/setup-ionic@main
+      - name: "Build Ionic app"
+        run: ionic build -c production
+      - name: Generate artifact name
+        id: meta
+        run: |
+          ARTIFACT_NAME="base-build-${GITHUB_RUN_ID}"
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.artifact_name }}
+          path: www/
+          if-no-files-found: error
+          retention-days: 1

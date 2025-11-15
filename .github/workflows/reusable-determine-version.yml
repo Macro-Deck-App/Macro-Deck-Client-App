@@ -1,0 +1,35 @@
+name: Determine Version
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "The determined version (tag without 'v' prefix or commit SHA)"
+        value: ${{ jobs.determine-version.outputs.version }}
+
+jobs:
+  determine-version:
+    name: Determine version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Determine version
+        id: version
+        run: |
+          # Check if this is a tag
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # Extract tag name and remove 'v' prefix if present
+            TAG_NAME="${{ github.ref_name }}"
+            VERSION="${TAG_NAME#v}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Using tag version: $VERSION"
+          else
+            # Use commit SHA
+            VERSION="${{ github.sha }}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Using commit SHA: $VERSION"
+          fi

@@ -26,7 +26,11 @@ lane :build do
     build_app(
         clean: true,
         silent: false,
-        output_name: "macro-deck-client.ipa"
+        output_name: "macro-deck-client.ipa",
+        output_directory: artifacts,
+        export_options: {
+          generateAppStoreInformation: true
+        }
     )
 end
 
