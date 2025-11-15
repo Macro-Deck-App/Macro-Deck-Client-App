@@ -20,6 +20,7 @@ jobs:
   ios-build:
     needs: [determine-version, base-build]
     uses: ./.github/workflows/reusable-ios-build.yml
+    secrets: inherit
     with:
       version: ${{ needs.determine-version.outputs.version }}
       base-build-artifact-name: ${{ needs.base-build.outputs.artifact_name }}

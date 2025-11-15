@@ -27,10 +27,13 @@ jobs:
       - name: Download base build artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.base-build-artifact-name }}
+          name: ${{ inputs.base-build-artifact-name }}-www
           path: www/
-      - name: "Install dependencies"
-        uses: Macro-Deck-App/Actions/setup-ionic@main
+      - name: Download base build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.base-build-artifact-name }}-ios
+          path: iOS/
       - name: "Install SSH key"
         uses: webfactory/ssh-agent@v0.9.0
         with:
