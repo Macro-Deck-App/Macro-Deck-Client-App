@@ -70,3 +70,6 @@ yarn.lock
 /android/fastlane/metadata/**/*
 
 /android/vendor/**/*
+
+# Local plugin installs
+capacitor_plugins/**/node_modules/

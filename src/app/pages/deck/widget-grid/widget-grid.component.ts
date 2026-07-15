@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  AfterViewInit,
   ApplicationRef,
   Component,
   ElementRef,
@@ -93,9 +92,38 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
         return this.macroDeckService.rows * this.macroDeckService.columns;
     }
 
+    /**
+     * Cells covered by another widget's span (but not that widget's origin) must not render,
+     * otherwise empty 1x1 widgets sit on top and steal touch events.
+     */
+    isCellCovered(index: number): boolean {
+        const row = Math.trunc(index / this.macroDeckService.columns);
+        const column = Math.trunc(index % this.macroDeckService.columns);
+
+        return this.macroDeckService.widgets.some(widget => {
+            if (widget.row === row && widget.column === column) {
+                return false;
+            }
+
+            const colSpan = Math.max(1, widget.colSpan ?? 1);
+            const rowSpan = Math.max(1, widget.rowSpan ?? 1);
+            return column >= widget.column &&
+                column < widget.column + colSpan &&
+                row >= widget.row &&
+                row < widget.row + rowSpan;
+        });
+    }
+
     getWidgetStyle(index: number) {
         const row = Math.trunc(index / this.macroDeckService.columns);
         const column = Math.trunc(index % this.macroDeckService.columns);
+
+        if (this.isCellCovered(index)) {
+            return {
+                'display': 'none'
+            };
+        }
+
         const widget = this.macroDeckService.widgets.find(x => x.row == row && x.column == column);
 
         const width = this.buttonSize * (widget?.colSpan ?? 1);
@@ -112,7 +140,8 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
             'height': height + 'px',
             'position': 'absolute',
             'top': y + "px",
-            'left': x + "px"
+            'left': x + "px",
+            'z-index': (widget && (widget.colSpan > 1 || widget.rowSpan > 1)) ? '2' : '1'
         }
     }
 
@@ -123,6 +152,10 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
     }
 
     getWidgetFromIndex(index: number): Widget | undefined {
+        if (this.isCellCovered(index)) {
+            return undefined;
+        }
+
         const row = Math.trunc(index / this.macroDeckService.columns);
         const column = Math.trunc(index % this.macroDeckService.columns);
         let widget: Widget | undefined = this.macroDeckService.widgets.find(x => x.row == row && x.column == column);

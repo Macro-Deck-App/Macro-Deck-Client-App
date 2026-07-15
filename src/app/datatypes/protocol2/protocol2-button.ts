@@ -3,5 +3,8 @@ export interface Protocol2Button {
     Position_X: number,
     Position_Y: number,
     LabelBase64: string | undefined,
-    BackgroundColorHex: string | undefined
+    BackgroundColorHex: string | undefined,
+    ColSpan?: number,
+    RowSpan?: number,
+    Type?: string
 }

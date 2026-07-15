@@ -2,10 +2,9 @@ import {Component, ComponentRef, Input, OnDestroy, ViewChild, ViewContainerRef} 
 import {Widget} from "../../../../datatypes/widgets/widget";
 import {WidgetContentType} from "../../../../enums/widget-content-type";
 import {ButtonWidgetComponent} from "../../../../widget-content-components/button-widget/button-widget.component";
-import {MacroDeckService} from "../../../../services/macro-deck/macro-deck.service";
-import {WidgetInteractionType} from "../../../../enums/widget-interaction-type";
-import {Subscription} from "rxjs";
 import {EmptyWidgetComponent} from "../../../../widget-content-components/empty-widget/empty-widget.component";
+import {TouchpadWidgetComponent} from "../../../../widget-content-components/touchpad-widget/touchpad-widget.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-widget-content',
@@ -49,6 +48,12 @@ export class WidgetContentComponent implements OnDestroy {
       case WidgetContentType.button:
         if (!this.componentCreated) {
           this.ref = this.vcr.createComponent(ButtonWidgetComponent);
+        }
+        this.ref.instance.updateWidget(data);
+        break;
+      case WidgetContentType.touchpad:
+        if (!this.componentCreated) {
+          this.ref = this.vcr.createComponent(TouchpadWidgetComponent);
         }
         this.ref.instance.updateWidget(data);
         break;

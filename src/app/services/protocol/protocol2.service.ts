@@ -73,11 +73,12 @@ export class Protocol2Service {
                 let receivedButton = message.Buttons[0] as Protocol2Button;
                 let existingWidget = this.macroDeckService.widgets.find(x => x.row === receivedButton.Position_Y
                     && x.column === receivedButton.Position_X);
-                if (existingWidget === undefined) {
+                if (existingWidget === undefined ||
+                    existingWidget.widgetContentType !== WidgetContentType.button) {
                     return;
                 }
 
-                let existingWidgetContent = existingWidget?.widgetContent as ButtonWidget;
+                let existingWidgetContent = existingWidget.widgetContent as ButtonWidget;
                 existingWidgetContent.labelBase64 = receivedButton.LabelBase64;
 
                 this.macroDeckService.updateWidget(existingWidget);
@@ -91,19 +92,43 @@ export class Protocol2Service {
     }
 
     private mapProtocol2ButtonToWidget(button: Protocol2Button): Widget {
-        let buttonWidget: ButtonWidget = {
-            iconBase64: button.IconBase64,
-            labelBase64: button.LabelBase64,
-        }
+        const isTouchpad = button.Type === "Touchpad";
+        const buttonWidget: ButtonWidget | undefined = isTouchpad
+            ? undefined
+            : {
+                iconBase64: button.IconBase64,
+                labelBase64: button.LabelBase64,
+            };
+
         return {
-            backgroundColorHex: button.BackgroundColorHex,
-            colSpan: 1,
+            backgroundColorHex: button.BackgroundColorHex ?? (isTouchpad ? '#2d2d2d' : undefined),
+            colSpan: Math.max(1, button.ColSpan ?? 1),
             column: button.Position_X,
             row: button.Position_Y,
-            rowSpan: 1,
-            widgetContentType: WidgetContentType.button,
+            rowSpan: Math.max(1, button.RowSpan ?? 1),
+            widgetContentType: isTouchpad ? WidgetContentType.touchpad : WidgetContentType.button,
             widgetContent: buttonWidget
         }
+    }
+
+    sendTouchpadMove(deltaX: number, deltaY: number) {
+        if (deltaX === 0 && deltaY === 0) {
+            return;
+        }
+
+        this.send(Protocol2Messages.getTouchpadMoveMessage(deltaX, deltaY));
+    }
+
+    sendMouseClick(button: "LEFT" | "RIGHT" | "MIDDLE" | "DOUBLE" | "LEFT_DOWN" | "LEFT_UP") {
+        this.send(Protocol2Messages.getMouseClickMessage(button));
+    }
+
+    sendMouseScroll(delta: number) {
+        if (delta === 0) {
+            return;
+        }
+
+        this.send(Protocol2Messages.getMouseScrollMessage(delta));
     }
 
     private send(payload: any) {
@@ -111,6 +136,10 @@ export class Protocol2Service {
     }
 
     private handleInteraction(interaction: WidgetInteraction) {
+        if (interaction.widget.widgetContentType === WidgetContentType.touchpad) {
+            return;
+        }
+
         let method: String | undefined;
         switch (interaction.widgetInteractionType) {
             case WidgetInteractionType.ButtonPress:
@@ -126,9 +155,9 @@ export class Protocol2Service {
                 method = "BUTTON_LONG_PRESS_RELEASE";
                 break;
         }
-      this.send({
-        "Method": method,
-        "Message": `${interaction.widget.row}_${interaction.widget.column}`
-      });
+        this.send({
+            "Method": method,
+            "Message": `${interaction.widget.row}_${interaction.widget.column}`
+        });
     }
 }

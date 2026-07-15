@@ -24,4 +24,4 @@ include ':capawesome-capacitor-screen-orientation'
 project(':capawesome-capacitor-screen-orientation').projectDir = new File('../node_modules/@capawesome/capacitor-screen-orientation/android')
 
 include ':sslhandler'
-project(':sslhandler').projectDir = new File('../node_modules/sslhandler/android')
+project(':sslhandler').projectDir = new File('../capacitor_plugins/sslhandler/android')

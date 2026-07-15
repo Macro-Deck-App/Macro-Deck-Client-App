@@ -1,0 +1,14 @@
+<div class="touchpad-widget"
+  [style.border-radius.pt]="widgetGridComponent.borderRadiusPoints">
+  <div class="touchpad-surface"
+    (pointerdown)="onSurfacePointerDown($event)"
+    (pointermove)="onSurfacePointerMove($event)"
+    (pointerup)="onSurfacePointerUp($event)"
+    (pointercancel)="onSurfacePointerCancel($event)">
+    <span class="touchpad-label">Touchpad</span>
+  </div>
+  <div class="touchpad-buttons">
+    <button type="button" class="touchpad-btn left" (pointerup)="onLeftClick($event)">Left</button>
+    <button type="button" class="touchpad-btn right" (pointerup)="onRightClick($event)">Right</button>
+  </div>
+</div>
