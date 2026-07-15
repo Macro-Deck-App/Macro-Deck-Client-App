@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {WebsocketService} from "../../services/websocket/websocket.service";
-import {Router} from "@angular/router";
 import {SettingsModalComponent} from "../shared/modals/settings-modal/settings-modal.component";
-import {IonicModule, ModalController, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
+import {IonicModule, ModalController, ViewDidEnter} from "@ionic/angular";
 import {environment} from "../../../environments/environment";
 import {SettingsService} from "../../services/settings/settings.service";
 import {DiagnosticService} from "../../services/diagnostic/diagnostic.service";
 import {NavigationService} from "../../services/navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
 import {WidgetGridComponent} from "./widget-grid/widget-grid.component";
+import {WakelockService} from "../../services/wakelock/wakelock.service";
 
 
 @Component({
@@ -30,13 +30,18 @@ export class DeckPage implements ViewDidEnter {
               private modalController: ModalController,
               private settingsService: SettingsService,
               private diagnosticsService: DiagnosticService,
-              private navigationService: NavigationService) {
+              private navigationService: NavigationService,
+              private wakelockService: WakelockService) {
   }
 
   async ionViewDidEnter() {
     if (!this.websocketService.isConnected) {
       await this.navigationService.navigateTo(NavigationDestination.Home);
+      return;
     }
+
+    // Re-apply wake lock after reconnect (connection-lost may have released it).
+    await this.wakelockService.onConnected();
 
     this.clientId = await this.settingsService.getClientId();
     this.version = await this.diagnosticsService.getVersion();

@@ -17,7 +17,7 @@ import { NgStyle } from "@angular/common";
   styleUrls: ['./button-widget.component.scss'],
   imports: [
     NgStyle
-]
+  ]
 })
 export class ButtonWidgetComponent implements OnInit, OnDestroy {
   protected readonly widgetGridComponent = WidgetGridComponent;
@@ -128,9 +128,6 @@ export class ButtonWidgetComponent implements OnInit, OnDestroy {
 
     let buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
 
-    setTimeout(() => {
-
-    });
     this.longPressTimeout = setTimeout(() => {
       this.longPressTrigger = true;
       this.emitInteraction(WidgetInteractionType.ButtonLongPress);

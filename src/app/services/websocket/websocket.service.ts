@@ -12,6 +12,7 @@ import {environment} from "../../../environments/environment";
 import {Connection} from "../../datatypes/connection";
 import {NavigationService} from "../navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
+import {WakelockService} from "../wakelock/wakelock.service";
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,8 @@ export class WebsocketService {
               private modalController: ModalController,
               private settingsService: SettingsService,
               private protocolHandlerService: ProtocolHandlerService,
-              private navigationService: NavigationService) {
+              private navigationService: NavigationService,
+              private wakelockService: WakelockService) {
     this.subscribeOpenClose();
   }
 
@@ -154,6 +156,7 @@ export class WebsocketService {
 
     if (this.isConnected) {
       this.isConnected = false;
+      await this.wakelockService.onConnectionLost();
       await this.navigationService.navigateTo(NavigationDestination.ConnectionLost);
       return;
     }

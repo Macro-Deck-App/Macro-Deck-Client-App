@@ -1,24 +1,14 @@
 .icon {
   background-image: url(^assets/icon.png);
-  width: 10rem;
-  height: 10rem;
+  width: 6rem;
+  height: 6rem;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  transform: scale(.9);
-  animation: pulseAnimation 2s ease 1s infinite normal forwards;
+  opacity: 0.55;
 }
 
-@keyframes pulseAnimation {
-  0% {
-    transform: scale(.9);
-  }
-
-  50% {
-    transform: scale(1);
-  }
-
-  100% {
-    transform: scale(.9);
-  }
+ion-content {
+  --background: #000;
+  color: #bbb;
 }

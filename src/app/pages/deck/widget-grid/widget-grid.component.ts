@@ -54,6 +54,12 @@ export class WidgetGridComponent implements AfterContentInit, OnDestroy {
         this.applicationRef.tick();
       }));
 
+      this.subscription.add(this.macroDeckService.widgetsUpdate.subscribe(() => {
+        this.calculateWidgetSize();
+        this.applicationRef.tick();
+        WidgetGridComponent.updated.emit();
+      }));
+
       window.addEventListener("resize", () => {
         setTimeout(() => {
           this.calculateWidgetSize();

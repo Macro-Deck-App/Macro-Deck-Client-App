@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {NavigationService} from "../../services/navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
 import {IonicModule, ViewDidEnter, ViewDidLeave} from "@ionic/angular";
+import {WakelockService} from "../../services/wakelock/wakelock.service";
 
 @Component({
   selector: 'app-connection-lost',
@@ -25,22 +26,31 @@ export class ConnectionLostPage implements ViewDidEnter, ViewDidLeave {
   private interval: any;
 
   constructor(private websocketService: WebsocketService,
-              private navigationService: NavigationService) {
+              private navigationService: NavigationService,
+              private wakelockService: WakelockService) {
     this.connection = websocketService.getConnection();
   }
 
   ionViewDidLeave() {
     this.subscription.unsubscribe();
+    clearInterval(this.interval);
   }
 
   async ionViewDidEnter() {
+    // Let the phone's normal screen timeout kick in while disconnected.
+    await this.wakelockService.onConnectionLost();
+
     this.subscription.add(this.websocketService.connectionFailed.subscribe(() => {
       this.startRetry();
+    }));
+    this.subscription.add(this.websocketService.connected.subscribe(async () => {
+      await this.wakelockService.onConnected();
     }));
     await this.startRetry();
   }
 
   async startRetry() {
+    clearInterval(this.interval);
     this.retryCountdown = 10;
     this.interval = setInterval(async () => {
       this.retryCountdown--;
@@ -61,6 +71,7 @@ export class ConnectionLostPage implements ViewDidEnter, ViewDidLeave {
 
   async cancel() {
     clearInterval(this.interval);
+    await this.wakelockService.onConnected();
     await this.navigationService.navigateTo(NavigationDestination.Home);
   }
 }

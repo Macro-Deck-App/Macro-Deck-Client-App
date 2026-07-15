@@ -17,6 +17,7 @@ const usbAutoConnectKey: string = "usb_auto_connect";
 const usbPortKey: string = "usb_port";
 const usbUseSslKey: string = "usb_use_ssl";
 const buttonWidgetBorderStyleKey: string = "button_widget_border_style";
+const allowScreenTimeoutWhenDisconnectedKey: string = "allow_screen_timeout_when_disconnected";
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +114,15 @@ export class SettingsService {
 
   public async getWakeLockEnabled() {
     return await this.storage.get(wakeLockKey) ?? false;
+  }
+
+  public async setAllowScreenTimeoutWhenDisconnected(state: boolean) {
+    await this.storage.set(allowScreenTimeoutWhenDisconnectedKey, state);
+  }
+
+  public async getAllowScreenTimeoutWhenDisconnected() {
+    // Default ON: enclosure/kiosk setups with prevent-timeout should still sleep when the PC is off.
+    return await this.storage.get(allowScreenTimeoutWhenDisconnectedKey) ?? true;
   }
 
   public async getConnectionCount() {

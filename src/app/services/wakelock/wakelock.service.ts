@@ -25,6 +25,29 @@ export class WakelockService {
     }
   }
 
+  /**
+   * When the Macro Deck host disconnects, release the wake lock so the OS can
+   * turn the screen off (important for enclosure/kiosk phones with prevent-timeout on).
+   */
+  public async onConnectionLost() {
+    try {
+      if (!(await this.settingsService.getAllowScreenTimeoutWhenDisconnected())) {
+        return;
+      }
+
+      await this.disableWakeLock();
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Restore wake-lock preference after a successful reconnect.
+   */
+  public async onConnected() {
+    await this.updateWakeLock();
+  }
+
   private async enableWakeLock() {
     const nativeSupport = await KeepAwake.isSupported();
     if (nativeSupport.isSupported) {

@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Widget} from "../../datatypes/widgets/widget";
 import {WidgetGridComponent} from "../../pages/deck/widget-grid/widget-grid.component";
 import {Protocol2Service} from "../../services/protocol/protocol2.service";
+import {HapticService} from "../../services/haptic/haptic.service";
 
 @Component({
   selector: 'app-touchpad-widget',
@@ -28,7 +29,8 @@ export class TouchpadWidgetComponent {
   private lastScrollY = 0;
   private scrollAccumulator = 0;
 
-  constructor(private protocol2Service: Protocol2Service) {
+  constructor(private protocol2Service: Protocol2Service,
+              private hapticService: HapticService) {
   }
 
   updateWidget(widget: Widget) {
@@ -113,6 +115,7 @@ export class TouchpadWidgetComponent {
     }
 
     if (wasTap) {
+      void this.hapticService.lightImpact();
       this.protocol2Service.sendMouseClick("LEFT");
     }
 
@@ -134,12 +137,14 @@ export class TouchpadWidgetComponent {
   onLeftClick(event: Event) {
     event.preventDefault();
     event.stopPropagation();
+    void this.hapticService.lightImpact();
     this.protocol2Service.sendMouseClick("LEFT");
   }
 
   onRightClick(event: Event) {
     event.preventDefault();
     event.stopPropagation();
+    void this.hapticService.mediumImpact();
     this.protocol2Service.sendMouseClick("RIGHT");
   }
 }

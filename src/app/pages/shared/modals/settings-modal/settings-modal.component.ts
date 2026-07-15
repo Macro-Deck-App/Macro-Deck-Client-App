@@ -25,6 +25,7 @@ export class SettingsModalComponent  implements OnInit {
 
   isAndroidOreo: boolean = false;
   preventScreenTimeout: boolean = false;
+  allowScreenTimeoutWhenDisconnected: boolean = true;
   showMenuButton: boolean = false;
   skipSslValidation: boolean = false;
   buttonLongPressDelay: number = 1000;
@@ -60,6 +61,7 @@ export class SettingsModalComponent  implements OnInit {
 
   async saveSettings() {
     await this.settingsService.setWakeLockEnabled(this.preventScreenTimeout);
+    await this.settingsService.setAllowScreenTimeoutWhenDisconnected(this.allowScreenTimeoutWhenDisconnected);
     await this.settingsService.setShowMenuButton(this.showMenuButton);
     await this.settingsService.setSkipSslValidation(this.skipSslValidation);
     await this.settingsService.setButtonLongPressDelay(this.buttonLongPressDelay);
@@ -80,6 +82,7 @@ export class SettingsModalComponent  implements OnInit {
 
   async loadCurrentSettings() {
     this.preventScreenTimeout = await this.settingsService.getWakeLockEnabled();
+    this.allowScreenTimeoutWhenDisconnected = await this.settingsService.getAllowScreenTimeoutWhenDisconnected();
     this.showMenuButton = await this.settingsService.getShowMenuButton();
     this.skipSslValidation = await this.settingsService.getSkipSslValidation();
     this.buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();

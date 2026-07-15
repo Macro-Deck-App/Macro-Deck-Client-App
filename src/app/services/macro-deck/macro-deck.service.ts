@@ -1,5 +1,4 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {WebsocketService} from "../websocket/websocket.service";
 import {Widget} from "../../datatypes/widgets/widget";
 import {WidgetInteraction} from "../../datatypes/widgets/widget-interaction";
 
@@ -8,6 +7,7 @@ import {WidgetInteraction} from "../../datatypes/widgets/widget-interaction";
 })
 export class MacroDeckService {
   @Output() configUpdate = new EventEmitter();
+  @Output() widgetsUpdate = new EventEmitter();
   @Output() interaction = new EventEmitter<WidgetInteraction>();
 
   widgets: Widget[] = [];
@@ -31,6 +31,7 @@ export class MacroDeckService {
 
   setWidgets(widgets: Widget[]) {
     this.widgets = widgets;
+    this.widgetsUpdate.emit();
   }
 
   updateWidget(widget: Widget) {
@@ -40,5 +41,6 @@ export class MacroDeckService {
     } else {
       this.widgets.push(widget);
     }
+    this.widgetsUpdate.emit();
   }
 }

@@ -11,6 +11,7 @@ import {WidgetInteractionType} from "../../enums/widget-interaction-type";
 import {LoadingService} from "../loading/loading.service";
 import {NavigationService} from "../navigation/navigation.service";
 import {NavigationDestination} from "../../enums/navigation-destination";
+import {HapticService} from "../haptic/haptic.service";
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,8 @@ export class Protocol2Service {
 
     constructor(private macroDeckService: MacroDeckService,
                 private loadingService: LoadingService,
-                private navigationService: NavigationService) {
+                private navigationService: NavigationService,
+                private hapticService: HapticService) {
         macroDeckService.interaction.subscribe(interaction => {
             this.handleInteraction(interaction);
         })
@@ -50,7 +52,11 @@ export class Protocol2Service {
                     return;
                 }
 
-                let widgets: Widget[] = message.Buttons.map((button: Protocol2Button) => {
+                const buttonList = Array.isArray(message.Buttons)
+                    ? message.Buttons
+                    : Object.values(message.Buttons ?? {});
+
+                let widgets: Widget[] = buttonList.map((button: Protocol2Button) => {
                     return this.mapProtocol2ButtonToWidget(button);
                 });
 
@@ -92,7 +98,7 @@ export class Protocol2Service {
     }
 
     private mapProtocol2ButtonToWidget(button: Protocol2Button): Widget {
-        const isTouchpad = button.Type === "Touchpad";
+        const isTouchpad = (button.Type ?? "").toString().toLowerCase() === "touchpad";
         const buttonWidget: ButtonWidget | undefined = isTouchpad
             ? undefined
             : {
@@ -138,6 +144,15 @@ export class Protocol2Service {
     private handleInteraction(interaction: WidgetInteraction) {
         if (interaction.widget.widgetContentType === WidgetContentType.touchpad) {
             return;
+        }
+
+        switch (interaction.widgetInteractionType) {
+            case WidgetInteractionType.ButtonPress:
+                void this.hapticService.lightImpact();
+                break;
+            case WidgetInteractionType.ButtonLongPress:
+                void this.hapticService.mediumImpact();
+                break;
         }
 
         let method: String | undefined;

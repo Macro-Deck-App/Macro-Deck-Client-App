@@ -23,6 +23,15 @@
       </ion-toggle>
     </ion-item>
 
+    @if (preventScreenTimeout) {
+      <ion-item>
+        <ion-icon name="moon" slot="start"></ion-icon>
+        <ion-toggle
+          [(ngModel)]="allowScreenTimeoutWhenDisconnected">Allow screen timeout when disconnected
+        </ion-toggle>
+      </ion-item>
+    }
+
     @if (isAndroid()) {
       <ion-item>
         <ion-icon slot="start" class="mdi mdi-lock-off d-flex align-items-center"></ion-icon>

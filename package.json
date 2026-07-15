@@ -8,6 +8,7 @@
     "ng": "ng",
     "start": "ng serve app --configuration development",
     "build": "ng build app --configuration development",
+    "build:prod": "ng build app --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test app",
     "lint": "ng lint app"
