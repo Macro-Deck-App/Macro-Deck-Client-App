@@ -96,42 +96,65 @@ export class ButtonWidgetComponent implements OnInit, OnDestroy {
   }
 
   onMouseUp(event: Event) {
+    this.release(event, true);
+  }
+
+  // Leaving the button or a canceled pointer aborts a short press, but a long press that already
+  // triggered still has to be released
+  onMouseLeave(event: Event) {
+    this.release(event, false);
+  }
+
+  private release(event: Event, triggerShortPress: boolean) {
     if (!this.pressed) {
       return;
     }
 
     this.pressed = false;
+    clearTimeout(this.longPressTimeout);
     this.setClass(event.currentTarget, 'pressed', false);
     this.setClass(event.currentTarget, 'release-transition', true);
 
     if (this.longPressTrigger) {
-      if (this.widget === undefined) {
-        return;
-      }
       this.emitInteraction(WidgetInteractionType.ButtonLongPressRelease);
-    } else {
+    } else if (triggerShortPress) {
+      // Like in Macro Deck 3, the short press only triggers on release and not when the button was held
+      this.emitInteraction(WidgetInteractionType.ButtonPress);
       this.emitInteraction(WidgetInteractionType.ButtonShortPressRelease);
     }
     this.longPressTrigger = false;
-    clearTimeout(this.longPressTimeout);
   }
 
-  async onMouseLeave(event: Event) {
-    this.onMouseUp(event);
+  onContextMenu(event: Event) {
+    event.preventDefault();
   }
 
-  async onMouseDown(event: Event) {
+  async onMouseDown(event: PointerEvent) {
+    if (this.pressed) {
+      return;
+    }
+
+    // Prevents the WebView from starting text selection, image drag or the long press callout,
+    // which would cancel the pointer and release the button before the long press triggers
+    event.preventDefault();
+
     this.setClass(event.currentTarget, 'pressed', true);
     this.setClass(event.currentTarget, 'release-transition', false);
-    this.emitInteraction(WidgetInteractionType.ButtonPress);
     this.pressed = true;
+    this.longPressTrigger = false;
+    clearTimeout(this.longPressTimeout);
 
     let buttonLongPressDelay = await this.settingsService.getButtonLongPressDelay();
 
-    setTimeout(() => {
+    // The button may have been released while the delay was loaded
+    if (!this.pressed) {
+      return;
+    }
 
-    });
     this.longPressTimeout = setTimeout(() => {
+      if (!this.pressed) {
+        return;
+      }
       this.longPressTrigger = true;
       this.emitInteraction(WidgetInteractionType.ButtonLongPress);
     }, buttonLongPressDelay);
