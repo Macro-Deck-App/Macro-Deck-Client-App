@@ -1,0 +1,41 @@
+name: Renew iOS certificates
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  renew:
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      # match pushes new profiles, so this key needs write access to the match repository.
+      - name: Install match SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ vars.MATCH_KNOWN_HOSTS }}
+
+      - name: Configure git identity for match commits
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Renew
+        env:
+          KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          ISSUER_ID: ${{ secrets.APPSTORE_KEY_ISSUER_ID }}
+          KEY_CONTENT: ${{ secrets.APPSTORE_KEY_CONTENT }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: |
+          cd ios/App
+          bundle install
+          fastlane renew_certs
