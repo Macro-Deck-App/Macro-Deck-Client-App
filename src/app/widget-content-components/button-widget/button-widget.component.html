@@ -2,12 +2,15 @@
   (pointerdown)="onMouseDown($event)"
   (pointerup)="onMouseUp($event)"
   (pointerleave)="onMouseLeave($event)"
+  (pointercancel)="onMouseLeave($event)"
+  (contextmenu)="onContextMenu($event)"
+  (dragstart)="$event.preventDefault()"
   class="button-widget-wrapper">
   @if (foregroundImage) {
-    <img [src]="foregroundImage" class="foreground" />
+    <img [src]="foregroundImage" class="foreground" draggable="false" />
   }
   @if (iconImage) {
-    <img [src]="iconImage" class="icon" />
+    <img [src]="iconImage" class="icon" draggable="false" />
   }
   <div [ngStyle]=backgroundStyle class="background"></div>
 </div>
