@@ -3,6 +3,7 @@ import {AlertController, IonicModule, ModalController} from "@ionic/angular";
 import {BarcodeScanner, SupportedFormat} from "@capacitor-community/barcode-scanner";
 import {Subscription} from "rxjs";
 import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.component";
+import {isMacroDeck3ConnectLink} from "../../../../../services/macro-deck3/connect-link";
 
 @Component({
   selector: 'app-qr-code-scanner',
@@ -15,6 +16,8 @@ import {QrCodeScannerUiComponent} from "./qr-code-scanner-ui/qr-code-scanner-ui.
 export class QrCodeScannerComponent implements OnInit, OnDestroy {
 
   public static quickSetupQrCodeScanned: EventEmitter<string> = new EventEmitter();
+
+  public static macroDeck3QrCodeScanned: EventEmitter<string> = new EventEmitter();
 
   private subscription: Subscription = new Subscription();
 
@@ -52,6 +55,9 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
       if (result.hasContent && result.content.toLowerCase().startsWith("https://macro-deck.app/quick-setup")) {
         await this.stopScan();
         QrCodeScannerComponent.quickSetupQrCodeScanned.emit(result.content);
+      } else if (result.hasContent && isMacroDeck3ConnectLink(result.content)) {
+        await this.stopScan();
+        QrCodeScannerComponent.macroDeck3QrCodeScanned.emit(result.content);
       }
     });
   }

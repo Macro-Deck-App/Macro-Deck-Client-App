@@ -21,6 +21,10 @@
     android:theme="@style/AppTheme"
     android:usesCleartextTraffic="true">
 
+    <property
+      android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
+      android:value="true" />
+
     <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false" />
     <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="barcode_ui"/>
 

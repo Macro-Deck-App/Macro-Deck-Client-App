@@ -31,6 +31,12 @@
 
   @if (savedConnectionsInitialized) {
     <ion-content>
+      <div class="legacy-notice m-3 p-3">
+        <b>Macro Deck 2 is legacy</b>
+        <p class="mt-1 mb-2">This app only supports Macro Deck 2 and is no longer being developed. Please switch to Macro Deck 3. Until the new Macro Deck Companion app is available, the web client built into Macro Deck 3 can be used in the browser.</p>
+        <ion-button size="small" fill="outline" (click)="openMacroDeck3Info()">Learn more</ion-button>
+      </div>
+
       @if (savedConnectionsInitialized) {
         <ion-item-group>
           @if (savedConnections.length > 0) {
