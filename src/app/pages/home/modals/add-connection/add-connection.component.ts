@@ -9,6 +9,9 @@ import {QrCodeScannerComponent} from "./qr-code-scanner/qr-code-scanner.componen
 import {ConnectionFailedComponent} from "../connection-failed/connection-failed.component";
 import {FormsModule} from "@angular/forms";
 import {NgTemplateOutlet} from "@angular/common";
+import {LoadingService} from "../../../../services/loading/loading.service";
+import {MacroDeck3DetectionService} from "../../../../services/macro-deck3/macro-deck3-detection.service";
+import {decodeMacroDeck3ConnectLink} from "../../../../services/macro-deck3/connect-link";
 
 @Component({
   selector: 'app-add-connection-modal',
@@ -34,10 +37,13 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
   index: number = 0;
   page: string = "quick-setup";
   subscription: Subscription = new Subscription();
+  private handlingMacroDeck3QrCode = false;
 
   constructor(private modalController: ModalController,
               private alertController: AlertController,
-              private diagnosticService: DiagnosticService) {
+              private diagnosticService: DiagnosticService,
+              private loadingService: LoadingService,
+              private macroDeck3DetectionService: MacroDeck3DetectionService) {
   }
 
   ngOnDestroy(): void {
@@ -54,8 +60,38 @@ export class AddConnectionComponent implements OnInit, OnDestroy {
           await this.handleQuickSetupQrCode();
         }
       }));
+      this.subscription.add(QrCodeScannerComponent.macroDeck3QrCodeScanned.subscribe(async content => {
+        await this.handleMacroDeck3QrCode(content);
+      }));
       await this.handleQuickSetupQrCode();
     }
+  }
+
+  async handleMacroDeck3QrCode(content: string) {
+    if (this.handlingMacroDeck3QrCode) {
+      return;
+    }
+    this.handlingMacroDeck3QrCode = true;
+    const link = decodeMacroDeck3ConnectLink(content);
+    const endpoints = link?.endpoints ?? [];
+    let baseUrl: string | null = null;
+    if (endpoints.length > 0) {
+      let canceled = false;
+      const cancelSubscription = this.loadingService.canceled.subscribe(() => canceled = true);
+      await this.loadingService.showLoading("Checking the host...");
+      baseUrl = await this.macroDeck3DetectionService.detectEndpoints(endpoints);
+      cancelSubscription.unsubscribe();
+      if (canceled) {
+        this.handlingMacroDeck3QrCode = false;
+        return;
+      }
+      await this.loadingService.dismiss();
+    }
+    await this.modalController.dismiss({
+      baseUrl: baseUrl,
+      name: link?.instanceName || undefined,
+      identityFingerprint: link?.identityFingerprint ?? null
+    }, 'macroDeck3');
   }
 
   async handleQuickSetupQrCode() {

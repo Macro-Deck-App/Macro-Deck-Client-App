@@ -24,6 +24,10 @@ import {QuickSetupQrCodeData} from "../../datatypes/quick-setup-qr-code-data";
 import {
   QrCodeScannerUiComponent
 } from "./modals/add-connection/qr-code-scanner/qr-code-scanner-ui/qr-code-scanner-ui.component";
+import {LoadingService} from "../../services/loading/loading.service";
+import {MacroDeck3DetectionService} from "../../services/macro-deck3/macro-deck3-detection.service";
+import {MacroDeck3DetectedComponent} from "./modals/macro-deck3-detected/macro-deck3-detected.component";
+import {companionAppUrl} from "../../services/macro-deck3/companion-app-url";
 
 
 @Component({
@@ -44,6 +48,7 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
   usbConnectionAvailable: boolean = false;
 
   private subscription: Subscription = new Subscription();
+  private connectionAttempt = 0;
 
   constructor(private settingsService: SettingsService,
               private modalController: ModalController,
@@ -52,7 +57,9 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
               private alertController: AlertController,
               private websocketService: WebsocketService,
               private wakeLockService: WakelockService,
-              private pingService: PingService) {
+              private pingService: PingService,
+              private loadingService: LoadingService,
+              private macroDeck3DetectionService: MacroDeck3DetectionService) {
   }
 
   ionViewWillEnter(): void {
@@ -98,7 +105,10 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
       await this.pingService.start();
     }));
     this.subscription.add(this.websocketService.connectionFailed.subscribe(async details => {
-      await this.showConnectionFailedModal(details);
+      await this.handleConnectionFailed(details);
+    }));
+    this.subscription.add(this.loadingService.canceled.subscribe(() => {
+      this.connectionAttempt++;
     }));
     this.subscription.add(AppComponent.quickSetupLinkScanned.subscribe(async data => {
       await this.openAddConnectionModal(null, data);
@@ -142,6 +152,9 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
     const {data, role} = await modal.onWillDismiss();
     if (role === 'confirm') {
       await this.connectionService.addUpdateConnection(data);
+    }
+    if (role === 'macroDeck3') {
+      await this.showMacroDeck3DetectedModal(data.baseUrl, data.name, data.identityFingerprint, true);
     }
 
     await this.loadConnections();
@@ -187,6 +200,7 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
   }
 
   async connect(connection: Connection) {
+    this.connectionAttempt++;
     await this.wakeLockService.updateWakeLock();
     await this.websocketService.connectToConnection(connection);
   }
@@ -212,11 +226,46 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
     await this.pingService.restart();
   }
 
-  private async showConnectionFailedModal(errorInformation: String) {
+  private async handleConnectionFailed(errorInformation: string) {
+    // Read before the first await: cancelling the loading overlay closes the socket and clears the connection.
+    const connection = this.websocketService.getConnection();
+    const attempt = ++this.connectionAttempt;
+
+    if (connection && !connection.usbConnection && !environment.webVersion) {
+      await this.loadingService.showLoading("Checking the host...");
+      const macroDeck3BaseUrl = await this.macroDeck3DetectionService.detect(connection);
+      if (attempt !== this.connectionAttempt) {
+        return;
+      }
+      await this.loadingService.dismiss();
+      if (macroDeck3BaseUrl) {
+        await this.showMacroDeck3DetectedModal(macroDeck3BaseUrl, connection.name);
+        return;
+      }
+    }
+
+    await this.showConnectionFailedModal(errorInformation, connection?.name);
+  }
+
+  private async showMacroDeck3DetectedModal(baseUrl: string | null, name?: string, identityFingerprint?: string | null,
+                                            fromConnectLink = false) {
+    const modal = await this.modalController.create({
+      component: MacroDeck3DetectedComponent,
+      componentProps: {
+        baseUrl: baseUrl,
+        name: name,
+        expectedIdentityFingerprint: identityFingerprint ?? null,
+        fromConnectLink: fromConnectLink
+      }
+    });
+    await modal.present();
+  }
+
+  private async showConnectionFailedModal(errorInformation: string, name: string | undefined) {
     const modal = await this.modalController.create({
       component: ConnectionFailedComponent,
       componentProps: {
-        name: this.websocketService.getConnection()?.name,
+        name: name,
         errorInformation: errorInformation
       }
     });
@@ -225,6 +274,10 @@ export class HomePage implements OnInit, ViewWillEnter, ViewDidEnter, ViewDidLea
 
   public showDonateButton() {
     return !this.diagnosticsService.isiOS();
+  }
+
+  public openMacroDeck3Info() {
+    window.open(companionAppUrl, "_blank");
   }
 
   public openDonate() {
