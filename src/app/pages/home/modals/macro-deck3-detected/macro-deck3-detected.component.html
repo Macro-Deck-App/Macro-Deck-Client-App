@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Macro Deck 3 detected</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" [strong]="true">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <h2>This app only supports Macro Deck 2</h2>
+  <p>To use Macro Deck 3, please use the new Macro Deck Companion app. Until it is available, the web client built into Macro Deck 3 can be used in the browser.</p>
+
+  @if (transferEnabled) {
+    <div class="transfer mt-4">
+      @if (!result && !transferring) {
+        <p>You bought this app in the App Store? Transfer your purchase to Macro Deck 3 on your computer and use the Macro Deck Companion app without buying it again.</p>
+      } @else if (transferring) {
+        <div class="d-flex align-items-center">
+          <ion-spinner name="crescent"></ion-spinner>
+          <span class="ms-3">Transferring your purchase to Macro Deck 3...</span>
+        </div>
+      } @else {
+        @switch (result?.state) {
+          @case ("transferred") {
+            <p><b>Your purchase has been transferred to Macro Deck 3.</b> Install the Macro Deck Companion app and connect it to your computer, no additional purchase needed.</p>
+          }
+          @case ("pending") {
+            <p>Your purchase was handed over to Macro Deck 3 and will be transferred automatically as soon as your computer can reach the Macro Deck servers.</p>
+          }
+          @case ("rejected") {
+            <p>Your purchase could not be transferred. {{ rejectionMessage() }}</p>
+          }
+          @case ("hostLocked") {
+            <p>Unlock Macro Deck 3 on your computer, then connect again to transfer your purchase.</p>
+          }
+          @case ("rateLimited") {
+            <p>Too many attempts to transfer your purchase. Please try again later.</p>
+          }
+          @case ("iosTooOld") {
+            <p>Transferring your purchase requires iOS 16 or later.</p>
+          }
+          @case ("purchaseUnavailable") {
+            <p>Your purchase could not be read from the App Store. Please try again later.</p>
+          }
+          @case ("failed") {
+            <p>Something went wrong while transferring your purchase. Please try again later.</p>
+          }
+          @default {
+            <p>Transferring your purchase is not supported by this Macro Deck 3 version yet. It will be possible with an upcoming Macro Deck 3 update.</p>
+          }
+        }
+      }
+      @if (canTransfer()) {
+        <ion-button expand="block" fill="outline" (click)="transfer()">{{ result ? "Try again" : "Transfer my purchase to " + hostName }}</ion-button>
+      }
+    </div>
+  }
+
+  <ion-button class="mt-4" expand="block" (click)="openCompanionApp()">Learn about the Macro Deck Companion app</ion-button>
+</ion-content>

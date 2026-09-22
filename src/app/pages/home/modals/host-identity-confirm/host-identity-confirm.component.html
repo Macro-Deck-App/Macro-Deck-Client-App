@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Compare the identity</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  @if (loading) {
+    <div class="d-flex align-items-center">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span class="ms-3">Asking {{ hostName }} for its identity...</span>
+    </div>
+  } @else {
+    @switch (result?.state) {
+      @case ("verified") {
+        <p>{{ hostName }} answered with this identity:</p>
+        <div class="fingerprint">
+          @for (row of fingerprintRows(); track $index) {
+            <div>{{ row }}</div>
+          }
+        </div>
+        @if (matchesQrCode() === true) {
+          <p><b>It matches the identity in the scanned QR code.</b></p>
+        } @else if (matchesQrCode() === false) {
+          <p><b>This identity does not match the scanned QR code. Do not transfer your purchase to this computer.</b></p>
+        }
+        <p><b>Check that all six groups match Identity in Macro Deck's connection panel on the computer, next to its QR code. Macro Deck also shows it in Settings under Network.</b></p>
+        <p class="hint">After confirming, your App Store purchase is sent to that computer.</p>
+        @if (canConfirm()) {
+          <ion-button expand="block" (click)="confirm()">Identity matches, transfer</ion-button>
+        }
+      }
+      @case ("invalid") {
+        <p><b>{{ hostName }} could not prove its identity.</b> Do not transfer your purchase to this computer.</p>
+      }
+      @case ("locked") {
+        <p>Macro Deck 3 on your computer is locked. Unlock it, then try again to transfer your purchase.</p>
+      }
+      @case ("unsupported") {
+        <p>This Macro Deck 3 version cannot show its identity yet. Please update Macro Deck 3 on your computer to transfer your purchase.</p>
+      }
+      @default {
+        <p>{{ hostName }} could not show its identity right now. Please try again later.</p>
+      }
+    }
+  }
+</ion-content>

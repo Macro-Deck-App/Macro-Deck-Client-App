@@ -10,7 +10,8 @@
     "build": "ng build app --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test app",
-    "lint": "ng lint app"
+    "lint": "ng lint app",
+    "postinstall": "patch-package"
   },
   "private": true,
   "dependencies": {
@@ -25,7 +26,7 @@
     "@angular/service-worker": "19.2.6",
     "@awesome-cordova-plugins/app-version": "^6.16.0",
     "@awesome-cordova-plugins/core": "^6.16.0",
-    "@capacitor-community/barcode-scanner": "^4.0.1",
+    "@capacitor-community/barcode-scanner": "4.0.1",
     "@capacitor-community/keep-awake": "^7.0.0",
     "@capacitor/android": "7.2.0",
     "@capacitor/app": "7.0.1",
@@ -85,6 +86,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "patch-package": "^8.0.1",
     "ts-node": "^10.9.2",
     "typescript": "5.8.3"
   }

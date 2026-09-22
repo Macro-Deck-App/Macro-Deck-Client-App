@@ -46,6 +46,20 @@ lane :get_certs do
     )
 end
 
+desc "Create or renew the development and App Store certificates and profiles in the match repository"
+lane :renew_certs do
+    setup_ci
+    app_store_connect
+    match(
+        type: "development",
+        readonly: false
+    )
+    match(
+        type: "appstore",
+        readonly: false
+    )
+end
+
 desc "Configure AppStoreConnect api"
 private_lane :app_store_connect do
     app_store_connect_api_key(
