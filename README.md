@@ -1,5 +1,20 @@
 # Macro Deck Client
 
+> [!IMPORTANT]
+>
+> ## This app is deprecated
+>
+> This Macro Deck app is deprecated and is no longer actively developed or supported.
+>
+> For **Macro Deck 3**, it has been replaced by the new **Macro Deck Companion App** for iOS and Android.
+>
+> Please use the new Companion App for Macro Deck 3 going forward:
+>
+> **[Learn more about the new Macro Deck Companion App](https://macro-deck.app/the-new-companion-app)**
+>
+> This repository is kept available for archival purposes.
+
+
 The Macro Deck Client is crafted with Angular, leveraging the power of the Ionic framework. This strategic choice ensures a unified codebase, seamlessly compatible across iOS, Android, and the Web platforms.
 
 <img src="https://raw.githubusercontent.com/Macro-Deck-App/Macro-Deck-Client-App/main/screenshots/iPad%20Pro%20Screenshot%202.png"
